@@ -4,9 +4,9 @@ const Tender = require('../models/tenderModel');
 const getTenders = async (req, res) => {
     try {
         const tenders = await Tender.find(); 
-         return res.status(200).json(tenders); 
+        return res.status(200).json(tenders); 
     } catch (error) {
-         return res.status(500).json({ message: error.message }); 
+        return res.status(500).json({ message: error.message }); 
     }
 };
 
@@ -18,9 +18,9 @@ const getTenderById = async (req, res) => {
         if (!tender) {
             return res.status(404).json({ message: 'Tender not found' }); 
         }
-        return res.status(200).json(tender); 
+        res.status(200).json(tender); 
     } catch (error) {
-        return res.status(500).json({ message: error.message }); 
+        res.status(500).json({ message: error.message }); 
     }
 };
 
@@ -46,7 +46,21 @@ const createTender = async (req, res) => {
         pincode,
         bidOpeningPlace,
         productCategory,
-        natureOfWork
+        natureOfWork,
+        proposalsInvitedBy,
+        dateOfOpeningFinancialProposals,
+        modeOfSubmittingProposals,
+        tenderWebsite,
+        costOfRPFDocument,
+        earnestMoneyDeposit,
+        modeOfPayment,
+        amount,
+        bankName,
+        performanceSecurity,
+        methodOfSelection,
+        objectionCharges,
+        authorizedManager,
+        authorizedPerson
     } = req.body; 
 
     try {
@@ -70,14 +84,28 @@ const createTender = async (req, res) => {
             pincode,
             bidOpeningPlace,
             productCategory,
-            natureOfWork
+            natureOfWork,
+            proposalsInvitedBy,
+            dateOfOpeningFinancialProposals,
+            modeOfSubmittingProposals,
+            tenderWebsite,
+            costOfRPFDocument,
+            earnestMoneyDeposit,
+            modeOfPayment,
+            amount,
+            bankName,
+            performanceSecurity,
+            methodOfSelection,
+            objectionCharges,
+            authorizedManager,
+            authorizedPerson
         });
 
         await newTender.save(); 
-        return res.status(201).json(newTender); 
+        res.status(201).json(newTender); 
     } catch (error) {
         console.error('Error creating tender:', error); 
-        return res.status(500).json({ message: error.message }); 
+        res.status(500).json({ message: error.message }); 
     }
 };
 
@@ -107,12 +135,12 @@ const uploadDocument = async (req, res) => {
         tender.documents.push(newDocument);
         await tender.save(); 
 
-        return res.status(200).json({
+        res.status(200).json({
             message: 'Document uploaded successfully',
             document: newDocument 
         });
     } catch (error) {
-        return res.status(500).json({ message: error.message }); 
+        res.status(500).json({ message: error.message }); 
     }
 };
 
@@ -122,4 +150,3 @@ module.exports = {
     getTenderById,
     uploadDocument,
 };
-
