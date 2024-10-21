@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const tenderRoutes = require('./routes/tenderRoutes'); 
 const dotenv = require('dotenv');
+const vendorRouter = require("./routes/vendorRoutes.js");
 const cors = require("cors");
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(
 );
 app.use(express.json());
 app.use('/tenders', tenderRoutes);
+app.use("/vendor", vendorRouter);
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI, {
