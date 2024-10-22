@@ -4,7 +4,7 @@ const { create, getAllVendors, findVendor, updateVendor } = require("../controll
 const route = express.Router();
 
 route.post("/create", create);
-route.get("/display", getAllVendors);
+route.get("/getAllVendors", getAllVendors);
 route.get("/find", findVendor);
 route.put("/update/:id", updateVendor);
 

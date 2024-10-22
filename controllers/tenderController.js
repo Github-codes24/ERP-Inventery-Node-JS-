@@ -12,7 +12,7 @@ const getTenders = async (req, res) => {
 
 // Get a tender by ID
 const getTenderById = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     try {
         const tender = await Tender.findOne({ _id: id }); 
         if (!tender) {
