@@ -16,21 +16,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-
-// mongoose.connection.on('connected', () => {
-//   console.log('Mongoose connected to DB');
-// });
-
-// mongoose.connection.on('error', (err) => {
-//   console.error('Mongoose connection error:', err);
-// });
-
-// mongoose.connection.on('disconnected', () => {
-//   console.log('Mongoose disconnected');
-// });
-
-
 mongoose.set('debug', true);
 
 module.exports = connectDB;
