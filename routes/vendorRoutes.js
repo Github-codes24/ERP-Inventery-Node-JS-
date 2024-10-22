@@ -5,7 +5,7 @@ const route = express.Router();
 
 route.post("/create", create);
 route.get("/getAllVendors", getAllVendors);
-route.get("/find", findVendor);
+route.get("/getByQuery", findVendor);
 route.put("/update/:id", updateVendor);
 
 module.exports = route;
