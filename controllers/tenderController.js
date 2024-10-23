@@ -180,6 +180,6 @@ const getTenderById = async (req, res) => {
     }
 };
 
-//modules
+//modules expoerted 
 
 module.exports = { createTender, getTenders, getTenderById };
