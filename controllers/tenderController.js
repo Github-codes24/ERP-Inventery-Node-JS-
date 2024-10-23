@@ -1,57 +1,8 @@
-const Tender = require('../models/tenderModel'); 
+const Tender = require('../models/tenderModel');
 
-// Get all tenders
-const getTenders = async (req, res) => {
-    try {
-        const tenders = await Tender.find(); 
-         return res.status(200).json(tenders); 
-    } catch (error) {
-         return res.status(500).json({ message: error.message }); 
-    }
-};
-
-// Get a tender by ID
-const getTenderById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const tender = await Tender.findOne({ _id: id }); 
-        if (!tender) {
-            return res.status(404).json({ message: 'Tender not found' }); 
-        }
-        return res.status(200).json(tender); 
-    } catch (error) {
-        return res.status(500).json({ message: error.message }); 
-    }
-};
-
-// Create a new tender
 const createTender = async (req, res) => {
-    const {
-        tenderID,
-        tenderName,
-        title,
-        issueDate,
-        tenderFloatingDate,
-        description,
-        bidderName,
-        documentDownloadStartDate,
-        documentDownloadEndDate,
-        bidSubmissionStartDate,
-        bidSubmissionEndDate,
-        bidValidity,
-        prebidMeetingAddressPortal,
-        technicalBidOpeningDate,
-        periodOfWork,
-        location,
-        pincode,
-        bidOpeningPlace,
-        productCategory,
-        natureOfWork
-    } = req.body; 
-
     try {
-        const newTender = new Tender({
-            tenderID,
+        const {
             tenderName,
             title,
             issueDate,
@@ -70,56 +21,130 @@ const createTender = async (req, res) => {
             pincode,
             bidOpeningPlace,
             productCategory,
-            natureOfWork
+            natureOfWork,
+            proposalsInvitedBy,
+            dateOfOpeningFinancialProposals,
+            modeOfSubmittingProposals,
+            tenderWebsite,
+            costOfRPFDocument,
+            earnestMoneyDeposit,
+            modeOfPayment,
+            amount,
+            bankName,
+            performanceSecurity,
+            methodOfSelection,
+            objectionCharges,
+            authorizedManager,
+            authorizedPerson,
+        } = req.body;
+
+        const documents = req.files ? Object.keys(req.files).map((key) => {
+            return {
+                fileName: req.files[key][0].originalname,
+                fileType: req.files[key][0].mimetype,
+                filePath: req.files[key][0].path,
+                uploadDate: new Date(),
+            };
+        }) : [];
+
+        const newTender = new Tender({
+            tenderName,
+            title,
+            issueDate,
+            tenderFloatingDate,
+            description,
+            bidderName,
+            documentDownloadStartDate,
+            documentDownloadEndDate,
+            bidSubmissionStartDate,
+            bidSubmissionEndDate,
+            bidValidity,
+            prebidMeetingAddressPortal,
+            technicalBidOpeningDate,
+            periodOfWork,
+            location,
+            pincode,
+            bidOpeningPlace,
+            productCategory,
+            natureOfWork,
+            proposalsInvitedBy,
+            dateOfOpeningFinancialProposals,
+            modeOfSubmittingProposals,
+            tenderWebsite,
+            costOfRPFDocument,
+            earnestMoneyDeposit,
+            modeOfPayment,
+            amount,
+            bankName,
+            performanceSecurity,
+            methodOfSelection,
+            objectionCharges,
+            authorizedManager,
+            authorizedPerson,
+            documents,
         });
 
-        await newTender.save(); 
-        return res.status(201).json(newTender); 
+        const savedTender = await newTender.save();
+
+        return res.status(201).json({
+            success: true,
+            message: "Tender created successfully.",
+            data:savedTender
+          
+        });
     } catch (error) {
-        console.error('Error creating tender:', error); 
-        return res.status(500).json({ message: error.message }); 
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while creating the tender.",
+            error: error.message,
+        });
     }
 };
 
-// Upload document
-const uploadDocument = async (req, res) => {
-    const document = req.file;
-
-    if (!document) {
-        return res.status(400).json({ message: 'Please upload a document' });
-    }
-
+// Get all tenders
+const getTenders = async (req, res) => {
     try {
-        // Find the tender by tenderID 
-        const tender = await Tender.findOne({ tenderID: req.params.id }); 
-        if (!tender) {
-            return res.status(404).json({ message: 'Tender not found' }); 
-        }
-
-        // Create document details
-        const newDocument = {
-            fileName: document.originalname,
-            fileType: document.mimetype,
-            filePath: document.path,
-            uploadDate: new Date()
-        };
-
-        tender.documents.push(newDocument);
-        await tender.save(); 
-
+        const tenders = await Tender.find(); 
         return res.status(200).json({
-            message: 'Document uploaded successfully',
-            document: newDocument 
+            success: true,
+            data: tenders,
         });
     } catch (error) {
-        return res.status(500).json({ message: error.message }); 
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching tenders.",
+            error: error.message,
+        });
     }
 };
 
-module.exports = {
-    createTender,
-    getTenders,
-    getTenderById,
-    uploadDocument,
+// Get a tender by ID
+const getTenderById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const tender = await Tender.findById(id); 
+        if (!tender) {
+            return res.status(404).json({
+                success: false,
+                message: "Tender not found.",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: tender,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching the tender.",
+            error: error.message,
+        });
+    }
 };
 
+//modules expoerted 
+
+module.exports = { createTender, getTenders, getTenderById };
