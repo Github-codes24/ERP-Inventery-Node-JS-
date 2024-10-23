@@ -1,12 +1,11 @@
 const express = require('express');
 const multer = require('multer');
-const { createTender, getTenders, getTenderById } = require('../controllers/tenderController'); // Check this import
+const { createTender, getTenders, getTenderById } = require('../controllers/tenderController'); 
 
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); // Specify your upload directory
+const upload = multer({ dest: 'uploads/' }); 
 
-// Route to create a tender with file uploads
 router.post('/', upload.fields([
     { name: 'tenderCopy', maxCount: 1 },
     { name: 'technicalDocuments', maxCount: 1 },
@@ -20,9 +19,9 @@ router.post('/', upload.fields([
 ]), createTender);
 
 // Route to get all tenders
-router.get('/', getTenders); // Check if this function is defined
+router.get('/', getTenders); 
 
 // Route to get a tender by ID
-router.get('/:id', getTenderById); // Check if this function is defined
+router.get('/:id', getTenderById); 
 
 module.exports = router;

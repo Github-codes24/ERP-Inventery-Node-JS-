@@ -1,9 +1,7 @@
-// controllers/tenderController.js
 const Tender = require('../models/tenderModel');
 
 const createTender = async (req, res) => {
     try {
-        // Extract data from the request body
         const {
             tenderName,
             title,
@@ -40,7 +38,6 @@ const createTender = async (req, res) => {
             authorizedPerson,
         } = req.body;
 
-        // Process the uploaded files
         const documents = req.files ? Object.keys(req.files).map((key) => {
             return {
                 fileName: req.files[key][0].originalname,
@@ -50,7 +47,6 @@ const createTender = async (req, res) => {
             };
         }) : [];
 
-        // Create a new tender document
         const newTender = new Tender({
             tenderName,
             title,
@@ -88,15 +84,13 @@ const createTender = async (req, res) => {
             documents,
         });
 
-        // Save the tender to the database
         const savedTender = await newTender.save();
 
-        // Send the success response
         return res.status(201).json({
             success: true,
             message: "Tender created successfully.",
             data: {
-                tenderID: savedTender._id, // Using the auto-generated ID from MongoDB
+                tenderID: savedTender._id, 
                 tenderName: savedTender.tenderName,
                 title: savedTender.title,
                 issueDate: savedTender.issueDate,
@@ -146,7 +140,7 @@ const createTender = async (req, res) => {
 // Get all tenders
 const getTenders = async (req, res) => {
     try {
-        const tenders = await Tender.find(); // Fetch all tenders from the database
+        const tenders = await Tender.find(); 
         return res.status(200).json({
             success: true,
             data: tenders,
@@ -165,7 +159,7 @@ const getTenders = async (req, res) => {
 const getTenderById = async (req, res) => {
     try {
         const { id } = req.params;
-        const tender = await Tender.findById(id); // Fetch the tender by ID
+        const tender = await Tender.findById(id); 
         if (!tender) {
             return res.status(404).json({
                 success: false,

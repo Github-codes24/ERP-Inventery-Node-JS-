@@ -1,4 +1,3 @@
-// models/tenderModel.js
 const mongoose = require('mongoose');
 
 const tenderSchema = new mongoose.Schema({
