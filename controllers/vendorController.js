@@ -83,6 +83,21 @@ const findVendor = async (req, res) => {
   }
 };
 
+const getVendorById = async (req, res) => {
+  try {
+    const { id } = req.params; // Get _id from request params
+    const vendor = await Vendor.findById(id);
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+    return res.status(200).json({ status: true, vendor });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error finding vendor", error: error.message });
+  }
+};
+
 const updateVendor = async (req, res) => {
   try {
     const { id } = req.params; // Get _id from request params
@@ -113,4 +128,5 @@ module.exports = {
   getAllVendors,
   findVendor,
   updateVendor,
+  getVendorById,
 };
