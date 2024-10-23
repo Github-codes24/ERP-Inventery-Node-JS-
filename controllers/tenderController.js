@@ -89,43 +89,8 @@ const createTender = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: "Tender created successfully.",
-            data: {
-                tenderID: savedTender._id, 
-                tenderName: savedTender.tenderName,
-                title: savedTender.title,
-                issueDate: savedTender.issueDate,
-                tenderFloatingDate: savedTender.tenderFloatingDate,
-                description: savedTender.description,
-                bidderName: savedTender.bidderName,
-                documentDownloadStartDate: savedTender.documentDownloadStartDate,
-                documentDownloadEndDate: savedTender.documentDownloadEndDate,
-                bidSubmissionStartDate: savedTender.bidSubmissionStartDate,
-                bidSubmissionEndDate: savedTender.bidSubmissionEndDate,
-                bidValidity: savedTender.bidValidity,
-                prebidMeetingAddressPortal: savedTender.prebidMeetingAddressPortal,
-                technicalBidOpeningDate: savedTender.technicalBidOpeningDate,
-                periodOfWork: savedTender.periodOfWork,
-                location: savedTender.location,
-                pincode: savedTender.pincode,
-                bidOpeningPlace: savedTender.bidOpeningPlace,
-                productCategory: savedTender.productCategory,
-                natureOfWork: savedTender.natureOfWork,
-                proposalsInvitedBy: savedTender.proposalsInvitedBy,
-                dateOfOpeningFinancialProposals: savedTender.dateOfOpeningFinancialProposals,
-                modeOfSubmittingProposals: savedTender.modeOfSubmittingProposals,
-                tenderWebsite: savedTender.tenderWebsite,
-                costOfRPFDocument: savedTender.costOfRPFDocument,
-                earnestMoneyDeposit: savedTender.earnestMoneyDeposit,
-                modeOfPayment: savedTender.modeOfPayment,
-                amount: savedTender.amount,
-                bankName: savedTender.bankName,
-                performanceSecurity: savedTender.performanceSecurity,
-                methodOfSelection: savedTender.methodOfSelection,
-                objectionCharges: savedTender.objectionCharges,
-                authorizedManager: savedTender.authorizedManager,
-                authorizedPerson: savedTender.authorizedPerson,
-                documents: savedTender.documents,
-            }
+            data:savedTender
+          
         });
     } catch (error) {
         console.error(error);
