@@ -5,9 +5,9 @@ const Product = require('../models/productModel');
 const getProducts = async (req, res) => {
   console.log("Received request to search for product:", req.query.productName);
   try {
-      const productName = req.query.productName;
+      const {productName} = req.query;
       // Find products matching the product name query
-      const products = await Product.find({ productName: { $regex: productName, $options: 'i' } });
+      const products = await Product.find(req.query);
       res.json(products); //returns empty array if product not found
   } catch (error) {
       console.error("Error fetching products:", error);
