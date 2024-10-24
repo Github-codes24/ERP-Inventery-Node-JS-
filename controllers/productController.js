@@ -1,14 +1,35 @@
 const Product = require('../models/productModel');
 
 // Get all products
-const getProducts = async (req, res) => {
+ const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find(); // Fetch all products from the database
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Error fetching products', error: error.message });
   }
 };
+
+
+// Get products by name
+const getProductsByName = async (req, res) => {
+  console.log("Received request to search for product:", req.query.productName);
+  try {
+      const productName = req.query.productName;
+      if (!productName) {
+          return res.status(400).json({ message: 'Product name is required' });
+      }
+
+      // Find products matching the product name query
+      const products = await Product.find({ productName: { $regex: productName, $options: 'i' } });
+      res.json(products); //returns empty array if product not found
+  } catch (error) {
+      console.error("Error fetching products:", error);
+      res.status(500).json({ message: 'Server Error', error: error.stack || error.message });
+  }
+};
+
+
 
 // Get product by ID
 const getProductById = async (req, res) => {
@@ -162,7 +183,8 @@ const updateProduct = async (req, res) => {
 };
 
 module.exports = {
-  getProducts,
+ getProducts,
+  getProductsByName,
   getProductById,
   createProduct,
   updateProduct,

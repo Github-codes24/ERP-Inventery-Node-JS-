@@ -3,6 +3,7 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const { 
     getProducts, 
+    getProductsByName,
     getProductById, 
     createProduct, 
     updateProduct 
@@ -41,7 +42,14 @@ router.put('/:id',uploadMiddleware.fields([
     updateProduct
 );
 
-router.get('/', getProducts);
+ router.get('/', getProducts);
+
+router.get('/search', getProductsByName);//Route to get serach prodyct by Name
+
+// Route to get a product by ID
 router.get('/:id', getProductById);
 
+// Other routes like create and update
+router.post('/', createProduct);
+router.put('/:id', updateProduct);
 module.exports = router;
