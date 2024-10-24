@@ -57,10 +57,12 @@ const upload = multer({
 const tenderRoutes = require('./routes/tenderRoutes');
 const vendorRouter = require('./routes/vendorRoutes');
 const productRoutes = require('./routes/productRoutes');
+const clientRouter= require("./routes/clientRoutes.js")
 
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
 app.use('/api/products', productRoutes);
+app.use("/client",clientRouter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
