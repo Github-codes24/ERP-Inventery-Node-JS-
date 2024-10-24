@@ -19,6 +19,8 @@ const registerClient = async (req, res) => {
             technicalSpecification
         } = req.body;
 
+        const {tertAuthFile, pptFile, coverLetterFile, productCertFile, isoCertFile, brochureFile } = req.files;
+
         // Create a new client object with destructured variables and file paths
         const client = new Client({
             dealerName,
@@ -33,12 +35,12 @@ const registerClient = async (req, res) => {
             sellingPrice,
             mouValidity,
             technicalSpecification,
-            tertAuthFile: req.files['tertAuthFile'] ? req.files['tertAuthFile'][0].path : '',
-            pptFile: req.files['pptFile'] ? req.files['pptFile'][0].path : '',
-            coverLetterFile: req.files['coverLetterFile'] ? req.files['coverLetterFile'][0].path : '',
-            productCertFile: req.files['productCertFile'] ? req.files['productCertFile'][0].path : '',
-            isoCertFile: req.files['isoCertFile'] ? req.files['isoCertFile'][0].path : '',
-            brochureFile: req.files['brochureFile'] ? req.files['brochureFile'][0].path : ''
+            tertAuthFile,
+            pptFile,
+            coverLetterFile,
+            productCertFile,
+            isoCertFile,
+            brochureFile
         });
 
         // Save the client to the database
