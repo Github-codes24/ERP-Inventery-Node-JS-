@@ -86,11 +86,12 @@ const createTender = async (req, res) => {
 
         const savedTender = await newTender.save();
 
+        console.log(savedTender);
+
         return res.status(201).json({
             success: true,
             message: "Tender created successfully.",
-            data:savedTender
-          
+            data: savedTender, 
         });
     } catch (error) {
         console.error(error);
@@ -145,6 +146,5 @@ const getTenderById = async (req, res) => {
     }
 };
 
-//modules expoerted 
-
+// Exporting the module
 module.exports = { createTender, getTenders, getTenderById };
