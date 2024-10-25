@@ -15,10 +15,10 @@ const {
     updateProduct,
     getTopSellingProducts,
     getEmergencyRequiredProducts,
-    // getProductDetails
+    getProductDetails,
 } = require('../controllers/productController');
 
-const { getProductDetails } = require('../controllers/productController');
+
 
 router.get('/', getProducts);
 router.get('/:id', getProductById);
@@ -29,11 +29,7 @@ router.post('/', upload.fields([
     { name: 'pptAvailable' },
     { name: 'coveringLetter' },
     { name: 'isoCertificate' }
-]), (req, res, next) => {
-    console.log('Received files:', req.files);
-    console.log('Received body:', req.body);
-    next();
-}, createProduct);
+]),createProduct);
 
 
 // Route for updating a product
@@ -45,5 +41,7 @@ router.get('/top-selling', getTopSellingProducts);
 // Route for fetching emergency-required products
 router.get('/emergency-required', getEmergencyRequiredProducts);
 
-// router.get('/product-details', getProductDetails);
+//route for product details
+router.get('/product-details', getProductDetails);
+
 module.exports = router;

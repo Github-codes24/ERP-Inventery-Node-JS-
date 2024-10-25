@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+
 dotenv.config();
 
 const app = express();
@@ -52,7 +53,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+    limits: { fileSize: 5 * 1024 * 1024 }, 
     fileFilter: fileFilter
 });
 
@@ -61,12 +62,15 @@ const tenderRoutes = require('./routes/tenderRoutes');
 const vendorRouter = require('./routes/vendorRoutes');
 const productRoutes = require('./routes/productRoutes');
 const clientRouter = require('./routes/clientRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
-// Use multer middleware only for the product routes that need file uploads
-app.use('/api/products', upload.fields([{ name: 'productImage' }, { name: 'productBrochure' }, { name: 'pptAvailable' }, { name: 'coveringLetter' }, { name: 'isoCertificate' }]), productRoutes);
+
+
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
 app.use('/client', clientRouter);
+app.use('/api/products',productRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
