@@ -32,6 +32,12 @@ const tenderSchema = new mongoose.Schema({
     performanceSecurity: { type: Number },
     methodOfSelection: { type: String },
     objectionCharges: { type: Number },
+    stockName: { type: String },
+    stockDescription: { type: String },
+    quantity: { type: Number },
+    unit: { type: Number },
+    Rate: { type: Number },
+    projectBidTotal: { type: Number },
     authorizedManager: { type: String, required: true },
     authorizedPerson: { type: String },
     documents: [
