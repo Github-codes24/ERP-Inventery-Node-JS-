@@ -9,7 +9,7 @@ const inventorySchema = new mongoose.Schema({
     },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'product', // This must match the model name in `productModel.js`
+        ref: 'productName', 
         required: true,
     },
     brandName: {

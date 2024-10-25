@@ -31,14 +31,22 @@ const createTender = async (req, res) => {
             modeOfPayment,
             amount,
             bankName,
+            stockName,
+            stockDescription,
+            quantity,
+            unit,
+            Rate,
+            projectBidTotal,
             performanceSecurity,
             methodOfSelection,
             objectionCharges,
             authorizedManager,
             authorizedPerson,
+            documents,
         } = req.body;
 
-        const documents = req.files ? Object.keys(req.files).map((key) => {
+        // Document handling
+        const docArray = req.files ? Object.keys(req.files).map((key) => {
             return {
                 fileName: req.files[key][0].originalname,
                 fileType: req.files[key][0].mimetype,
@@ -76,22 +84,26 @@ const createTender = async (req, res) => {
             modeOfPayment,
             amount,
             bankName,
+            stockName,
+            stockDescription,
+            quantity,
+            unit,
+            Rate,
+            projectBidTotal,
             performanceSecurity,
             methodOfSelection,
             objectionCharges,
             authorizedManager,
             authorizedPerson,
-            documents,
+            documents: docArray,
         });
 
         const savedTender = await newTender.save();
-
-        console.log(savedTender);
-
+        
         return res.status(201).json({
             success: true,
             message: "Tender created successfully.",
-            data: savedTender, 
+            data: savedTender,
         });
     } catch (error) {
         console.error(error);
@@ -102,6 +114,8 @@ const createTender = async (req, res) => {
         });
     }
 };
+
+
 
 // Get all tenders
 const getTenders = async (req, res) => {
