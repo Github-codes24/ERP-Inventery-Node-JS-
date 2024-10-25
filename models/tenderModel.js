@@ -1,36 +1,47 @@
 const mongoose = require('mongoose');
 
-const documentSchema = new mongoose.Schema({
-    fileName: { type: String, required: true },
-    fileType: { type: String, required: true },
-    uploadDate: { type: Date, default: Date.now },
-    filePath: { type: String, required: true }
-});
-
 const tenderSchema = new mongoose.Schema({
-    tenderID: { type: String },
     tenderName: { type: String, required: true },
     title: { type: String, required: true },
-    issueDate: { type: String, required: true },
-    tenderFloatingDate: { type: String, required: true },
-    description: { type: String, required: true },
+    issueDate: { type: Date, required: true },
+    tenderFloatingDate: { type: Date, required: true },
+    description: { type: String },
     bidderName: { type: String, required: true },
-    documentDownloadStartDate: { type: String, required: true },
-    documentDownloadEndDate: { type: String, required: true },
-    bidSubmissionStartDate: { type: String, required: true },
-    bidSubmissionEndDate: { type: String, required: true },
-    bidValidity: { type: String, required: true },
-    prebidMeetingAddressPortal: { type: String, required: true },
-    technicalBidOpeningDate: { type: String, required: true },
-    periodOfWork: { type: String, required: true },
-    location: { type: String, required: true },
-    pincode: { type: String, required: true },
-    bidOpeningPlace: { type: String, required: true },
-    productCategory: { type: String, required: true },
-    natureOfWork: { type: String, required: true },
-    documents: [documentSchema]  // Array to hold document details
+    documentDownloadStartDate: { type: Date, required: true },
+    documentDownloadEndDate: { type: Date },
+    bidSubmissionStartDate: { type: Date },
+    bidSubmissionEndDate: { type: Date },
+    bidValidity: { type: Number },
+    prebidMeetingAddressPortal: { type: String },
+    technicalBidOpeningDate: { type: Date },
+    periodOfWork: { type: String },
+    location: { type: String },
+    pincode: { type: String },
+    bidOpeningPlace: { type: String },
+    productCategory: { type: String },
+    natureOfWork: { type: String },
+    proposalsInvitedBy: { type: String, required: true },
+    dateOfOpeningFinancialProposals: { type: Date, required: true },
+    modeOfSubmittingProposals: { type: String },
+    tenderWebsite: { type: String, required: true },
+    costOfRPFDocument: { type: Number },
+    earnestMoneyDeposit: { type: Number },
+    modeOfPayment: { type: String },
+    amount: { type: Number },
+    bankName: { type: String },
+    performanceSecurity: { type: Number },
+    methodOfSelection: { type: String },
+    objectionCharges: { type: Number },
+    authorizedManager: { type: String, required: true },
+    authorizedPerson: { type: String },
+    documents: [
+        {
+            fileName: { type: String },
+            fileType: { type: String },
+            filePath: { type: String },
+            uploadDate: { type: Date, default: Date.now }
+        }
+    ]
 });
 
-const Tender = mongoose.model('Tender', tenderSchema);
-
-module.exports = Tender;
+module.exports = mongoose.model('Tender', tenderSchema);
