@@ -11,9 +11,10 @@ dotenv.config();
 const app = express();
 
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
-app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use(express.json());
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI, {
     console.error('MongoDB connection error:', err);
 });
 
+// Multer setup
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = 'uploads/';
@@ -50,19 +52,21 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, 
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
     fileFilter: fileFilter
 });
 
+// Routes
 const tenderRoutes = require('./routes/tenderRoutes');
 const vendorRouter = require('./routes/vendorRoutes');
 const productRoutes = require('./routes/productRoutes');
-const clientRouter= require("./routes/clientRoutes.js")
+const clientRouter = require('./routes/clientRoutes');
 
+// Use multer middleware only for the product routes that need file uploads
+app.use('/api/products', upload.fields([{ name: 'productImage' }, { name: 'productBrochure' }, { name: 'pptAvailable' }, { name: 'coveringLetter' }, { name: 'isoCertificate' }]), productRoutes);
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
-app.use('/api/products', productRoutes);
-app.use("/client",clientRouter);
+app.use('/client', clientRouter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

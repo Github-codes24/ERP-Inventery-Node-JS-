@@ -1,54 +1,49 @@
 const express = require('express');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
-const { 
-    getProducts, 
-    getProductById, 
-    createProduct, 
-    updateProduct 
-} = require('../controllers/productController');
-
 const router = express.Router();
+const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); 
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${uuidv4()}-${file.originalname}`); 
-    }
+const upload = multer({ 
+    dest: 'uploads/', 
+    limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
-const uploadMiddleware = multer({ storage });
 
-router.post('/',uploadMiddleware.fields([
-        { name: 'productImage', maxCount: 1 },
-        { name: 'productBrochure', maxCount: 1 },
-        { name: 'pptAvailable', maxCount: 1 },
-        { name: 'coveringLetter', maxCount: 1 },
-        { name: 'isoCertificate', maxCount: 1 }
-    ]), 
-    createProduct
-);
+const {
+    getProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    getTopSellingProducts,
+    getEmergencyRequiredProducts,
+    // getProductDetails
+} = require('../controllers/productController');
 
-router.put('/:id',uploadMiddleware.fields([
-        { name: 'productImage', maxCount: 1 },
-        { name: 'productBrochure', maxCount: 1 },
-        { name: 'pptAvailable', maxCount: 1 },
-        { name: 'coveringLetter', maxCount: 1 },
-        { name: 'isoCertificate', maxCount: 1 }
-    ]), 
-    updateProduct
-);
+const { getProductDetails } = require('../controllers/productController');
 
-//  router.get('/', getProducts);
-
-router.get('/search', getProducts);//Route to get serach prodyct by Name
-
-// Route to get a product by ID
+router.get('/', getProducts);
 router.get('/:id', getProductById);
 
-// Other routes like create and update
-router.post('/', createProduct);
+router.post('/', upload.fields([
+    { name: 'productImage' },
+    { name: 'productBrochure' },
+    { name: 'pptAvailable' },
+    { name: 'coveringLetter' },
+    { name: 'isoCertificate' }
+]), (req, res, next) => {
+    console.log('Received files:', req.files);
+    console.log('Received body:', req.body);
+    next();
+}, createProduct);
+
+
+// Route for updating a product
 router.put('/:id', updateProduct);
+
+// Route for fetching top-selling products
+router.get('/top-selling', getTopSellingProducts);
+
+// Route for fetching emergency-required products
+router.get('/emergency-required', getEmergencyRequiredProducts);
+
+// router.get('/product-details', getProductDetails);
 module.exports = router;
