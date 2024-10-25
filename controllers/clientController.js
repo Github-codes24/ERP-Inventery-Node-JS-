@@ -20,6 +20,27 @@ const registerClient = async (req, res) => {
         } = req.body;
 
         const {tertAuthFile, pptFile, coverLetterFile, productCertFile, isoCertFile, brochureFile } = req.files;
+        
+        let tertAuthFileName, pptFileName, coverLetterFileName, productCertFileName, isoCertFileName, brochureFileName ;
+
+        if (tertAuthFile) {
+            tertAuthFileName = tertAuthFile[0]?.originalname;
+        };
+        if (pptFile) {
+            pptFileName = pptFile[0]?.originalname;
+        }
+        if (coverLetterFile) {
+            coverLetterFileName = coverLetterFile[0]?.originalname;
+        }
+        if (productCertFile) {
+            productCertFileName = productCertFile[0]?.originalname;
+        }
+        if (isoCertFile) {
+            isoCertFileName = isoCertFile[0]?.originalname;
+        }
+        if (brochureFile) {
+            brochureFileName = brochureFile[0]?.originalname;
+        }
 
         // Create a new client object with destructured variables and file paths
         const client = new Client({
@@ -35,17 +56,17 @@ const registerClient = async (req, res) => {
             sellingPrice,
             mouValidity,
             technicalSpecification,
-            tertAuthFile,
-            pptFile,
-            coverLetterFile,
-            productCertFile,
-            isoCertFile,
-            brochureFile
+            tertAuthFile: tertAuthFileName,
+            pptFile: pptFileName,
+            coverLetterFile: coverLetterFileName,
+            productCertFile: productCertFileName,
+            isoCertFile: isoCertFileName,
+            brochureFile: brochureFileName
         });
 
         // Save the client to the database
         await client.save();
-        res.status(201).json(client);
+        return res.status(201).json(client);
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
