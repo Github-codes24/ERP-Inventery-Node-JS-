@@ -4,21 +4,21 @@ const mongoose = require('mongoose');
 const inventorySchema = new mongoose.Schema({
     productName: {
         type: String,
-        required: true,
         unique: true, 
+        require: true,
     },
+
     productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'productName', 
-        required: true,
+        ref: 'product', 
+        
     },
     brandName: {
         type: String,
-        required: true,
+        
     },
     price: {
         type: Number,
-        required: true,
         min: 0, 
     },
     ratings: {
@@ -29,21 +29,17 @@ const inventorySchema = new mongoose.Schema({
     },
     availableModelNos: {
         type: Number,
-        required: true,
         min: 0, 
     },
     skuCode: {
         type: String,
-        required: true,
         unique: true, 
     },
     description: {
         type: String,
-        required: true,
     },
     productImage: {
         type: String,
-        required: true,
     },
     technicalSpecification: {
         processor: String,
@@ -60,13 +56,14 @@ const inventorySchema = new mongoose.Schema({
     },
     quantityInStock: {
         type: Number,
-        required: true,
         min: 0, 
+
     },
+
     location: {
         type: String,
-        required: true,
     },
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Inventory', inventorySchema);
