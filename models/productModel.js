@@ -23,12 +23,17 @@ const productSchema = new mongoose.Schema({
     itemGroup: { type: String },
     stock: { type: Number},
     sales: { type: Number, default: 0 },
- itemGroup: { type: String },
+    itemGroup: { type: String },
     productImage: { type: String },
     productBrochure: { type: String },
     pptAvailable: { type: String },
     coveringLetter: { type: String },
     isoCertificate: { type: String },
+    gstRate: Number, 
+    gstAmount: Number, 
+    companyPrice: Number, 
+    applicableTaxes: Number, 
+    freight: Number, 
 }, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);

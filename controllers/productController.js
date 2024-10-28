@@ -30,7 +30,7 @@ const getProductById = async (req, res) => {
 
 // Create a new product
 const createProduct = async (req, res) => {
-    console.log("line 34");
+  console.log("line 34");
   try {
     const {
       srNo,
@@ -54,9 +54,30 @@ const createProduct = async (req, res) => {
       itemGroup,
       code,
       name,
+      gstRate,         
+      companyPrice,   
+      applicableTaxes, 
+      freight         
     } = req.body;
 
-    console.log(req.body,"line 59");
+    console.log(req.body, "line 59");
+
+    // Calculate GST Amount based on gstRate and price
+    const gstAmount = (price * (gstRate / 100)).toFixed(2);
+
+    // Calculate Subtotal
+    const subtotal = price * quantityUnit;
+
+    // Calculate Total Taxes (sum of GST and applicable other taxes)
+    const totalTaxes = parseFloat(gstAmount) + parseFloat(applicableTaxes);
+
+    // Calculate Net Amount: Subtotal + Freight + Total Taxes
+    const netAmount = (parseFloat(subtotal) + parseFloat(freight) + parseFloat(totalTaxes)).toFixed(2);
+
+    const existingProduct = await Product.findOne({ productName });
+    if (existingProduct) {
+      return res.status(400).json({ message: 'Product with the same name already exists' });
+    }
 
     const productImage = req.files?.productImage?.[0]?.path || null;
     const productBrochure = req.files?.productBrochure?.[0]?.path || null;
@@ -91,14 +112,27 @@ const createProduct = async (req, res) => {
       pptAvailable,
       coveringLetter,
       isoCertificate,
+      gstRate,         
+      gstAmount,       
+      companyPrice,    
+      applicableTaxes, 
+      freight,         
+      subtotal,        
+      totalTaxes,      
+      netAmount        
     });
 
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Duplicate key error: Product already exists', error: error.message });
+    }
+
     res.status(500).json({ message: 'Error creating product', error: error.message });
   }
 };
+
 
 // Update product by ID
 const updateProduct = async (req, res) => {
