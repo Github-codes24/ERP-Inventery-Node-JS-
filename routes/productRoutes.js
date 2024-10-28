@@ -49,6 +49,6 @@ router.get('/search', getProducts);//Route to get serach prodyct by Name
 router.get('/:id', getProductById);
 
 // Other routes like create and update
-router.post('/', createProduct);
-router.put('/:id', updateProduct);
+// router.post('/', createProduct);
+// router.put('/:id', updateProduct);
 module.exports = router;
