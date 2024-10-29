@@ -11,6 +11,7 @@ dotenv.config();
 
 const app = express();
 
+// app.use(multer().array());
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/uploads', express.static('uploads'));
 app.use(express.json());

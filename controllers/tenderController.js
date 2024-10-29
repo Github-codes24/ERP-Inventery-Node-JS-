@@ -2,6 +2,8 @@ const Tender = require('../models/tenderModel');
 
 const createTender = async (req, res) => {
     try {
+        console.log("Request Body:", req.body);
+
         const {
             tenderName,
             title,
@@ -31,29 +33,36 @@ const createTender = async (req, res) => {
             modeOfPayment,
             amount,
             bankName,
-            stockName,
-            stockDescription,
-            quantity,
-            unit,
-            Rate,
-            projectBidTotal,
             performanceSecurity,
             methodOfSelection,
             objectionCharges,
             authorizedManager,
-            authorizedPerson,
-            documents,
+            authorizedPerson
         } = req.body;
 
-        // Document handling
-        const docArray = req.files ? Object.keys(req.files).map((key) => {
-            return {
-                fileName: req.files[key][0].originalname,
-                fileType: req.files[key][0].mimetype,
-                filePath: req.files[key][0].path,
-                uploadDate: new Date(),
-            };
-        }) : [];
+        const processedStockItems = Array.isArray(req.body.stockItems)
+            ? req.body.stockItems.map(item => ({
+                  stockName: item.stockName,
+                  quantity: item.quantity,
+                  unit: item.unit,
+                  description: item.description,
+                  Rate: item.Rate,
+                  projectBidTotal: item.projectBidTotal
+              }))
+            : [];
+
+        // console.log("Extracted Stock Items:", processedStockItems);
+
+        const documents = req.files
+            ? Object.keys(req.files).map((key) => ({
+                  fileName: req.files[key][0].originalname,
+                  fileType: req.files[key][0].mimetype,
+                  filePath: req.files[key][0].path,
+                  uploadDate: new Date(),
+              }))
+            : [];
+
+        // console.log("Extracted Documents:", documents);
 
         const newTender = new Tender({
             tenderName,
@@ -84,22 +93,17 @@ const createTender = async (req, res) => {
             modeOfPayment,
             amount,
             bankName,
-            stockName,
-            stockDescription,
-            quantity,
-            unit,
-            Rate,
-            projectBidTotal,
             performanceSecurity,
             methodOfSelection,
             objectionCharges,
             authorizedManager,
             authorizedPerson,
-            documents: docArray,
+            stockItems: processedStockItems,  
+            documents   
         });
 
         const savedTender = await newTender.save();
-        
+
         return res.status(201).json({
             success: true,
             message: "Tender created successfully.",
@@ -160,5 +164,4 @@ const getTenderById = async (req, res) => {
     }
 };
 
-// Exporting the module
 module.exports = { createTender, getTenders, getTenderById };

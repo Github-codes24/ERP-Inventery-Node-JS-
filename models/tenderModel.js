@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const stockItemSchema = new mongoose.Schema({
+    stockName: String,
+    quantity: Number,
+    unit: String,
+    description: String,
+    Rate: Number,
+    projectBidTotal: Number,
+}, { _id: false });
+
+
 const tenderSchema = new mongoose.Schema({
     tenderName: { type: String, required: true },
     title: { type: String, required: true },
@@ -29,17 +39,18 @@ const tenderSchema = new mongoose.Schema({
     modeOfPayment: { type: String },
     amount: { type: Number },
     bankName: { type: String },
-    stockName: { type: String },
-    stockDescription: { type: String },
-    quantity: { type: Number },
-    unit: { type: String },
-    Rate: { type: Number },
-    projectBidTotal: { type: Number },
+    // stockName: { type: String },
+    // stockDescription: { type: String },
+    // quantity: { type: Number },
+    // unit: { type: String },
+    // Rate: { type: Number },
+    // projectBidTotal: { type: Number },
     performanceSecurity: { type: String },
     methodOfSelection: { type: String },
     objectionCharges: { type: Number },
     authorizedManager: { type: String },
     authorizedPerson: { type: String },
+    stockItems: [stockItemSchema],
     documents: [
         {
             fileName: { type: String },
@@ -49,6 +60,7 @@ const tenderSchema = new mongoose.Schema({
         },
     ],
 });
+
 
 const Tender = mongoose.model('Tender', tenderSchema);
 module.exports = Tender;
