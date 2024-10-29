@@ -11,7 +11,6 @@ dotenv.config();
 
 const app = express();
 
-// app.use(multer().array());
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/uploads', express.static('uploads'));
 app.use(express.json());
@@ -64,6 +63,7 @@ const vendorRouter = require('./routes/vendorRoutes');
 const productRoutes = require('./routes/productRoutes');
 const clientRouter = require('./routes/clientRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const proposalRoutes = require('./routes/proposalRoutes');
 
 
 
@@ -72,6 +72,7 @@ app.use('/vendor', vendorRouter);
 app.use('/client', clientRouter);
 app.use('/api/products',productRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use("/api/proposals", proposalRoutes); 
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
