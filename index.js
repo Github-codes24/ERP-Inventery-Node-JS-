@@ -60,21 +60,21 @@ const upload = multer({
 // Routes
 const tenderRoutes = require('./routes/tenderRoutes');
 const vendorRouter = require('./routes/vendorRoutes');
-const productRoutes = require('./routes/productRoutes');
+const productRoutes = require('./routes/productRoutes')
 const clientRouter = require('./routes/clientRoutes');
-const inventoryRoutes = require('./routes/inventoryRoutes');
 const proposalRoutes = require('./routes/proposalRoutes');
-
-
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
 app.use('/client', clientRouter);
 app.use('/api/products',productRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use("/api/proposals", proposalRoutes); 
+app.use('/api/inventory',inventoryRoutes);
+app.use("/api/proposals",proposalRoutes); 
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on PORT ${PORT}`);
 });
+
+

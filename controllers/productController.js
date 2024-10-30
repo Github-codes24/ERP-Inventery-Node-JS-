@@ -137,70 +137,58 @@ const createProduct = async (req, res) => {
 // Update product by ID
 const updateProduct = async (req, res) => {
   try {
-    const {
-      srNo,
-      productName,
-      model,
-      productType,
-      skuCode,
-      amcCmc,
-      companyName,
-      availableModelNos,
-      proposedCompany,
-      hsnSacCode,
-      warranty,
-      expiryDate,
-      amcValidityStartDate,
-      amcValidityEndDate,
-      productDescription,
-      price,
-      quantityUnit,
-      lastPurchase,
-      itemGroup,
-      code,
-      name,
-    } = req.body;
+    // Log the incoming request body
+    console.log("Request Body:", req.body);
+    
+    const productId = req.params.id; // Log the product ID
+    const product = await Product.findById(productId);
 
-    const product = await Product.findById(req.params.id);
-
-    if (product) {
-      product.srNo = srNo || product.srNo;
-      product.productName = productName || product.productName;
-      product.model = model || product.model;
-      product.productType = productType || product.productType;
-      product.skuCode = skuCode || product.skuCode;
-      product.amcCmc = amcCmc || product.amcCmc;
-      product.companyName = companyName || product.companyName;
-      product.availableModelNos = availableModelNos || product.availableModelNos;
-      product.proposedCompany = proposedCompany || product.proposedCompany;
-      product.hsnSacCode = hsnSacCode || product.hsnSacCode;
-      product.warranty = warranty || product.warranty;
-      product.expiryDate = expiryDate || product.expiryDate;
-      product.amcValidityStartDate = amcValidityStartDate || product.amcValidityStartDate;
-      product.amcValidityEndDate = amcValidityEndDate || product.amcValidityEndDate;
-      product.productDescription = productDescription || product.productDescription;
-      product.price = price || product.price;
-      product.quantityUnit = quantityUnit || product.quantityUnit;
-      product.lastPurchase = lastPurchase || product.lastPurchase;
-      product.itemGroup = itemGroup || product.itemGroup;
-      product.code = code || product.code;
-      product.name = name || product.name;
-
-      product.productImage = req.files?.productImage?.[0]?.path || product.productImage;
-      product.productBrochure = req.files?.productBrochure?.[0]?.path || product.productBrochure;
-      product.pptAvailable = req.files?.pptAvailable?.[0]?.path || product.pptAvailable;
-      product.coveringLetter = req.files?.coveringLetter?.[0]?.path || product.coveringLetter;
-      product.isoCertificate = req.files?.isoCertificate?.[0]?.path || product.isoCertificate;
-
-      const updatedProduct = await product.save();
-      res.json(updatedProduct);
-    } else {
-      res.status(404).json({ message: 'Product not found' });
+    // Check if the product exists
+    if (!product) {
+      console.log("Product not found:", productId); // Log if product not found
+      return res.status(404).json({ message: 'Product not found' });
     }
+
+    // Update fields
+    product.srNo = req.body.srNo || product.srNo;
+    product.productName = req.body.productName || product.productName;
+    product.model = req.body.model || product.model;
+    product.productType = req.body.productType || product.productType;
+    product.skuCode = req.body.skuCode || product.skuCode;
+    product.amcCmc = req.body.amcCmc || product.amcCmc;
+    product.companyName = req.body.companyName || product.companyName;
+    product.availableModelNos = req.body.availableModelNos || product.availableModelNos;
+    product.proposedCompany = req.body.proposedCompany || product.proposedCompany;
+    product.hsnSacCode = req.body.hsnSacCode || product.hsnSacCode;
+    product.warranty = req.body.warranty || product.warranty;
+    product.expiryDate = req.body.expiryDate || product.expiryDate;
+    product.amcValidityStartDate = req.body.amcValidityStartDate || product.amcValidityStartDate;
+    product.amcValidityEndDate = req.body.amcValidityEndDate || product.amcValidityEndDate;
+    product.productDescription = req.body.productDescription || product.productDescription;
+    product.price = req.body.price || product.price;
+    product.quantityUnit = req.body.quantityUnit || product.quantityUnit;
+    product.lastPurchase = req.body.lastPurchase || product.lastPurchase;
+    product.itemGroup = req.body.itemGroup || product.itemGroup;
+    product.code = req.body.code || product.code;
+    product.name = req.body.name || product.name;
+
+    // Handle file uploads
+    product.productImage = req.files?.productImage?.[0]?.path || product.productImage;
+    product.productBrochure = req.files?.productBrochure?.[0]?.path || product.productBrochure;
+    product.pptAvailable = req.files?.pptAvailable?.[0]?.path || product.pptAvailable;
+    product.coveringLetter = req.files?.coveringLetter?.[0]?.path || product.coveringLetter;
+    product.isoCertificate = req.files?.isoCertificate?.[0]?.path || product.isoCertificate;
+
+    // Save updated product
+    const updatedProduct = await product.save();
+    console.log("Updated Product:", updatedProduct); // Log the updated product
+    res.json(updatedProduct);
   } catch (error) {
+    console.error("Error updating product:", error); // Log any errors
     res.status(500).json({ message: 'Error updating product', error: error.message });
   }
 };
+
 
 // Get top-selling products
 const getTopSellingProducts = async (req, res) => {
