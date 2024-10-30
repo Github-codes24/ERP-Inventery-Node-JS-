@@ -109,7 +109,7 @@ const updateOrderById = async (req, res) => {
     return res.status(500).json({ message: 'Error updating order', error });
   }
 };
-const findOrdersByParams = async (req, res) => {
+const findOrdersByQueryParams = async (req, res) => {
   try {
     const filters = req.query; 
     const orders = await PurchaseOrder.find(filters);
@@ -129,6 +129,6 @@ module.exports = {
   getAllOrders,
   getOrderById,
   updateOrderById,
-  findOrdersByParams
+  findOrdersByQueryParams
 };
 
