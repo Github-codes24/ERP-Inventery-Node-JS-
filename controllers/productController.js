@@ -134,22 +134,18 @@ const createProduct = async (req, res) => {
 };
 
 
-// Update product by ID
 const updateProduct = async (req, res) => {
   try {
-    // Log the incoming request body
     console.log("Request Body:", req.body);
     
     const productId = req.params.id; // Log the product ID
     const product = await Product.findById(productId);
 
-    // Check if the product exists
     if (!product) {
-      console.log("Product not found:", productId); // Log if product not found
+      console.log("Product not found:", productId); 
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Update fields
     product.srNo = req.body.srNo || product.srNo;
     product.productName = req.body.productName || product.productName;
     product.model = req.body.model || product.model;
@@ -172,19 +168,17 @@ const updateProduct = async (req, res) => {
     product.code = req.body.code || product.code;
     product.name = req.body.name || product.name;
 
-    // Handle file uploads
     product.productImage = req.files?.productImage?.[0]?.path || product.productImage;
     product.productBrochure = req.files?.productBrochure?.[0]?.path || product.productBrochure;
     product.pptAvailable = req.files?.pptAvailable?.[0]?.path || product.pptAvailable;
     product.coveringLetter = req.files?.coveringLetter?.[0]?.path || product.coveringLetter;
     product.isoCertificate = req.files?.isoCertificate?.[0]?.path || product.isoCertificate;
 
-    // Save updated product
     const updatedProduct = await product.save();
-    console.log("Updated Product:", updatedProduct); // Log the updated product
+    console.log("Updated Product:", updatedProduct); 
     res.json(updatedProduct);
   } catch (error) {
-    console.error("Error updating product:", error); // Log any errors
+    console.error("Error updating product:", error); 
     res.status(500).json({ message: 'Error updating product', error: error.message });
   }
 };
