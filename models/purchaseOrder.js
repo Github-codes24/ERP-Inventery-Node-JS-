@@ -26,7 +26,10 @@ orderDetails: [
       taxableTotalValue: { type: Number, required: true },
       sgstRate: { type: Number, required: true },
       sgstAmount: { type: Number, required: true },
-      total: { type: Number, required: true }
+      total: { type: Number, required: true },
+      itemCode: {type: String, required: true },
+      description: {  type: String,  required: true },
+      packaging: { type: String,default: 'Standard'}
     }
   ],
 subTotal: { type: Number, required: true },

@@ -24,6 +24,9 @@ const createPurchaseOrder = async (req, res) => {
       deliveryTerms,
       returnPolicy,
       name,
+      itemCode,
+      description,
+      packaging,
       designation,
       email
     } = req.body;
@@ -49,6 +52,9 @@ const createPurchaseOrder = async (req, res) => {
       deliveryTerms,
       returnPolicy,
       name,
+      itemCode,
+      description,
+      packaging,
       designation,
       email,
       contact
@@ -129,6 +135,6 @@ module.exports = {
   getAllOrders,
   getOrderById,
   updateOrderById,
-  findOrdersByQueryParams
+  findOrdersByQueryParams,
 };
 
