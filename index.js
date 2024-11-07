@@ -9,7 +9,7 @@ const fs = require('fs');
 
 dotenv.config();
 
-const app = express();
+const app = express(); 
 
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/uploads', express.static('uploads'));
