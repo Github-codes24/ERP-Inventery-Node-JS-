@@ -64,6 +64,8 @@ const productRoutes = require('./routes/productRoutes')
 const clientRouter = require('./routes/clientRoutes');
 const proposalRoutes = require('./routes/proposalRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
+const quotationRoutes = require('./routes/qoutationRoutes');
 
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
@@ -71,6 +73,10 @@ app.use('/client', clientRouter);
 app.use('/api/products',productRoutes);
 app.use('/api/inventory',inventoryRoutes);
 app.use("/api/proposals",proposalRoutes); 
+app.use('/api/purchase-orders', purchaseOrderRoutes); 
+app.use('/api/quotations', quotationRoutes); 
+
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
