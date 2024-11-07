@@ -44,6 +44,13 @@ returnPolicy: { type: String },
 designation: { type: String, required: true },
 email: { type: String, required: true },
  contact: { type: String, required: true },
+ supplier: { type: String, required: true },  
+  destination: { type: String, required: true },  
+  quantity: { type: Number, required: true },    
+  received: { type: Number, required: true },   
+  total: { type: Number, required: true },     
+  orderedDate: { type: Date, required: true },  
+  action: { type: String, required: true }  
 
 });
 
