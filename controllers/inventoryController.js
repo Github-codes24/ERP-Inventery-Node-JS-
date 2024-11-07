@@ -5,10 +5,10 @@ const getAllProducts = async (req, res) => {
     console.log("getAllProducts:", getAllProducts);
     try {
         const products = await Product.find(); 
-        res.json(products); 
+       return  res.json(products); 
     } catch (error) {
         console.error("Error fetching all products:", error);
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        return res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -17,10 +17,10 @@ const getAvailableBrandNames = async (req, res) => {
     console.log("getAvailableBrandNames:", getAvailableBrandNames);
     try {
         const brands = await Product.distinct('companyName'); 
-        res.json(brands); 
+       return res.json(brands); 
     } catch (error) {
         console.error("Error fetching brand names:", error);
-        res.status(500).json({ message: 'Server Error', error: error.message });
+       return res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
