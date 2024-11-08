@@ -40,11 +40,11 @@ const create = async (req, res) => {
     // Save the vendor to the database
     await newVendor.save();
 
-    res
+     return res
       .status(201)
       .json({ message: "Vendor created successfully", vendor: newVendor });
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Error creating vendor", error: error.message });
   }
@@ -53,9 +53,9 @@ const create = async (req, res) => {
 const getAllVendors = async (req, res) => {
   try {
     const vendors = await Vendor.find();
-    res.status(200).json(vendors);
+   return res.status(200).json(vendors);
   } catch (error) {
-    res
+   return res
       .status(500)
       .json({ message: "Error retrieving vendors", error: error.message });
   }
@@ -75,9 +75,9 @@ const findVendor = async (req, res) => {
         .json({ message: "No vendor found with the provided criteria" });
     }
 
-    res.status(200).json(vendors);
+     return res.status(200).json(vendors);
   } catch (error) {
-    res
+     return res
       .status(500)
       .json({ message: "Error finding vendor", error: error.message });
   }
@@ -92,7 +92,7 @@ const getVendorById = async (req, res) => {
     }
     return res.status(200).json({ status: true, vendor });
   } catch (error) {
-    res
+     return res
       .status(500)
       .json({ message: "Error finding vendor", error: error.message });
   }
@@ -113,11 +113,11 @@ const updateVendor = async (req, res) => {
       return res.status(404).json({ message: "Vendor not found" });
     }
 
-    res
+   return  res
       .status(200)
       .json({ message: "Vendor updated successfully", vendor: updatedVendor });
   } catch (error) {
-    res
+      return res
       .status(500)
       .json({ message: "Error updating vendor", error: error.message });
   }

@@ -1,54 +1,46 @@
 const express = require('express');
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
-const { 
-    getProducts, 
-    getProductById, 
-    createProduct, 
-    updateProduct 
-} = require('../controllers/productController');
-
 const router = express.Router();
+const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); 
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${uuidv4()}-${file.originalname}`); 
-    }
+// Configure multer for file uploads
+const upload = multer({ 
+    dest: 'uploads/', 
+    limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
-const uploadMiddleware = multer({ storage });
+const {
+    getProducts,
+    getProductById,
+    createProduct,
+    updateProduct,
+    getTopSellingProducts,
+    getEmergencyRequiredProducts,
+    getProductDetails,
+} = require('../controllers/productController');
 
-router.post('/',uploadMiddleware.fields([
-        { name: 'productImage', maxCount: 1 },
-        { name: 'productBrochure', maxCount: 1 },
-        { name: 'pptAvailable', maxCount: 1 },
-        { name: 'coveringLetter', maxCount: 1 },
-        { name: 'isoCertificate', maxCount: 1 }
-    ]), 
-    createProduct
-);
+// Route for fetching top-selling products - more specific route comes first
+router.get('/top-selling', getTopSellingProducts);
 
-router.put('/:id',uploadMiddleware.fields([
-        { name: 'productImage', maxCount: 1 },
-        { name: 'productBrochure', maxCount: 1 },
-        { name: 'pptAvailable', maxCount: 1 },
-        { name: 'coveringLetter', maxCount: 1 },
-        { name: 'isoCertificate', maxCount: 1 }
-    ]), 
-    updateProduct
-);
+// Route for fetching emergency-required products
+router.get('/emergency-required', getEmergencyRequiredProducts);
 
-//  router.get('/', getProducts);
+// Route for fetching product details
+router.get('/product-details', getProductDetails);
 
-router.get('/search', getProducts);//Route to get serach prodyct by Name
+// General routes for products
+router.get('/', getProducts); // Get all products
+router.get('/:id', getProductById); // Get product by ID
 
-// Route to get a product by ID
-router.get('/:id', getProductById);
+// Route for creating a new product with file uploads
+router.post('/', upload.fields([
+    { name: 'productImage' },
+    { name: 'productBrochure' },
+    { name: 'pptAvailable' },
+    { name: 'coveringLetter' },
+    { name: 'isoCertificate' }
+]), createProduct);
 
-// Other routes like create and update
-// router.post('/', createProduct);
-// router.put('/:id', updateProduct);
-module.exports = router;
+// Route for updating a product by ID
+router.put('/:id', updateProduct);
+
+module.exports = router

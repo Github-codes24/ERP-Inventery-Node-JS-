@@ -24,6 +24,9 @@ const createPurchaseOrder = async (req, res) => {
       deliveryTerms,
       returnPolicy,
       name,
+      itemCode,
+      description,
+      packaging,
       designation,
       email
     } = req.body;
@@ -49,6 +52,9 @@ const createPurchaseOrder = async (req, res) => {
       deliveryTerms,
       returnPolicy,
       name,
+      itemCode,
+      description,
+      packaging,
       designation,
       email,
       contact
@@ -78,6 +84,43 @@ const getAllOrders = async (req, res) => {
     return res.status(500).json({ message: 'Error fetching orders', error });
   }
 };
+
+const getAllPurchaseOrders = async (req, res) => {
+  try {
+    const purchaseOrders = await PurchaseOrder.find().select(
+      'poOrderNo clientName address orderDetails poDate'
+    );
+
+    const formattedOrders = purchaseOrders.map(({ _id, poOrderNo, clientName, address, orderDetails, poDate }) => {
+      const totalQuantity = orderDetails.reduce((sum, { quantity }) => sum + quantity, 0);
+      const totalAmount = orderDetails.reduce((sum, { total }) => sum + total, 0);
+
+      return {
+        _id,
+        poOrderNo,
+        supplier: clientName, 
+        destination: address, 
+        quantity: totalQuantity,
+        received: 0, 
+        total: totalAmount,
+        orderedDate: poDate,
+        action: 'Pending' 
+      };
+    });
+
+    return res.status(200).json({
+      message: 'Purchase Orders fetched successfully!',
+      purchaseOrders: formattedOrders
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Error fetching purchase orders',
+      error: error.message
+    });
+  }
+};
+
+
 const getOrderById = async (req, res) => {
   try {
     const order = await PurchaseOrder.findById(req.params.id);
@@ -86,7 +129,7 @@ const getOrderById = async (req, res) => {
       return res.status(404).json({ message: 'Purchase order not found' });
     }
 
-    return res.status(200).json(order); // Send the order data in response
+    return res.status(200).json(order); 
   } catch (error) {
     return res.status(500).json({ message: 'Error fetching order', error });
   }
@@ -127,8 +170,9 @@ const findOrdersByQueryParams = async (req, res) => {
 module.exports = {
   createPurchaseOrder,
   getAllOrders,
+  getAllPurchaseOrders,
   getOrderById,
   updateOrderById,
-  findOrdersByQueryParams
+  findOrdersByQueryParams,
 };
 
