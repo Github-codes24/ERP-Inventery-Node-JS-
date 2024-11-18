@@ -5,15 +5,18 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const userRoutes = require('./routes/user.route');
+
 
 dotenv.config();
 
 const app = express(); 
 
 app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
-app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use(express.json());
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -23,7 +26,8 @@ mongoose.connect(process.env.MONGO_URI, {
     console.error('MongoDB connection error:', err);
 });
 
-const storage = multer.diskStorage({ 
+// Multer setup
+const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = 'uploads/';
         if (!fs.existsSync(uploadPath)) {
@@ -54,22 +58,29 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
+// Routes
 const tenderRoutes = require('./routes/tenderRoutes');
 const vendorRouter = require('./routes/vendorRoutes');
-const productRoutes = require('./routes/productRoutes');
-const clientRouter= require("./routes/clientRoutes.js")
-const purchaseRouter=require("./routes/purchaseOrderRoutes.js")
-const quotationRouter=require("./routes/qoutationRoutes.js")
+const productRoutes = require('./routes/productRoutes')
+const clientRouter = require('./routes/clientRoutes');
+const proposalRoutes = require('./routes/proposalRoutes');
+const inventoryRoutes = require('./routes/inventoryRoutes');
+const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
+const quotationRoutes = require('./routes/qoutationRoutes');
 
 app.use('/tenders', tenderRoutes);
 app.use('/vendor', vendorRouter);
-app.use('/api/products', productRoutes);
-app.use("/client",clientRouter); 
-app.use("/purchaseOrder",purchaseRouter)
-app.use("/quotation",quotationRouter);
+app.use('/client', clientRouter);
+app.use('/api/products',productRoutes);
+app.use('/api/inventory',inventoryRoutes);
+app.use("/api/proposals",proposalRoutes); 
+app.use('/api/purchase-orders', purchaseOrderRoutes); 
+app.use('/api/quotations', quotationRoutes); 
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on PORT ${PORT}`);
 });
- 
+
+

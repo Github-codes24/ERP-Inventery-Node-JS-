@@ -24,6 +24,7 @@ const purchaseOrderSchema = new mongoose.Schema({
       sgstRate: { type: Number, required: true },
       sgstAmount: { type: Number, required: true },
       total: { type: Number, required: true },
+<<<<<<< HEAD
     },
   ],
   subTotal: { type: Number, required: true },
@@ -38,6 +39,33 @@ const purchaseOrderSchema = new mongoose.Schema({
   designation: { type: String, required: true },
   email: { type: String, required: true },
   contact: { type: String, required: true },
+=======
+      itemCode: {type: String, required: true },
+      description: {  type: String,  required: true },
+      packaging: { type: String,default: 'Standard'}
+    }
+  ],
+subTotal: { type: Number, required: true },
+shippingHandling: { type: Number },
+taxes: { type: Number },
+netAmount: { type: Number, required: true },
+expiryTerms: { type: String },
+paymentTerms: { type: String },
+deliveryTerms: { type: String },
+returnPolicy: { type: String },
+ name: { type: String, required: true },
+designation: { type: String, required: true },
+email: { type: String, required: true },
+ contact: { type: String, required: true },
+ supplier: { type: String, required: true },  
+  destination: { type: String, required: true },  
+  quantity: { type: Number, required: true },    
+  received: { type: Number, required: true },   
+  total: { type: Number, required: true },     
+  orderedDate: { type: Date, required: true },  
+  action: { type: String, required: true }  
+
+>>>>>>> edaf7fa3b7bd1ddd8851aa3f4b8fc5fd8fbba0c8
 });
 
 const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema);
