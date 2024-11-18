@@ -5,6 +5,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const userRoutes = require('./routes/user.route');
 
 
 dotenv.config();
@@ -75,6 +76,7 @@ app.use('/api/inventory',inventoryRoutes);
 app.use("/api/proposals",proposalRoutes); 
 app.use('/api/purchase-orders', purchaseOrderRoutes); 
 app.use('/api/quotations', quotationRoutes); 
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
