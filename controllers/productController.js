@@ -211,7 +211,7 @@ const updateProduct = async (req, res) => {
 
 
 // Get top-selling products
-const getTopSellingProducts = async (req, res) => {
+const getTopSellingProducts = async (_req, res) => {
     try {
         const products = await Product.find().sort({ sales: -1 }).limit(5);
         return res.json(products);
@@ -222,7 +222,7 @@ const getTopSellingProducts = async (req, res) => {
 };
 
 // Get emergency-required products (items with low stock)
-const getEmergencyRequiredProducts = async (req, res) => {
+const getEmergencyRequiredProducts = async (_req, res) => {
     try {
         const products = await Product.find({ stock: { $lte: 3 } }).sort({ stock: 1 });
        return  res.json(products);
@@ -233,7 +233,7 @@ const getEmergencyRequiredProducts = async (req, res) => {
 }
 
 // Get Product Details for Dashboard
-const getProductDetails = async (req, res) => {
+const getProductDetails = async (_req, res) => {
     try {
         // Get out of stock items count (assuming stock = 0 means out of stock)
         const outOfStockCount = await Product.countDocuments({ stock: 0 });
@@ -255,6 +255,41 @@ const getProductDetails = async (req, res) => {
     }
 };
 
+const getProductList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort = 'productName' } = req.query;
+
+    const products = await Product.find()
+      .select("_id productName lastPurchase quantityUnit price hsnSacCode") // Added more useful fields
+      .sort({ [sort]: 1 })
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit));
+
+    const total = await Product.countDocuments();
+
+    res.status(200).json({
+      products,
+      totalPages: Math.ceil(total / limit),
+      currentPage: Number(page),
+      totalProducts: total
+    });
+
+  } catch (error) {
+    console.error("Error fetching product list:", error);
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid query parameters'
+      });
+    }
+
+    res.status(500).json({ 
+      message: 'Error fetching product list', 
+      error: error.message 
+    });
+  }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -263,4 +298,5 @@ module.exports = {
     getTopSellingProducts,
     getEmergencyRequiredProducts,
     getProductDetails,
+    getProductList
 };

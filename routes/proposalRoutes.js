@@ -15,18 +15,18 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Routes
-router.post('/', upload.fields([
+router.post('/createProposal', upload.fields([
     { name: 'coveringLetter', maxCount: 1 },
     { name: 'specification', maxCount: 1 },
     { name: 'quotation', maxCount: 1 }
   ]), proposalController.createProposal);
 
 
-router.get("/", proposalController.getAllProposals);
+router.get("/getAllProposals", proposalController.getAllProposals);
 router.get("/name/:name", proposalController.getProposalByName);
 
 router.put(
-  "/:id",
+  "/updateProposal/:id",
   upload.fields([
     { name: "coveringLetter" },
     { name: "specification" },
@@ -35,7 +35,7 @@ router.put(
   proposalController.updateProposal
 );
 
-router.delete("/:id", proposalController.deleteProposal);
+router.delete("/deleteProposal/:id", proposalController.deleteProposal);
 
 module.exports = router;
 

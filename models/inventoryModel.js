@@ -7,12 +7,15 @@ const inventorySchema = new mongoose.Schema({
         unique: true, 
         require: true,
     },
-
+    Addedon: { type: Date },
+    Action: { type: String },
+    itemgroup: { type: String },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'product', 
         
     },
+
     brandName: {
         type: String,
         

@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const productSchema = new mongoose.Schema({
     srNo: { type: String, required: true },
+    Addedon: {type:String},
     productName: { type: String, required: true ,unique: true, },
     model: { type: String, required: true },
     productType: { type: String, required: true },
