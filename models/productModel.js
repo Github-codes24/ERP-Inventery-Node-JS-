@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+
 
 const productSchema = new mongoose.Schema({
     srNo: { type: String, required: true },
@@ -20,7 +20,6 @@ const productSchema = new mongoose.Schema({
     price: { type: Number},
     quantityUnit: { type: String },
     lastPurchase: { type: Date },
-    itemGroup: { type: String },
     stock: { type: Number},
     sales: { type: Number, default: 0 },
     itemGroup: { type: String },
