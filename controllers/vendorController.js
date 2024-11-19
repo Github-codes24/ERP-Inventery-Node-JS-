@@ -1,15 +1,15 @@
-const Vendor = require("../models/Vendor.js");
+const Vendor = require("../models/VendorModel.js");
 
-const create = async (req, res) => {
+const createVendor = async (req, res) => {
   try {
     const {
       vendorId,
       vendorName,
-      contactName,
-      alternateName,
+      contactNumber, 
+      alternateNumber, 
       contactEmail,
       alternateEmail,
-      productService,
+      productOrService,
       category,
       productManufacture,
       additionalInfo,
@@ -17,17 +17,17 @@ const create = async (req, res) => {
       branchName,
       ifscCode,
       bankingName,
+      date
     } = req.body;
 
-    // Create a new vendor instance
     const newVendor = new Vendor({
       vendorId,
       vendorName,
-      contactName,
-      alternateName,
+      contactNumber,
+      alternateNumber,
       contactEmail,
       alternateEmail,
-      productService,
+      productOrService,
       category,
       productManufacture,
       additionalInfo,
@@ -35,14 +35,12 @@ const create = async (req, res) => {
       branchName,
       ifscCode,
       bankingName,
+      date,
     });
-
-    // Save the vendor to the database
-    await newVendor.save();
-
+     await newVendor.save();
      return res
       .status(201)
-      .json({ message: "Vendor created successfully", vendor: newVendor });
+      .json({success:true , message: "Vendor created successfully", vendor: newVendor });
   } catch (error) {
     return res
       .status(500)
@@ -63,7 +61,7 @@ const findVendor = async (req, res) => {
     if (vendors.length === 0) {
       return res
         .status(404)
-        .json({ message: "No vendor found with the provided criteria" });
+        .json({success:true , message: "No vendor found with the provided criteria" });
     }
 
      return res.status(200).json(vendors);
@@ -91,31 +89,61 @@ const getVendorById = async (req, res) => {
 
 const updateVendor = async (req, res) => {
   try {
-    const { id } = req.params; // Get _id from request params
-    const updateData = req.body; // Get update data from request body
+    const { id } = req.params; 
+    const {
+      vendorId,
+      vendorName,
+      contactNumber,
+      alternateNumber,
+      contactEmail,
+      alternateEmail,
+      productOrService,
+      category,
+      productManufacture,
+      additionalInfo,
+      bankName,
+      branchName,
+      ifscCode,
+      bankingName,
+    } = req.body;
 
-    // Find the vendor using the default MongoDB _id
+    
+    const updateData = {
+      vendorId,
+      vendorName,
+      contactNumber,
+      alternateNumber,
+      contactEmail,
+      alternateEmail,
+      productOrService,
+      category,
+      productManufacture,
+      additionalInfo,
+      bankName,
+      branchName,
+      ifscCode,
+      bankingName,
+    };
+
     const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
-      new: true, // Return the updated document
+      new: true 
     });
-
-    // Check if vendor was found and updated
     if (!updatedVendor) {
       return res.status(404).json({ message: "Vendor not found" });
     }
-
-   return  res
+    return res
       .status(200)
-      .json({ message: "Vendor updated successfully", vendor: updatedVendor });
+      .json({ success:true , message: "Vendor updated successfully", vendor: updatedVendor });
   } catch (error) {
-      return res
+    return res
       .status(500)
       .json({ message: "Error updating vendor", error: error.message });
   }
 };
+//add sucess messages pending//
 
 module.exports = {
-  create,
+  createVendor,
   findVendor,
   updateVendor,
   getVendorById,
