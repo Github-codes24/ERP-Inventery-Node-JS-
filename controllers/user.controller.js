@@ -182,7 +182,7 @@ const transporter = nodemailer.createTransport({
         });
         // Send a response with user details or redirect URL
         // const redirectUrl = accessRecord.allowedPages.length ? accessRecord.allowedPages[0] : '/default'; // Default or first allowed page
-        return res.status(200).json({ message: 'Login successful',token,id: user._id });
+        return res.status(200).json({ message: 'Login successful',token,id: user._id, companyId: user.companyId, name: user.name});
       } catch (error) {
         return res.status(500).json({ message: 'Error logging in', error: error.message });
       }
