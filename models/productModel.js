@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema({
     gstAmount: Number, 
     companyPrice: Number, 
     applicableTaxes: Number, 
-    freight: Number, 
+    // freight: Number,  no need in backend
 }, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);
