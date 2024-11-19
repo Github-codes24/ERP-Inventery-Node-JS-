@@ -1,4 +1,3 @@
-const exp = require("constants");
 const mongoose = require("mongoose");
 
 const vendorSchema = new mongoose.Schema({
@@ -10,10 +9,10 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  contactName: {
+  contactNumber: {
     type: String,
   },
-  alternateName: {
+  alternateNumber: {
     type: String,
   },
   contactEmail: {
@@ -22,9 +21,8 @@ const vendorSchema = new mongoose.Schema({
   alternateEmail: {
     type: String,
   },
-  productService: {
+  productOrService: {
     type: String,
-    enum: ["Product", "Service"],
   },
   category: {
     type: String,
@@ -49,7 +47,6 @@ const vendorSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now,
   },
 });
 

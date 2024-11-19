@@ -4,7 +4,6 @@ const { create, getAllVendors, findVendor, updateVendor, getVendorById } = requi
 const route = express.Router();
 
 route.post("/create", create);
-route.get("/getAllVendors", getAllVendors);
 route.get("/getByQuery", findVendor);
 route.get("/getVendorById/:id", getVendorById);
 route.put("/update/:id", updateVendor);

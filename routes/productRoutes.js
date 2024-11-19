@@ -16,23 +16,20 @@ const {
     getTopSellingProducts,
     getEmergencyRequiredProducts,
     getProductDetails,
+    getProductList
 } = require('../controllers/productController');
 
-// Route for fetching top-selling products - more specific route comes first
-router.get('/top-selling', getTopSellingProducts);
-
-// Route for fetching emergency-required products
+// More specific routes first
+// router.get('/top-selling', getTopSellingProducts);
 router.get('/emergency-required', getEmergencyRequiredProducts);
-
-// Route for fetching product details
 router.get('/product-details', getProductDetails);
 
-// General routes for products
+// Generic routes last
 router.get('/', getProducts); // Get all products
 router.get('/:id', getProductById); // Get product by ID
 
 // Route for creating a new product with file uploads
-router.post('/', upload.fields([
+router.post('/createProduct', upload.fields([
     { name: 'productImage' },
     { name: 'productBrochure' },
     { name: 'pptAvailable' },

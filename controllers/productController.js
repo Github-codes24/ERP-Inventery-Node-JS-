@@ -3,11 +3,10 @@ const Product = require('../models/productModel');
 
 // Get products by name
 const getProducts = async (req, res) => {
-  console.log("Received request to search for product:", req.query.productName);
   try {
       const {productName} = req.query;
       const products = await Product.find(req.query);
-       return res.json(products); 
+       return res.status(200).json({products, success: true}); 
   } catch (error) {
       console.error("Error fetching products:", error);
      return  res.status(500).json({ message: 'Server Error', error: error.stack || error.message });
@@ -17,7 +16,8 @@ const getProducts = async (req, res) => {
 // Get product by ID
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const id = req.params.id;
+    const product = await Product.findById(id);
     if (product) {
      return res.json(product);
     } else {
@@ -30,7 +30,6 @@ const getProductById = async (req, res) => {
 
 // Create a new product
 const createProduct = async (req, res) => {
-  console.log("line 34");
   try {
     const {
       srNo,
@@ -42,37 +41,20 @@ const createProduct = async (req, res) => {
       companyName,
       availableModelNos,
       proposedCompany,
-      hsnSacCode,
+      hsnOrSacCode,
       warranty,
       expiryDate,
-      amcValidityStartDate,
-      amcValidityEndDate,
+      startDate,
+      endDate,
       productDescription,
-      price,
-      quantityUnit,
-      lastPurchase,
-      itemGroup,
-      code,
-      name,
-      gstRate,         
-      companyPrice,   
+      quantity,
+      companyPrice,
+      gstRate, 
       applicableTaxes, 
-      freight         
+      date,
+      stock = 0          
     } = req.body;
 
-    console.log(req.body, "line 59");
-
-    // Calculate GST Amount based on gstRate and price
-    const gstAmount = (price * (gstRate / 100)).toFixed(2);
-
-    // Calculate Subtotal
-    const subtotal = price * quantityUnit;
-
-    // Calculate Total Taxes (sum of GST and applicable other taxes)
-    const totalTaxes = parseFloat(gstAmount) + parseFloat(applicableTaxes);
-
-    // Calculate Net Amount: Subtotal + Freight + Total Taxes
-    const netAmount = (parseFloat(subtotal) + parseFloat(freight) + parseFloat(totalTaxes)).toFixed(2);
 
     const existingProduct = await Product.findOne({ productName });
     if (existingProduct) {
@@ -95,40 +77,28 @@ const createProduct = async (req, res) => {
       companyName,
       availableModelNos,
       proposedCompany,
-      hsnSacCode,
+      hsnOrSacCode,
       warranty,
       expiryDate,
-      amcValidityStartDate,
-      amcValidityEndDate,
+      startDate,
+      endDate,
       productDescription,
-      price,
-      quantityUnit,
-      lastPurchase,
-      itemGroup,
-      code,
-      name,
+      quantity,
+      companyPrice,
+      gstRate, 
+      applicableTaxes, 
+      date,
+      stock,
       productImage,
       productBrochure,
       pptAvailable,
       coveringLetter,
-      isoCertificate,
-      gstRate,         
-      gstAmount,       
-      companyPrice,    
-      applicableTaxes, 
-      freight,         
-      subtotal,        
-      totalTaxes,      
-      netAmount        
+      isoCertificate
     });
 
     const createdProduct = await product.save();
-   return  res.status(201).json(createdProduct);
+   return  res.status(201).json({ success: true ,createdProduct});
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ message: 'Duplicate key error: Product already exists', error: error.message });
-    }
-
    return res.status(500).json({ message: 'Error creating product', error: error.message });
   }
 };
@@ -136,90 +106,97 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    console.log("Request Body:", req.body);
-    
-    const { id: productId } = req.params; 
-    const product = await Product.findById(productId);
+    const { id: productId } = req.params;
 
+    // Validate product ID
+    if (!productId?.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'Invalid product ID format' });
+    }
+
+    // Check if product exists
+    const product = await Product.findById(productId);
     if (!product) {
-      console.log("Product not found:", productId);
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    const {
-      srNo,
-      productName,
-      model,
-      productType,
-      skuCode,
-      amcCmc,
-      companyName,
-      availableModelNos,
-      proposedCompany,
-      hsnSacCode,
-      warranty,
-      expiryDate,
-      amcValidityStartDate,
-      amcValidityEndDate,
-      productDescription,
-      price,
-      quantityUnit,
-      lastPurchase,
-      itemGroup,
-      code,
-      name
-    } = req.body;
+    // Create updates object from request body
+    const allowedFields = [
+      'srNo', 'productName', 'model', 'productType', 'skuCode',
+      'amcCmc', 'companyName', 'availableModelNos', 'proposedCompany',
+      'hsnSacCode', 'warranty', 'expiryDate', 'startDate', 'endDate',
+      'productDescription', 'quantity', 'companyPrice', 'gstRate',
+      'applicableTaxes', 'date', 'stock'
+    ];
 
-    Object.assign(product, {
-      srNo: srNo || product.srNo,
-      productName: productName || product.productName,
-      model: model || product.model,
-      productType: productType || product.productType,
-      skuCode: skuCode || product.skuCode,
-      amcCmc: amcCmc || product.amcCmc,
-      companyName: companyName || product.companyName,
-      availableModelNos: availableModelNos || product.availableModelNos,
-      proposedCompany: proposedCompany || product.proposedCompany,
-      hsnSacCode: hsnSacCode || product.hsnSacCode,
-      warranty: warranty || product.warranty,
-      expiryDate: expiryDate || product.expiryDate,
-      amcValidityStartDate: amcValidityStartDate || product.amcValidityStartDate,
-      amcValidityEndDate: amcValidityEndDate || product.amcValidityEndDate,
-      productDescription: productDescription || product.productDescription,
-      price: price || product.price,
-      quantityUnit: quantityUnit || product.quantityUnit,
-      lastPurchase: lastPurchase || product.lastPurchase,
-      itemGroup: itemGroup || product.itemGroup,
-      code: code || product.code,
-      name: name || product.name,
-      productImage: req.files?.productImage?.[0]?.path || product.productImage,
-      productBrochure: req.files?.productBrochure?.[0]?.path || product.productBrochure,
-      pptAvailable: req.files?.pptAvailable?.[0]?.path || product.pptAvailable,
-      coveringLetter: req.files?.coveringLetter?.[0]?.path || product.coveringLetter,
-      isoCertificate: req.files?.isoCertificate?.[0]?.path || product.isoCertificate,
+    const updates = Object.fromEntries(
+      Object.entries(req.body)
+        .filter(([key]) => allowedFields.includes(key))
+    );
+
+    // Convert numeric fields
+    const numericFields = ['companyPrice', 'gstRate', 'applicableTaxes', 'stock', 'availableModelNos'];
+    numericFields.forEach(field => {
+      if (updates[field]) {
+        updates[field] = Number(updates[field]);
+      }
     });
 
-    const updatedProduct = await product.save();
-    console.log("Updated Product:", updatedProduct);
+    // Process file uploads if any
+    const fileFields = ['productImage', 'productBrochure', 'pptAvailable', 'coveringLetter', 'isoCertificate'];
+    fileFields.forEach(field => {
+      if (req.files?.[field]?.[0]?.path) {
+        updates[field] = req.files[field][0].path.replace(/\\/g, '/');
+      }
+    });
+
+    // Update product
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found after update' });
+    }
+
     return res.json(updatedProduct);
+
   } catch (error) {
     console.error("Error updating product:", error);
-    return res.status(500).json({ message: 'Error updating product', error: error.message });
+    
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: 'Validation error', 
+        errors: error.errors 
+      });
+    }
+
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format'
+      });
+    }
+
+    return res.status(500).json({ 
+      message: 'Error updating product',
+      error: error.message 
+    });
   }
 };
 
 
 
-// Get top-selling products
-const getTopSellingProducts = async (req, res) => {
-    try {
-        const products = await Product.find().sort({ sales: -1 }).limit(5);
-        return res.json(products);
-    } catch (error) {
-        console.error("Error fetching top-selling products:", error);
-        return res.status(500).json({ message: 'Server Error', error: error.message });
-    }
-};
+// // Get top-selling products
+// const getTopSellingProducts = async (req, res) => {
+//     try {
+//         const products = await Product.find().sort({ sales: -1 }).limit(5);
+//         return res.json(products);
+//     } catch (error) {
+//         console.error("Error fetching top-selling products:", error);
+//         return res.status(500).json({ message: 'Server Error', error: error.message });
+//     }
+// };
 
 // Get emergency-required products (items with low stock)
 const getEmergencyRequiredProducts = async (req, res) => {
@@ -232,7 +209,7 @@ const getEmergencyRequiredProducts = async (req, res) => {
     }
 }
 
-// Get Product Details for Dashboard
+// Get Product Details Card for Product Management 
 const getProductDetails = async (req, res) => {
     try {
         // Get out of stock items count (assuming stock = 0 means out of stock)
@@ -260,7 +237,7 @@ module.exports = {
     getProductById,
     createProduct,
     updateProduct,
-    getTopSellingProducts,
+    // getTopSellingProducts,
     getEmergencyRequiredProducts,
-    getProductDetails,
+    getProductDetails
 };

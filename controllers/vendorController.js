@@ -50,16 +50,7 @@ const create = async (req, res) => {
   }
 };
 
-const getAllVendors = async (req, res) => {
-  try {
-    const vendors = await Vendor.find();
-   return res.status(200).json(vendors);
-  } catch (error) {
-   return res
-      .status(500)
-      .json({ message: "Error retrieving vendors", error: error.message });
-  }
-};
+
 
 const findVendor = async (req, res) => {
   try {
@@ -125,7 +116,6 @@ const updateVendor = async (req, res) => {
 
 module.exports = {
   create,
-  getAllVendors,
   findVendor,
   updateVendor,
   getVendorById,
