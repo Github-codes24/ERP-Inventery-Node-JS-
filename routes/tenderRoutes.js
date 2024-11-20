@@ -6,7 +6,7 @@ const { createTender, getTenders, getTenderById } = require('../controllers/tend
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' }); 
 
-router.post('/', upload.fields([
+router.post('/createTender', upload.fields([
     { name: 'tenderCopy', maxCount: 1 },
     { name: 'technicalDocuments', maxCount: 1 },
     { name: 'tenderFees', maxCount: 1 },
@@ -19,9 +19,9 @@ router.post('/', upload.fields([
 ]), createTender);
 
 // Route to get all tenders
-router.get('/', getTenders); 
+router.get('/getTender', getTenders); 
 
 // Route to get a tender by ID
-router.get('/:id', getTenderById); 
+router.get('/getTenderById/:id', getTenderById); 
 
 module.exports = router;
