@@ -19,7 +19,7 @@ router.post('/createTender', upload.fields([
 ]), createTender);
 
 // Route to get all tenders
-router.get('/getTender', getTenders); 
+router.get('/getTenders', getTenders); 
 
 // Route to get a tender by ID
 router.get('/getTenderById/:id', getTenderById); 
