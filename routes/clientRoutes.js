@@ -9,7 +9,7 @@ const upload = multer({
 
 // Route for client registration
 
-router.get("/findByQuery", clientController.findClient);
+router.get("/findClientByQuery", clientController.findClient);
 
 router.put(
     "/updateClient/:id",

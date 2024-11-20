@@ -71,7 +71,7 @@ const findClient = async (req, res) => {
 
         if (clients.length === 0) {
             return res.status(404).json({
-                sucess: true,
+                success: true,
                 message: "No clients found matching the criteria.",
             });
         }
