@@ -82,25 +82,30 @@ const getQuotationById = async (req, res) => {
     return res.status(500).json({ message: "Server error", error });
   }
 };
+
 const deleteQuotationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedQuotation = await Quotation.findByIdAndUpdate(id,
-      { isDeleted:true },
-      {
-        new:true,
-      }
-    );
+    const deletedQuotation = await Quotation.findById(id);
 
     if (!deletedQuotation) {
       return res.status(404).json({ message: "Quotation not found" });
     }
+    if (deletedQuotation.isDeleted) {
+      return res.status(400).json({ message: "Quotation already deleted" });
+    }
 
+    deletedQuotation.isDeleted = true;
+    await deletedQuotation.save();
+    
     return res.status(200).json({ message: "Quotation deleted successfully", deletedQuotation });
+  
   } catch (error) {
     return res.status(500).json({ message: "Server error", error });
   }
 };
+
+
 const updateQuotation = async (req, res) => {
   try {
     const {id} = req.params; 
