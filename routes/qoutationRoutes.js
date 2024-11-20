@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const quotationController = require("../controllers/quotationController");
 
-router.post("/create", quotationController.createQuotation);
-router.get("/getByID/:id", quotationController.getQuotationById);
-router.delete("/delete/:id", quotationController.deleteQuotationById);
+router.post("/createQuotation", quotationController.createQuotation);
+router.get("/getQuotationById/:id", quotationController.getQuotationById);
+router.put("/deleteQuotationById/:id", quotationController.deleteQuotationById);
 router.get("/getAllQuotation",quotationController.getAllQuotations)
-router.put("/update",quotationController.updateQuotation);
+router.put("/updateQuotation/:id",quotationController.updateQuotation);
 module.exports = router;

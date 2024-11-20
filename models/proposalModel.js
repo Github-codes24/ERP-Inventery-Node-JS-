@@ -1,25 +1,75 @@
 const mongoose = require("mongoose");
 
-const ProposalSchema = new mongoose.Schema({
-  proposalID: String,
-  subject: String,
-  clientName: String,
-  clientContactInfo: String,
-  responsibleDepartment: String,
-  assignedTo: String,
-  proposalType: String,
-  proposalDate: Date,
-  dueDate: Date,
-  introduction: String,
-  scopeOfWork: String,
-  budgetEstimation: Number,
-  timeline: String,
-  comments: [String],
-  deliverables: String,
-  TermsConditions: String,
-  coveringLetter: String,
-  specification: String,
-  quotation: String,
-}, { timestamps: true });
+const ProposalSchema = new mongoose.Schema(
+  {
+    proposalID: {
+      type: String,
+    },
+    subject: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ["Approved", "Reject", "Pending"],
+      default: "Pending",
+    },
+    clientName: {
+      type: String,
+    },
+    clientContactInfo: {
+      type: String,
+    },
+    responsibleDepartment: {
+      type: String,
+    },
+    assignedTo: {
+      type: String,
+    },
+    proposalType: {
+      type: String,
+    },
+    proposalDate: {
+      type: Date,
+    },
+    dueDate: {
+      type: Date,
+    },
+    introduction: {
+      type: String,
+    },
+    scopeOfWork: {
+      type: String,
+    },
+    budgetEstimation: {
+      type: String,
+    },
+    timeline: {
+      type: String,
+    },
+    comments: {
+      type: String,
+    },
+    deliverables: {
+      type: String,
+    },
+    termsConditions: {
+      type: String,
+    },
+    coveringLetter: {
+      type: String,
+    },
+    specification: {
+      type: String,
+    },
+    quotation: {
+      type: String,
+    },
+    isDeleted:{
+      type:Boolean,
+      default:false
+    }
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Proposal", ProposalSchema);

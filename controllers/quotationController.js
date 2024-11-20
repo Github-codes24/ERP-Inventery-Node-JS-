@@ -1,4 +1,3 @@
-
 const Quotation = require("../models/quotation");
 
 
@@ -22,26 +21,26 @@ const createQuotation = async (req, res) => {
       netAmount,
     } = req.body;
 
-    if (
-      !quotationNo ||
-      !quotationDate ||
-      !from ||
-      !from.companyName ||
-      !from.email ||
-      !from.mobile ||
-      !to ||
-      !to.customerName ||
-      !to.address ||
-      !bankDetails ||
-      !bankDetails.bankName ||
-      !bankDetails.accountName ||
-      !bankDetails.accountType ||
-      !bankDetails.ifscCode ||
-      !subtotal ||
-      !netAmount
-    ) {
-      return res.status(400).json({ message: "Missing required fields." });
-    }
+    // if (
+    //   !quotationNo ||
+    //   !quotationDate ||
+    //   !from ||
+    //   !from.companyName ||
+    //   !from.email ||
+    //   !from.mobile ||
+    //   !to ||
+    //   !to.customerName ||
+    //   !to.address ||
+    //   !bankDetails ||
+    //   !bankDetails.bankName ||
+    //   !bankDetails.accountName ||
+    //   !bankDetails.accountType ||
+    //   !bankDetails.ifscCode ||
+    //   !subtotal ||
+    //   !netAmount
+    // ) {
+    //   return res.status(400).json({ message: "Missing required fields." });
+    // }
 
     
     const newQuotation = new Quotation({
@@ -86,7 +85,12 @@ const getQuotationById = async (req, res) => {
 const deleteQuotationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedQuotation = await Quotation.findByIdAndDelete(id);
+    const deletedQuotation = await Quotation.findByIdAndUpdate(id,
+      { isDeleted:true },
+      {
+        new:true,
+      }
+    );
 
     if (!deletedQuotation) {
       return res.status(404).json({ message: "Quotation not found" });
@@ -99,11 +103,10 @@ const deleteQuotationById = async (req, res) => {
 };
 const updateQuotation = async (req, res) => {
   try {
-    const query = req.query; 
-    const updateData = req.body; 
+    const {id} = req.params; 
+    const updateData = req.body;
 
-    const updatedQuotation = await Quotation.findOneAndUpdate(
-      query,
+    const updatedQuotation = await Quotation.findByIdAndUpdate(id,
       updateData,
       {
         new: true, 
@@ -122,7 +125,13 @@ const updateQuotation = async (req, res) => {
 };
 const getAllQuotations = async (req, res) => {
   try {
-    const quotations = await Quotation.find();
+    const {quotationName } = req.query;
+    const filter = { isDeleted: false }; 
+
+    if (quotationName) {
+      filter.quotationName = quotationName; 
+    }
+    const quotations = await Quotation.find(filter);
 
     if (!quotations.length) {
       return res.status(404).json({ message: "No quotations found" });
