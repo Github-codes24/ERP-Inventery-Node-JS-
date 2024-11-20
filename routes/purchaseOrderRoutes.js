@@ -4,7 +4,6 @@ const { createPurchaseOrder,getAllPurchaseOrders,getOrderById,updateOrderById,fi
 
 router.post('/createPurchaseOrder', createPurchaseOrder);
 router.get('/getAllPurchaseOrders', getAllPurchaseOrders);
-router.get('/getAllOrders', getAllOrders);
 router.get('/findOrdersByQueryParams', findOrdersByQueryParams);
 router.get('/getOrderById/:id', getOrderById);
 router.put('/updateOrder/:id', updateOrderById);

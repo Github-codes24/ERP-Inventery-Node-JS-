@@ -85,12 +85,11 @@ const getQuotationById = async (req, res) => {
 const deleteQuotationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedQuotation = await Quotation.findByIdAndUpdate(id,{
-      isDeleted:true,},
+    const deletedQuotation = await Quotation.findByIdAndUpdate(id,
+      { isDeleted:true },
       {
         new:true,
       }
-      
     );
 
     if (!deletedQuotation) {
@@ -105,7 +104,7 @@ const deleteQuotationById = async (req, res) => {
 const updateQuotation = async (req, res) => {
   try {
     const {id} = req.params; 
-    const updateData = req.body; 
+    const updateData = req.body;
 
     const updatedQuotation = await Quotation.findByIdAndUpdate(id,
       updateData,

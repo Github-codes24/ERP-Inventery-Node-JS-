@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
     srNo: { type: String},
-    productName: { type: String },
+    productName: { type: String, unique: true },
     model: { type: String },
     productType: { type: String },
     skuCode: { type: String },
@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
     endDate: { type: Date },
     productDescription: { type: String },
     quantity: { type: String },
-    stock: { type: Number},
+    stock: { type: Number, default: 0 },
     productImage: { type: String },
     companyPrice:{ type: Number },
     gstRate: { type: Number }, 

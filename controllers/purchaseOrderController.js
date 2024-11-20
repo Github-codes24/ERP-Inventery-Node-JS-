@@ -61,14 +61,6 @@ const createPurchaseOrder = async (req, res) => {
     });
   }
 };
-const getAllOrders = async (req, res) => {
-  try {
-    const orders = await PurchaseOrder.find(); 
-    return res.status(200).json(orders); 
-  } catch (error) {
-    return res.status(500).json({ message: 'Error fetching orders', error });
-  }
-};
 
 const getAllPurchaseOrders = async (req, res) => {
   try {
@@ -154,7 +146,6 @@ const findOrdersByQueryParams = async (req, res) => {
 
 module.exports = {
   createPurchaseOrder,
-  getAllOrders,
   getAllPurchaseOrders,
   getOrderById,
   updateOrderById,

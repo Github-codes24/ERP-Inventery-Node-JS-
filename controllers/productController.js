@@ -6,10 +6,9 @@ const getProducts = async (req, res) => {
   try {
       const {productName} = req.query;
       const products = await Product.find(req.query);
-       return res.status(200).json({products, success: true}); 
+      return res.status(200).json({ success: true, products }); 
   } catch (error) {
-      console.error("Error fetching products:", error);
-     return  res.status(500).json({ message: 'Server Error', error: error.stack || error.message });
+     return  res.status(500).json({ message: 'Server Error', error: error.message });
   }
 }
 
@@ -18,11 +17,12 @@ const getProductById = async (req, res) => {
   try {
     const id = req.params.id;
     const product = await Product.findById(id);
-    if (product) {
-     return res.json(product);
-    } else {
+
+    if (!product) {
       return  res.status(404).json({ message: 'Product not found' });
-    }
+    };
+
+    return res.status(200).json({ success: true, product });
   } catch (error) {
      return res.status(500).json({ message: 'Server Error', error: error.message });
   }
@@ -52,7 +52,6 @@ const createProduct = async (req, res) => {
       gstRate, 
       applicableTaxes, 
       date,
-      stock = 0          
     } = req.body;
 
 
@@ -108,51 +107,38 @@ const updateProduct = async (req, res) => {
   try {
     const { id: productId } = req.params;
 
-    // Validate product ID
-    if (!productId?.match(/^[0-9a-fA-F]{24}$/)) {
-      return res.status(400).json({ message: 'Invalid product ID format' });
+    const {
+      srNo,
+      productName,
+      model,
+      productType,
+      skuCode,
+      amcCmc,
+      companyName,
+      availableModelNos,
+      proposedCompany,
+      hsnOrSacCode,
+      warranty,
+      expiryDate,
+      startDate,
+      endDate,
+      productDescription,
+      quantity,
+      companyPrice,
+      gstRate, 
+      applicableTaxes, 
+      date,
+    } = req.body;
+
+    const product = await Product.findOne({ productName: productName });
+    if (product) {
+      return res.status(409).json({ message: 'Product with product name already exists' });
     }
-
-    // Check if product exists
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    // Create updates object from request body
-    const allowedFields = [
-      'srNo', 'productName', 'model', 'productType', 'skuCode',
-      'amcCmc', 'companyName', 'availableModelNos', 'proposedCompany',
-      'hsnSacCode', 'warranty', 'expiryDate', 'startDate', 'endDate',
-      'productDescription', 'quantity', 'companyPrice', 'gstRate',
-      'applicableTaxes', 'date', 'stock'
-    ];
-
-    const updates = Object.fromEntries(
-      Object.entries(req.body)
-        .filter(([key]) => allowedFields.includes(key))
-    );
-
-    // Convert numeric fields
-    const numericFields = ['companyPrice', 'gstRate', 'applicableTaxes', 'stock', 'availableModelNos'];
-    numericFields.forEach(field => {
-      if (updates[field]) {
-        updates[field] = Number(updates[field]);
-      }
-    });
-
-    // Process file uploads if any
-    const fileFields = ['productImage', 'productBrochure', 'pptAvailable', 'coveringLetter', 'isoCertificate'];
-    fileFields.forEach(field => {
-      if (req.files?.[field]?.[0]?.path) {
-        updates[field] = req.files[field][0].path.replace(/\\/g, '/');
-      }
-    });
 
     // Update product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { $set: updates },
+      { $set: req.body },
       { new: true, runValidators: true }
     );
 
@@ -160,24 +146,9 @@ const updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found after update' });
     }
 
-    return res.json(updatedProduct);
+    return res.status(200).json({ success: true, updatedProduct});
 
   } catch (error) {
-    console.error("Error updating product:", error);
-    
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ 
-        message: 'Validation error', 
-        errors: error.errors 
-      });
-    }
-
-    if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid data format'
-      });
-    }
-
     return res.status(500).json({ 
       message: 'Error updating product',
       error: error.message 
@@ -197,12 +168,12 @@ const updateProduct = async (req, res) => {
 //         return res.status(500).json({ message: 'Server Error', error: error.message });
 //     }
 // };
-
-// Get emergency-required products (items with low stock)
+//===#### Needs to be fixed #######====
+// Get emergency-required products (items with low stock)   
 const getEmergencyRequiredProducts = async (req, res) => {
     try {
         const products = await Product.find({ stock: { $lte: 3 } }).sort({ stock: 1 });
-       return  res.json(products);
+       return  res.status(200).json(products);
     } catch (error) {
         console.error("Error fetching emergency-required products:", error);
        return  res.status(500).json({ message: 'Server Error', error: error.message });

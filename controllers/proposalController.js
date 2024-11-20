@@ -21,7 +21,6 @@ const createProposal = async (req, res) => {
     comments,
     deliverables,
     termsConditions,
-    isDeleted
   } = req.body;
 
   const { coveringLetter, specification, quotation } = req.files;
@@ -44,7 +43,6 @@ const createProposal = async (req, res) => {
       comments,
       deliverables,
       termsConditions,
-      isDeleted,
       coveringLetter: coveringLetter ? coveringLetter[0].path : null,
       specification: specification ? specification[0].path : null,
       quotation: quotation ? quotation[0].path : null,
@@ -88,7 +86,7 @@ const getAllProposals = async (req, res) => {
 
     const proposals = await Proposal.find(filter);
 
-    if (!proposals || proposals.length === 0) {
+    if (proposals.length === 0) {
       return res.status(404).json({ message: "No proposals found" });
     }
 
@@ -172,7 +170,7 @@ const getProposalById = async(req,res)=>{
     const {id} = req.params;
     const proposal = await Proposal.findById(id);
     if(!proposal){
-      return res.status(400).json({message:"proposal not found"});
+      return res.status(404).json({message:"proposal not found"});
     }
     return res.status(200).json(proposal);
   }catch(error){
