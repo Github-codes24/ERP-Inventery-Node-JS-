@@ -183,21 +183,32 @@ const getProposalById = async(req,res)=>{
 const deleteProposal = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedProposal = await Proposal.findByIdAndUpdate(
-      id,
-      {
-        isDeleted: true,
-      },
-      {
-        new: true,
-      }
-    );
-    if (!deletedProposal) {
+
+    // Find proposal 
+    const proposal = await Proposal.findById(id);
+
+    // Check if proposal exists
+    if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
+
+    // Check if already deleted
+    if (proposal.isDeleted) {
+      return res.status(400).json({ message: "Proposal already deleted" });
+    }
+
+    // Update deletion status
+    proposal.isDeleted = true;
+    await proposal.save();
+
     return res.status(200).json({ message: "Proposal deleted successfully" });
+
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error deleting proposal:", error);
+    return res.status(500).json({ 
+      message: "Error deleting proposal",
+      error: error.message 
+    });
   }
 };
 
