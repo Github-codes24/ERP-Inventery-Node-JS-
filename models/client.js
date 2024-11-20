@@ -1,69 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const clientSchema = new mongoose.Schema(
+  {
+    srNo: { type: String },
+    dealerName: { type: String },
+    manufacturerName: { type: String },
+    productName: { type: String },
+    productCode: { type: String },
+    description: { type: String },
+    hsnCode: { type: String },
+    companyPrice: { type: Number },
+    applicableGst: { type: Number },
+    buyingPrice: { type: Number },
+    sellingPrice: { type: Number },
+    mouValidity: { type: String },
+    teritaryAuthFile: { type: String },
+    pptFile: { type: String },
+    coverLetterFile: { type: String },
+    productCertificate: { type: String },
+    isoCertificate: { type: String },
+    brochureFile: { type: String },
+    technicalSpecification: { type: String },
+    date: { type: Date },
+  },
+  { timestamps: true },
+);
 
-const clientSchema = new mongoose.Schema({
-    dealerName: {
-        type: String,
-        required: true
-    },
-    manufacturerName: {
-        type: String,
-        required: true
-    },
-    productName: {
-        type: String,
-        required: true
-    },
-    productCode: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    },
-    hsnCode: {
-        type: String
-    },
-    companyPrice: {
-        type: Number
-    },
-    applicableGst: {
-        type: Number
-    },
-    buyingPrice: {
-        type: Number
-    },
-    sellingPrice: {
-        type: Number
-    },
-    mouValidity: {
-        type: String
-    },
-    // Save file paths in MongoDB
-    tertAuthFile: {
-        type: String
-    },
-    pptFile: {
-        type: String
-    },
-    coverLetterFile: {
-        type: String
-    },
-    productCertFile: {
-        type: String
-    },
-    isoCertFile: {
-        type: String
-    },
-    brochureFile: {
-        type: String
-    },
-    technicalSpecification:{
-       type:String
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-});
-
-module.exports = mongoose.model('Client', clientSchema);
+module.exports = mongoose.model("Client", clientSchema);

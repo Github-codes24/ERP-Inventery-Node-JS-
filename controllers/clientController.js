@@ -1,49 +1,9 @@
-const Client = require('../models/client');
-const mongoose = require('mongoose');
+const Client = require("../models/clientModel");
 
-const registerClient = async (req, res) => {
+const createClient = async (req, res) => {
     try {
-        // Destructure all values from req.body
         const {
-            dealerName,
-            manufacturerName,
-            productName,
-            productCode,
-            description,
-            hsnCode,
-            companyPrice,
-            applicableGst,
-            buyingPrice,
-            sellingPrice,
-            mouValidity,
-            technicalSpecification
-        } = req.body;
-
-        const {tertAuthFile, pptFile, coverLetterFile, productCertFile, isoCertFile, brochureFile } = req.files;
-        
-        let tertAuthFileName, pptFileName, coverLetterFileName, productCertFileName, isoCertFileName, brochureFileName ;
-
-        if (tertAuthFile) {
-            tertAuthFileName = tertAuthFile[0]?.originalname;
-        };
-        if (pptFile) {
-            pptFileName = pptFile[0]?.originalname;
-        }
-        if (coverLetterFile) {
-            coverLetterFileName = coverLetterFile[0]?.originalname;
-        }
-        if (productCertFile) {
-            productCertFileName = productCertFile[0]?.originalname;
-        }
-        if (isoCertFile) {
-            isoCertFileName = isoCertFile[0]?.originalname;
-        }
-        if (brochureFile) {
-            brochureFileName = brochureFile[0]?.originalname;
-        }
-
-        // Create a new client object with destructured variables and file paths
-        const client = new Client({
+            srNo,
             dealerName,
             manufacturerName,
             productName,
@@ -56,28 +16,51 @@ const registerClient = async (req, res) => {
             sellingPrice,
             mouValidity,
             technicalSpecification,
-            tertAuthFile: tertAuthFileName,
-            pptFile: pptFileName,
-            coverLetterFile: coverLetterFileName,
-            productCertFile: productCertFileName,
-            isoCertFile: isoCertFileName,
-            brochureFile: brochureFileName
+            date,
+        } = req.body;
+
+        const teritaryAuthFile = req.files?.teritaryAuthFile?.[0]?.path || null;
+        const pptFile = req.files?.pptFile?.[0]?.path || null;
+        const coverLetterFile = req.files?.coverLetterFile?.[0]?.path || null;
+        const productCertificate =
+            req.files?.productCertificate?.[0]?.path || null;
+        const isoCertificate = req.files?.isoCertificate?.[0]?.path || null;
+        const brochureFile = req.files?.brochureFile?.[0]?.path || null;
+
+        const client = new Client({
+            srNo,
+            dealerName,
+            manufacturerName,
+            productName,
+            productCode,
+            description,
+            hsnCode,
+            companyPrice,
+            applicableGst,
+            buyingPrice,
+            sellingPrice,
+            mouValidity,
+            technicalSpecification,
+            date,
+            teritaryAuthFile,
+            pptFile,
+            coverLetterFile,
+            productCertificate,
+            isoCertificate,
+            brochureFile,
         });
 
-        // Save the client to the database
-        await client.save();
-        return res.status(201).json(client);
+        const createdClient = await client.save();
+        return res.status(201).json({
+            success: true,
+            message: "Client created successfully",
+            createdClient,
+        });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
-    }
-};
-
-const getAllClients = async (req, res) => {
-    try {
-        const clients = await Client.find();
-        res.status(200).json(clients);
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({
+            message: "Error creating client",
+            error: error.message,
+        });
     }
 };
 
@@ -87,10 +70,13 @@ const findClient = async (req, res) => {
         const clients = await Client.find(query);
 
         if (clients.length === 0) {
-            return res.status(404).json({ message: 'No clients found matching the criteria.' });
+            return res.status(404).json({
+                sucess: true,
+                message: "No clients found matching the criteria.",
+            });
         }
 
-        res.status(200).json(clients);
+        res.status(200).json({ success: true, clients });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -98,25 +84,95 @@ const findClient = async (req, res) => {
 
 const updateClient = async (req, res) => {
     try {
-        const clientId = req.params.id;
+        const { id: clientId } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(clientId)) {
-            return res.status(400).json({ message: 'Invalid Client ID' });
+        // Extract form data from req.body
+        const {
+            dealerName,
+            manufacturerName,
+            productName,
+            productCode,
+            description,
+            hsnCode,
+            companyPrice,
+            applicableGst,
+            buyingPrice,
+            sellingPrice,
+            mouValidity,
+            technicalSpecification,
+        } = req.body;
+
+        // Initialize file paths
+        let teritaryAuthFile = req.files?.teritaryAuthFile
+            ? req.files.teritaryAuthFile[0].path
+            : null;
+        let pptFile = req.files?.pptFile ? req.files.pptFile[0].path : null;
+        let coverLetterFile = req.files?.coverLetterFile
+            ? req.files.coverLetterFile[0].path
+            : null;
+        let productCertificate = req.files?.productCertificate
+            ? req.files.productCertificate[0].path
+            : null;
+        let isoCertificate = req.files?.isoCertificate
+            ? req.files.isoCertificate[0].path
+            : null;
+        let brochureFile = req.files?.brochureFile
+            ? req.files.brochureFile[0].path
+            : null;
+
+        // Find the existing client to retain old file paths if no new file is uploaded
+        const client = await Client.findById(clientId);
+        if (!client) {
+            return res.status(404).json({ message: "Client not found" });
         }
 
+        // Update the file paths only if the new files are uploaded, else retain old ones
+        teritaryAuthFile = teritaryAuthFile || client.teritaryAuthFile;
+        pptFile = pptFile || client.pptFile;
+        coverLetterFile = coverLetterFile || client.coverLetterFile;
+        productCertificate = productCertificate || client.productCertificate;
+        isoCertificate = isoCertificate || client.isoCertificate;
+        brochureFile = brochureFile || client.brochureFile;
+
+        // Prepare the update data object
+        const updateData = {
+            dealerName,
+            manufacturerName,
+            productName,
+            productCode,
+            description,
+            hsnCode,
+            companyPrice,
+            applicableGst,
+            buyingPrice,
+            sellingPrice,
+            mouValidity,
+            technicalSpecification,
+            teritaryAuthFile,
+            pptFile,
+            coverLetterFile,
+            productCertificate,
+            isoCertificate,
+            brochureFile,
+        };
+
+        // Update the client data
         const updatedClient = await Client.findByIdAndUpdate(
             clientId,
-            { $set: req.body },
-            { new: true, runValidators: true }
+            updateData,
+            { new: true },
         );
 
         if (!updatedClient) {
-            return res.status(404).json({ message: 'Client not found' });
+            return res.status(404).json({ message: "Client not found" });
         }
 
-        res.status(200).json(updatedClient);
+        return res.status(200).json({ success: true, updatedClient });
     } catch (error) {
-         return res.status(500).json({ error: error.message });
+        console.error("Error updating client:", error);
+        return res
+            .status(500)
+            .json({ message: "Error updating client", error: error.message });
     }
 };
 
@@ -124,27 +180,22 @@ const getClientById = async (req, res) => {
     try {
         const clientId = req.params.id;
 
-        if (!mongoose.Types.ObjectId.isValid(clientId)) {
-            return res.status(400).json({ message: 'Invalid Client ID' });
-        }
-
         const client = await Client.findById(clientId);
 
         if (!client) {
-            return res.status(404).json({ message: 'Client not found' });
+            return res.status(404).json({ message: "Client not found" });
         }
 
-        res.status(200).json(client);
+        res.status(200).json({ success: true, client });
     } catch (error) {
-       return  res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
 // Export all the functions at the end
 module.exports = {
-    registerClient,
-    getAllClients,
+    createClient,
     findClient,
     updateClient,
-    getClientById
+    getClientById,
 };
