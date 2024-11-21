@@ -4,7 +4,7 @@ const { createVendor, findVendor, updateVendor, getVendorById } = require("../co
 const route = express.Router();
 
 route.post("/createVendor", createVendor);
-route.get("/getByQuery", findVendor);
+route.get("/getVendorByQuery", findVendor);
 route.get("/getVendorById/:id", getVendorById);
 route.put("/updateVendor/:id", updateVendor);
 
