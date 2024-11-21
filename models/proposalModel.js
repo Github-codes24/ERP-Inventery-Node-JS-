@@ -5,6 +5,7 @@ const ProposalSchema = new mongoose.Schema(
     proposalID: {
       type: String,
     },
+    proposalName: { type: String, default: "testing" },
     subject: {
       type: String,
     },
@@ -64,10 +65,10 @@ const ProposalSchema = new mongoose.Schema(
     quotation: {
       type: String,
     },
-    isDeleted:{
-      type:Boolean,
-      default:false
-    }
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
