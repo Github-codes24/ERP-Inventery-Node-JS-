@@ -66,8 +66,29 @@ const createClient = async (req, res) => {
 
 const findClient = async (req, res) => {
     try {
-        const query = req.query;
-        const clients = await Client.find(query);
+        const { page = 1, limit = 10, dealerName } = req.query;
+
+        // Parse page and limit as integers
+        const currentPage = parseInt(page);
+        const itemsPerPage = parseInt(limit);
+
+        const skip = (currentPage - 1) * itemsPerPage;
+        
+        const data =  {};
+        if(dealerName) {
+            data.dealerName = dealerName
+        };
+
+        const totalCount = await Client.countDocuments(data);
+
+        const clients = await Client.find(data)
+        .select(
+            "srNo dealerName manufacturerName productName productCode description hsnCode",
+        )
+        .skip(skip)
+        .limit(itemsPerPage);
+
+        
 
         if (clients.length === 0) {
             return res.status(404).json({
@@ -76,7 +97,16 @@ const findClient = async (req, res) => {
             });
         }
 
-        res.status(200).json({ success: true, clients });
+        const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+        return res.status(200).json({ success: true, clients,
+            pagination: {
+                currentPage,
+                totalPages,
+                hasNextPage: currentPage < totalPages,
+                hasPrevPage: currentPage > 1,
+                totalCount,
+          }, });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

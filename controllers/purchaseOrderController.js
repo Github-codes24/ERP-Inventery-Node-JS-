@@ -64,10 +64,24 @@ const createPurchaseOrder = async (req, res) => {
 
 const getAllPurchaseOrders = async (req, res) => {
   try {
-    const purchaseOrders = await PurchaseOrder.find().select(
-      'poOrderNo clientName address orderDetails poDate'
-    );
+    const { page = 1, limit = 10 } = req.query;
 
+    // Parse page and limit as integers
+    const currentPage = parseInt(page);
+    const itemsPerPage = parseInt(limit);
+
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    // Get total count of purchase orders
+    const totalCount = await PurchaseOrder.countDocuments();
+
+    // Fetch paginated purchase orders
+    const purchaseOrders = await PurchaseOrder.find()
+      .select('poOrderNo clientName address orderDetails poDate')
+      .skip(skip)
+      .limit(itemsPerPage);
+
+    // Format orders
     const formattedOrders = purchaseOrders.map(({ _id, poOrderNo, clientName, address, orderDetails, poDate }) => {
       const totalQuantity = orderDetails.reduce((sum, { quantity }) => sum + quantity, 0);
       const totalAmount = orderDetails.reduce((sum, { total }) => sum + total, 0);
@@ -75,19 +89,35 @@ const getAllPurchaseOrders = async (req, res) => {
       return {
         _id,
         poOrderNo,
-        supplier: clientName, 
-        destination: address, 
+        supplier: clientName,
+        destination: address,
         quantity: totalQuantity,
-        received: 0, 
+        received: 0,
         total: totalAmount,
         orderedDate: poDate,
-        action: 'Pending' 
+        action: 'Pending'
       };
     });
 
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+    if (!formattedOrders.length) {
+      return res.status(404).json({ message: "No purchase orders found" });
+    }
+
     return res.status(200).json({
+      success: true,
       message: 'Purchase Orders fetched successfully!',
-      purchaseOrders: formattedOrders
+      data: {
+        purchaseOrders: formattedOrders,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount,
+        },
+      },
     });
   } catch (error) {
     return res.status(500).json({
