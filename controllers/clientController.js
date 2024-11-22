@@ -86,9 +86,7 @@ const findClient = async (req, res) => {
             "srNo dealerName manufacturerName productName productCode description hsnCode",
         )
         .skip(skip)
-        .limit(itemsPerPage);
-
-        
+        .limit(itemsPerPage).sort({ createdAt: -1 }); 
 
         if (clients.length === 0) {
             return res.status(404).json({
