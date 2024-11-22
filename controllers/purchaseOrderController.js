@@ -64,7 +64,7 @@ const createPurchaseOrder = async (req, res) => {
 
 const getAllPurchaseOrders = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, poOrderNo } = req.query;
 
     // Parse page and limit as integers
     const currentPage = parseInt(page);
@@ -72,14 +72,20 @@ const getAllPurchaseOrders = async (req, res) => {
 
     const skip = (currentPage - 1) * itemsPerPage;
 
+    const filter = { };
+    if (poOrderNo) {
+      filter.poOrderNo = poOrderNo;
+    }
+
     // Get total count of purchase orders
-    const totalCount = await PurchaseOrder.countDocuments();
+    const totalCount = await PurchaseOrder.countDocuments(filter);
 
     // Fetch paginated purchase orders
-    const purchaseOrders = await PurchaseOrder.find()
+    const purchaseOrders = await PurchaseOrder.find(filter)
       .select('poOrderNo clientName address orderDetails poDate')
       .skip(skip)
-      .limit(itemsPerPage);
+      .limit(itemsPerPage)
+      .sort({ createdAt: -1 });
 
     // Format orders
     const formattedOrders = purchaseOrders.map(({ _id, poOrderNo, clientName, address, orderDetails, poDate }) => {

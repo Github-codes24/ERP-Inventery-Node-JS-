@@ -11,6 +11,7 @@ const stockItemSchema = new mongoose.Schema({
 
 
 const tenderSchema = new mongoose.Schema({
+    tenderID: { type: String, required: true },
     tenderName: { type: String, required: true },
     title: { type: String, required: true },
     issueDate: { type: Date, required: true },
@@ -59,7 +60,9 @@ const tenderSchema = new mongoose.Schema({
             uploadDate: { type: Date },
         },
     ],
-});
+},
+{ timestamps: true }
+);
 
 
 const Tender = mongoose.model('Tender', tenderSchema);

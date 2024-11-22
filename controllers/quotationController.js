@@ -130,23 +130,50 @@ const updateQuotation = async (req, res) => {
 };
 const getAllQuotations = async (req, res) => {
   try {
-    const {quotationName } = req.query;
+    const {quotationName,  page = 1, limit = 10} = req.query;
+
+     // Parse page and limit as integers
+     const currentPage = parseInt(page);
+     const itemsPerPage = parseInt(limit);
+
+     const skip = (currentPage - 1) * itemsPerPage;
+
     const filter = { isDeleted: false }; 
 
     if (quotationName) {
       filter.quotationName = quotationName; 
     }
-    const quotations = await Quotation.find(filter);
+
+    // Get total count of matching documents
+    const totalCount = await Quotation.countDocuments(filter);
+
+    const quotations = await Quotation.find(filter).select('quotationNo quotationName customerName to.cityStateZip validity ').skip(skip)
+    .limit(itemsPerPage);
+
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     if (!quotations.length) {
       return res.status(404).json({ message: "No quotations found" });
     }
 
-    return res.status(200).json(quotations);
+    return res.status(200).json({
+      success: true,
+      message: "Retrieved Quatations successfully",
+      data: {
+        quotations,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount,
+        },
+    }});
   } catch (error) {
    return  res.status(500).json({ message: "Server error", error });
   }
 };
+
 module.exports = {
   createQuotation,
   getQuotationById,

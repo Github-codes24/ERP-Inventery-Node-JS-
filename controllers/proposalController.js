@@ -84,7 +84,8 @@ const getAllProposals = async (req, res) => {
     const proposals = await Proposal.find(filter)
       .select("proposalID proposalName clientName proposalDate status budgetEstimation")
       .skip(skip)
-      .limit(itemsPerPage);
+      .limit(itemsPerPage)
+      .sort({ createdAt: -1 });
  
     // Calculate total pages
     const totalPages = Math.ceil(totalCount / itemsPerPage);

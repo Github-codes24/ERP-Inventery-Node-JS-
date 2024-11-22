@@ -119,15 +119,50 @@ const createTender = async (req, res) => {
     }
 };
 
-
-
 // Get all tenders
-const getTenders = async (req, res) => {
+const getAllTenders = async (req, res) => {
     try {
-        const tenders = await Tender.find(); 
+        const { page = 1, limit = 10, ...query } = req.query;
+         
+        // Parse page and limit as integers
+        const currentPage = parseInt(page, 10);
+        const itemsPerPage = parseInt(limit, 10);
+        const skip = (currentPage - 1) * itemsPerPage;
+
+        // Fetch total count of tenders
+        const totalCount = await Tender.countDocuments(query);
+
+        // Fetch tenders with pagination
+        const tenders = await Tender.find(query)
+            .select("tenderID title issueDate authorizedPerson")
+            .skip(skip)
+            .limit(itemsPerPage);
+
+        // Calculate total pages
+        const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+        // Handle case when no tenders are found
+        if (tenders.length === 0) {
+            return res.status(404).json({
+                success: true,
+                message: "No tenders found.",
+            });
+        }
+
+        // Respond with tenders and pagination data
         return res.status(200).json({
             success: true,
-            data: tenders,
+            message: "Tenders retrieved successfully.",
+            data: {
+                tenders,
+                pagination: {
+                    currentPage,
+                    totalPages,
+                    hasNextPage: currentPage < totalPages,
+                    hasPrevPage: currentPage > 1,
+                    totalCount,
+                },
+            },
         });
     } catch (error) {
         console.error(error);
@@ -138,6 +173,7 @@ const getTenders = async (req, res) => {
         });
     }
 };
+
 
 // Get a tender by ID
 const getTenderById = async (req, res) => {
@@ -164,4 +200,4 @@ const getTenderById = async (req, res) => {
     }
 };
 
-module.exports = { createTender, getTenders, getTenderById };
+module.exports = { createTender, getAllTenders, getTenderById };

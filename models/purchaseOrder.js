@@ -38,7 +38,9 @@ const purchaseOrderSchema = new mongoose.Schema({
   designation: { type: String, required: true },
   email: { type: String, required: true },
   contact: { type: String, required: true },
-});
+}, 
+{ timestamps: true }
+);
 
 const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema);
 module.exports = PurchaseOrder;

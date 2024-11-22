@@ -52,25 +52,55 @@ const createVendor = async (req, res) => {
 
 const findVendor = async (req, res) => {
   try {
-    // Retrieve query parameters from the request
-    const query = req.query;
+    const { page = 1, limit = 10, ...query } = req.query;
 
-    // Find vendors based on query parameters
-    const vendors = await Vendor.find(query);
+    // Parse page and limit as integers
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
 
+    // Fetch total count of vendors based on query
+    const totalCount = await Vendor.countDocuments(query);
+
+    // Fetch vendors with pagination
+    const vendors = await Vendor.find(query).skip(skip).limit(itemsPerPage);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+    // Handle case when no vendors are found
     if (vendors.length === 0) {
-      return res
-        .status(404)
-        .json({success:true , message: "No vendor found with the provided criteria" });
+      return res.status(404).json({
+        success: true,
+        message: "No vendors found with the provided criteria.",
+      });
     }
 
-     return res.status(200).json(vendors);
+    // Respond with vendors and pagination data
+    return res.status(200).json({
+      success: true,
+      message: "Vendors retrieved successfully.",
+      data: {
+        vendors,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount,
+        },
+      },
+    });
   } catch (error) {
-     return res
-      .status(500)
-      .json({ message: "Error finding vendor", error: error.message });
-  }
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching vendors.",
+      error: error.message,
+    });
+  }
 };
+
 
 const getVendorById = async (req, res) => {
   try {
