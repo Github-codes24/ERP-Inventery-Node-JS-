@@ -229,13 +229,113 @@ const deleteProposal = async (req, res) => {
     });
   }
 };
+
+
  
 //check update api ,modify delete proposal api ,add get proposal by id
- 
+const getResponsibleDepartments = (req, res) => {
+  const responsibleDepartments = [
+    "Marketing",
+    "Sales",
+    "Finance",
+    "Operations",
+  ];
+
+  try {
+    // Respond with the list of responsible departments
+    return res.status(200).json({
+      message: "Responsible departments retrieved successfully.",
+      responsibleDepartments,
+    });
+  } catch (error) {
+    console.error("Error fetching responsible departments:", error);
+    return res.status(500).json({
+      message: "Error retrieving responsible departments.",
+      error: error.message,
+    });
+  }
+}; 
+
+const getAssignedTo = (req, res) => {
+  // Define predefined roles for 'assignedTo'
+  const assignedTo = [
+    "Project Manager",
+    "Sales Representative",
+    "Lead Developer",
+    "Marketing Specialist",
+  ];
+
+  try {
+    // Respond with the list of roles
+    return res.status(200).json({
+      message: "Assigned to roles retrieved successfully.",
+      assignedTo,
+    });
+  } catch (error) {
+    console.error("Error fetching assigned to roles:", error);
+    return res.status(500).json({
+      message: "Error retrieving assigned to roles.",
+      error: error.message,
+    });
+  }
+};
+
+const getProposalType = (req, res) => {
+  // Define only 4 random proposal types
+  const proposalTypes = [
+    "Business Proposal",
+    "Project Proposal",
+    "Investment Proposal",
+    "Marketing Proposal",
+  ];
+
+  try {
+    // Respond with the list of proposal types
+    return res.status(200).json({
+      message: "Proposal types retrieved successfully.",
+      proposalTypes,
+    });
+  } catch (error) {
+    console.error("Error fetching proposal types:", error);
+    return res.status(500).json({
+      message: "Error retrieving proposal types.",
+      error: error.message,
+    });
+  }
+};
+const getClientNames = async (req, res) => {
+  // Define a list of 5 client names
+  const clientNames = [
+    "Sam",
+    "Vivky",
+    "John",
+    "Alex",
+    "Maria",
+  ];
+
+  try {
+    // Respond with the list of client names
+    return res.status(200).json({
+      message: "Client names retrieved successfully.",
+      clientNames,
+    });
+  } catch (error) {
+    console.error("Error retrieving client names:", error);
+    return res.status(500).json({
+      message: "Error retrieving client names.",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createProposal,
   getAllProposals,
- 
+  getClientNames,
+  getProposalType,
+  getResponsibleDepartments,
+  getAssignedTo,
   updateProposal,
   deleteProposal,
   getProposalById,

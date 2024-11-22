@@ -1,68 +1,107 @@
 const Client = require("../models/clientModel");
 
 const createClient = async (req, res) => {
+    const {
+      srNo,
+      dealerName,
+      manufacturerName,
+      productName,
+      productCode,
+      description,
+      hsnCode,
+      companyPrice,
+      applicableGst,
+      buyingPrice,
+      sellingPrice,
+      mouValidity,
+      technicalSpecification,
+      date,
+    } = req.body;
+  
+    const {
+      teritaryAuthFile,
+      pptFile,
+      coverLetterFile,
+      productCertificate,
+      isoCertificate,
+      brochureFile,
+    } = req.files || {};
+  
+    // Validate each field separately
+    const error = {}; 
+    if (!srNo) error.srNo = "Serial Number (srNo) is required.";
+    if (!dealerName) error.dealerName = "Dealer Name is required.";
+    if (!manufacturerName) error.manufacturerName = "Manufacturer Name is required.";
+    if (!productName) error.productName = "Product Name is required.";
+    if (!productCode) error.productCode = "Product Code is required.";
+    if (!description) error.description = "Description is required.";
+    if (!hsnCode) error.hsnCode = "HSN Code is required.";
+    if (!companyPrice) error.companyPrice = "Company Price is required.";
+    if (!applicableGst) error.applicableGst = "Applicable GST is required.";
+    if (!buyingPrice) error.buyingPrice = "Buying Price is required.";
+    if (!sellingPrice) error.sellingPrice = "Selling Price is required.";
+    if (!mouValidity) error.mouValidity = "MOU Validity is required.";
+    if (!technicalSpecification) error.technicalSpecification = "Technical Specification is required.";
+    if (!date) error.date = "Date is required.";
+  
+    if (!teritaryAuthFile) error.teritaryAuthFile = "Tertiary Authorization File is required.";
+    if (!pptFile) error.pptFile = "PPT File is required.";
+    if (!coverLetterFile) error.coverLetterFile = "Cover Letter File is required.";
+    if (!productCertificate) error.productCertificate = "Product Certificate is required.";
+    if (!isoCertificate) error.isoCertificate = "ISO Certificate is required.";
+    if (!brochureFile) error.brochureFile = "Brochure File is required.";
+  
+    // If there are missing fields, return a detailed error message
+    if (Object.keys(error).length > 0) {
+      return res.status(400).json({
+        message: "The following fields are missing or invalid:",
+        error,
+      });
+    }
+  
     try {
-        const {
-            srNo,
-            dealerName,
-            manufacturerName,
-            productName,
-            productCode,
-            description,
-            hsnCode,
-            companyPrice,
-            applicableGst,
-            buyingPrice,
-            sellingPrice,
-            mouValidity,
-            technicalSpecification,
-            date,
-        } = req.body;
-
-        const teritaryAuthFile = req.files?.teritaryAuthFile?.[0]?.path || null;
-        const pptFile = req.files?.pptFile?.[0]?.path || null;
-        const coverLetterFile = req.files?.coverLetterFile?.[0]?.path || null;
-        const productCertificate =
-            req.files?.productCertificate?.[0]?.path || null;
-        const isoCertificate = req.files?.isoCertificate?.[0]?.path || null;
-        const brochureFile = req.files?.brochureFile?.[0]?.path || null;
-
-        const client = new Client({
-            srNo,
-            dealerName,
-            manufacturerName,
-            productName,
-            productCode,
-            description,
-            hsnCode,
-            companyPrice,
-            applicableGst,
-            buyingPrice,
-            sellingPrice,
-            mouValidity,
-            technicalSpecification,
-            date,
-            teritaryAuthFile,
-            pptFile,
-            coverLetterFile,
-            productCertificate,
-            isoCertificate,
-            brochureFile,
-        });
-
-        const createdClient = await client.save();
-        return res.status(201).json({
-            success: true,
-            message: "Client created successfully",
-            createdClient,
-        });
+      const newClient = new Client({
+        srNo,
+        dealerName,
+        manufacturerName,
+        productName,
+        productCode,
+        description,
+        hsnCode,
+        companyPrice,
+        applicableGst,
+        buyingPrice,
+        sellingPrice,
+        mouValidity,
+        technicalSpecification,
+        date,
+        teritaryAuthFile: teritaryAuthFile[0].path,
+        pptFile: pptFile[0].path,
+        coverLetterFile: coverLetterFile[0].path,
+        productCertificate: productCertificate[0].path,
+        isoCertificate: isoCertificate[0].path,
+        brochureFile: brochureFile[0].path,
+      });
+  
+      const savedClient = await newClient.save();
+      return res.status(201).json({
+        success: true,
+        message: "Client created successfully.",
+        data: savedClient,
+      });
     } catch (error) {
-        return res.status(500).json({
-            message: "Error creating client",
-            error: error.message,
-        });
+      console.error("Error saving client:", error);
+      return res.status(500).json({
+        message: "Error creating client.",
+        error: error.message,
+      });
     }
 };
+
+  
+
+
+
 
 const findClient = async (req, res) => {
     try {
@@ -204,6 +243,7 @@ const updateClient = async (req, res) => {
             .json({ message: "Error updating client", error: error.message });
     }
 };
+
 
 const getClientById = async (req, res) => {
     try {
