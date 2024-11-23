@@ -1,66 +1,65 @@
 const mongoose = require("mongoose");
 
-const QuotationSchema = new mongoose.Schema({
-  quotationNo: { type: String, unique: true },
-  quotationName: { type: String },
-  quotationDate: { type: Date },
-  validity: { type: Date },
+const QuotationSchema = new mongoose.Schema(
+  {
+    quotationNo: { type: String, unique: true, required: true },
+    quotationName: { type: String, required: true },
+    quotationDate: { type: Date, required: true },
+    validity: { type: Date, required: true },
 
-  from: {
-    companyName: { type: String },
-    address: { type: String },
-    cityStateZip: { type: String },
-    email: { type: String },
-    mobile: { type: String },
-  },
-
-  to: {
-    customerName: { type: String },
-    address: { type: String },
-    cityStateZip: { type: String },
-    email: { type: String },
-    mobile: { type: String },
-  },
-
-  bankDetails: {
-    bankName: { type: String },
-    location: { type: String },
-    accountName: { type: String },
-    accountType: { type: String },
-    ifscCode: { type: String },
-  },
-
-  items: [
-    {
-      itemNo: { type: Number },
-    //  description: { type: String }, // this field is not available in figma
-      quantity: { type: Number },
-      unitPrice: { type: Number },
-      discountPercentage: { type: Number, default: 0 },
-      discountAmount: { type: Number, default: 0 },
-      sgstRate: { type: Number, default: 0 },
-      sgstAmount: { type: Number, default: 0 },
-      cgstRate: { type: Number, default: 0 },
-      cgstAmount: { type: Number, default: 0 },
-      total: { type: Number },
+    from: {
+      companyName: { type: String, required: true },
+      address: { type: String, required: true },
+      cityStateZip: { type: String, required: true },
+      email: { type: String, required: true },
+      mobile: { type: String, required: true },
     },
-  ],
 
-  termsAndConditions: {
-    warranty: { type: String },
-    orderSize: { type: String },
-    paymentTerms: { type: String },
+    to: {
+      customerName: { type: String, required: true },
+      address: { type: String, required: true },
+      cityStateZip: { type: String, required: true },
+      email: { type: String, required: true },
+      mobile: { type: String, required: true },
+    },
+
+    bankDetails: {
+      bankName: { type: String, required: true },
+      location: { type: String, required: true },
+      accountName: { type: String, required: true },
+      accountType: { type: String, required: true },
+      ifscCode: { type: String, required: true },
+    },
+
+    items: [
+      {
+        itemNo: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+        unitPrice: { type: Number, required: true },
+        discountPercentage: { type: Number, default: 0, required: true },
+        discountAmount: { type: Number, default: 0, required: true },
+        sgstRate: { type: Number, default: 0, required: true },
+        sgstAmount: { type: Number, default: 0, required: true },
+        cgstRate: { type: Number, default: 0, required: true },
+        cgstAmount: { type: Number, default: 0, required: true },
+        total: { type: Number, required: true },
+      },
+    ],
+
+    termsAndConditions: {
+      warranty: { type: String, required: true },
+      orderSize: { type: String, required: true },
+      paymentTerms: { type: String, required: true },
+    },
+
+    subtotal: { type: Number, required: true },
+    totalDiscountPercentage: { type: Number, default: 0, required: true },
+    totalDiscountAmount: { type: Number, default: 0, required: true },
+    taxes: { type: Number, default: 0, required: true },
+    netAmount: { type: Number, required: true },
+    isDeleted: { type: Boolean, default: false, required: true },
   },
-
-  subtotal: { type: Number },
-  totalDiscountPercentage: { type: Number, default: 0 },
-  totalDiscountAmount: { type: Number, default: 0 },
-  taxes: { type: Number, default: 0 },
-  netAmount: { type: Number },
-  isDeleted:{
-    type:Boolean,
-    default:false
-  }
-});
+  { timestamps: true } // Correctly placed timestamps option here
+);
 
 module.exports = mongoose.model("Quotation", QuotationSchema);

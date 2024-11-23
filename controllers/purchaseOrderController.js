@@ -1,14 +1,95 @@
 const PurchaseOrder = require('../models/purchaseOrder');
 
 
+// const createPurchaseOrder = async (req, res) => {
+//   try {
+//     const {
+//       poOrderNo,
+//       poDate,
+//       shipAndBillToAddress,
+//       purchaseForm,
+//       orderDetails,
+//       subTotal,
+//       shippingHandling,
+//       taxes,
+//       netAmount,
+//       expiryTerms,
+//       paymentTerms,
+//       deliveryTerms,
+//       returnPolicy,
+//       name,
+//       designation,
+//       email,
+//       contact,
+//     } = req.body;
+
+//     // Validate required fields
+//     if (
+//       !poOrderNo ||
+//       !poDate ||
+//       !shipAndBillToAddress ||
+//       !purchaseForm ||
+//       !orderDetails ||
+//       !subTotal ||
+//       !shippingHandling ||
+//       !taxes ||
+//       !netAmount ||
+//       !expiryTerms ||
+//       !paymentTerms ||
+//       !deliveryTerms ||
+//       !returnPolicy ||
+//       !name ||
+//       !designation ||
+//       !email ||
+//       !contact
+//     ) {
+//       return res.status(400).json({
+//         message: "All fields are required.",
+//       });
+//     }
+
+//     const newPurchaseOrder = new PurchaseOrder({
+//       poOrderNo,
+//       poDate,
+//       shipAndBillToAddress,
+//       purchaseForm,
+//       orderDetails,
+//       subTotal,
+//       shippingHandling,
+//       taxes,
+//       netAmount,
+//       expiryTerms,
+//       paymentTerms,
+//       deliveryTerms,
+//       returnPolicy,
+//       name,
+//       designation,
+//       email,
+//       contact,
+//     });
+
+//     // Save to database
+//     await newPurchaseOrder.save();
+
+//     return res.status(201).json({
+//       message: "Purchase Order created successfully!",
+//       purchaseOrder: newPurchaseOrder,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Error creating purchase order",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const createPurchaseOrder = async (req, res) => {
   try {
-    
     const {
       poOrderNo,
       poDate,
-      shipAndBillToAddress, 
-      purchaseForm, 
+      shipAndBillToAddress,
+      purchaseForm,
       orderDetails,
       subTotal,
       shippingHandling,
@@ -24,7 +105,35 @@ const createPurchaseOrder = async (req, res) => {
       contact,
     } = req.body;
 
-    
+    // Validate required fields
+    const missingFields = [];
+    if (!poOrderNo) missingFields.push("poOrderNo");
+    if (!poDate) missingFields.push("poDate");
+    if (!shipAndBillToAddress) missingFields.push("shipAndBillToAddress");
+    if (!purchaseForm) missingFields.push("purchaseForm");
+    if (!orderDetails) missingFields.push("orderDetails");
+    if (!subTotal) missingFields.push("subTotal");
+    if (!shippingHandling) missingFields.push("shippingHandling");
+    if (!taxes) missingFields.push("taxes");
+    if (!netAmount) missingFields.push("netAmount");
+    if (!expiryTerms) missingFields.push("expiryTerms");
+    if (!paymentTerms) missingFields.push("paymentTerms");
+    if (!deliveryTerms) missingFields.push("deliveryTerms");
+    if (!returnPolicy) missingFields.push("returnPolicy");
+    if (!name) missingFields.push("name");
+    if (!designation) missingFields.push("designation");
+    if (!email) missingFields.push("email");
+    if (!contact) missingFields.push("contact");
+
+    // If any fields are missing, return a detailed error response
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: "The following fields are required:",
+        missingFields,
+      });
+    }
+
+    // Create a new purchase order
     const newPurchaseOrder = new PurchaseOrder({
       poOrderNo,
       poDate,
@@ -45,22 +154,24 @@ const createPurchaseOrder = async (req, res) => {
       contact,
     });
 
-  
-    await newPurchaseOrder.save();
+    // Save to database
+    const savedPurchaseOrder = await newPurchaseOrder.save();
 
-    
+    // Send success response
     return res.status(201).json({
       message: "Purchase Order created successfully!",
-      purchaseOrder: newPurchaseOrder,
+      purchaseOrder: savedPurchaseOrder,
     });
   } catch (error) {
-    
+    // Send error response
+    console.error("Error creating purchase order:", error);
     return res.status(500).json({
       message: "Error creating purchase order",
       error: error.message,
     });
   }
 };
+
 
 const getAllPurchaseOrders = async (req, res) => {
   try {

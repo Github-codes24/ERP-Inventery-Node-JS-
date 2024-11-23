@@ -1,9 +1,64 @@
 const Proposal = require("../models/proposalModel");
  
 // create a proposal
-const createProposal = async (req, res) => {
-  // console.log("Uploaded files:", req.files);
+// const createProposal = async (req, res) => {
+//   // console.log("Uploaded files:", req.files);
  
+//   const {
+//     subject,
+//     clientName,
+//     clientContactInfo,
+//     responsibleDepartment,
+//     assignedTo,
+//     proposalType,
+//     proposalDate,
+//     dueDate,
+//     status,
+//     proposalName,
+//     introduction,
+//     scopeOfWork,
+//     budgetEstimation,
+//     timeline,
+//     comments,
+//     deliverables,
+//     termsConditions,
+//   } = req.body;
+ 
+//   const { coveringLetter, specification, quotation } = req.files;
+ 
+//   try {
+//     const newProposal = new Proposal({
+//       subject,
+//       clientName,
+//       clientContactInfo,
+//       responsibleDepartment,
+//       assignedTo,
+//       proposalType,
+//       proposalDate,
+//       dueDate,
+//       status,
+//       proposalName,
+//       introduction,
+//       scopeOfWork,
+//       budgetEstimation,
+//       timeline,
+//       comments,
+//       deliverables,
+//       termsConditions,
+//       coveringLetter: coveringLetter ? coveringLetter[0].path : null,
+//       specification: specification ? specification[0].path : null,
+//       quotation: quotation ? quotation[0].path : null,
+//     });
+ 
+//     const savedProposal = await newProposal.save();
+//     return res.status(201).json(savedProposal);
+//   } catch (error) {
+//     console.error("Error saving proposal:", error);
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
+
+const createProposal = async (req, res) => {
   const {
     subject,
     clientName,
@@ -23,9 +78,40 @@ const createProposal = async (req, res) => {
     deliverables,
     termsConditions,
   } = req.body;
- 
-  const { coveringLetter, specification, quotation } = req.files;
- 
+
+  const { coveringLetter, specification, quotation } = req.files || {};
+
+  // Validate each field separately
+  const missingFields = [];
+  if (!subject) missingFields.push("subject");
+  if (!clientName) missingFields.push("clientName");
+  if (!clientContactInfo) missingFields.push("clientContactInfo");
+  if (!responsibleDepartment) missingFields.push("responsibleDepartment");
+  if (!assignedTo) missingFields.push("assignedTo");
+  if (!proposalType) missingFields.push("proposalType");
+  if (!proposalDate) missingFields.push("proposalDate");
+  if (!dueDate) missingFields.push("dueDate");
+//if (!status) missingFields.push("status");
+  if (!proposalName) missingFields.push("proposalName");
+  if (!introduction) missingFields.push("introduction");
+  if (!scopeOfWork) missingFields.push("scopeOfWork");
+  if (!budgetEstimation) missingFields.push("budgetEstimation");
+  if (!timeline) missingFields.push("timeline");
+  if (!comments) missingFields.push("comments");
+  if (!deliverables) missingFields.push("deliverables");
+  if (!termsConditions) missingFields.push("termsConditions");
+  if (!coveringLetter) missingFields.push("coveringLetter");
+  if (!specification) missingFields.push("specification");
+  if (!quotation) missingFields.push("quotation");
+
+  // If there are missing fields, return a detailed error message
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      message: "The following fields are missing:",
+      missingFields,
+    });
+  }
+
   try {
     const newProposal = new Proposal({
       subject,
@@ -45,18 +131,19 @@ const createProposal = async (req, res) => {
       comments,
       deliverables,
       termsConditions,
-      coveringLetter: coveringLetter ? coveringLetter[0].path : null,
-      specification: specification ? specification[0].path : null,
-      quotation: quotation ? quotation[0].path : null,
+      coveringLetter: coveringLetter[0].path,
+      specification: specification[0].path,
+      quotation: quotation[0].path,
     });
- 
+
     const savedProposal = await newProposal.save();
     return res.status(201).json(savedProposal);
   } catch (error) {
     console.error("Error saving proposal:", error);
-    return res.status(500).json({ message: error.message });
-  }
+    return res.status(500).json({ message: error.message });
+}
 };
+
 
 const getAllProposals = async (req, res) => {
   try {
@@ -229,13 +316,113 @@ const deleteProposal = async (req, res) => {
     });
   }
 };
+
+
  
 //check update api ,modify delete proposal api ,add get proposal by id
- 
+const getResponsibleDepartments = (req, res) => {
+  const responsibleDepartments = [
+    "Marketing",
+    "Sales",
+    "Finance",
+    "Operations",
+  ];
+
+  try {
+    // Respond with the list of responsible departments
+    return res.status(200).json({
+      message: "Responsible departments retrieved successfully.",
+      responsibleDepartments,
+    });
+  } catch (error) {
+    console.error("Error fetching responsible departments:", error);
+    return res.status(500).json({
+      message: "Error retrieving responsible departments.",
+      error: error.message,
+    });
+  }
+}; 
+
+const getAssignedTo = (req, res) => {
+  // Define predefined roles for 'assignedTo'
+  const assignedTo = [
+    "Project Manager",
+    "Sales Representative",
+    "Lead Developer",
+    "Marketing Specialist",
+  ];
+
+  try {
+    // Respond with the list of roles
+    return res.status(200).json({
+      message: "Assigned to roles retrieved successfully.",
+      assignedTo,
+    });
+  } catch (error) {
+    console.error("Error fetching assigned to roles:", error);
+    return res.status(500).json({
+      message: "Error retrieving assigned to roles.",
+      error: error.message,
+});
+}
+};
+
+const getProposalType = (req, res) => {
+  // Define only 4 random proposal types
+  const proposalTypes = [
+    "Business Proposal",
+    "Project Proposal",
+    "Investment Proposal",
+    "Marketing Proposal",
+  ];
+
+  try {
+    // Respond with the list of proposal types
+    return res.status(200).json({
+      message: "Proposal types retrieved successfully.",
+      proposalTypes,
+    });
+  } catch (error) {
+    console.error("Error fetching proposal types:", error);
+    return res.status(500).json({
+      message: "Error retrieving proposal types.",
+      error: error.message,
+});
+}
+};
+const getClientNames = async (req, res) => {
+  // Define a list of 5 client names
+  const clientNames = [
+    "Sam",
+    "Vivky",
+    "John",
+    "Alex",
+    "Maria",
+  ];
+
+  try {
+    // Respond with the list of client names
+    return res.status(200).json({
+      message: "Client names retrieved successfully.",
+      clientNames,
+    });
+  } catch (error) {
+    console.error("Error retrieving client names:", error);
+    return res.status(500).json({
+      message: "Error retrieving client names.",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createProposal,
   getAllProposals,
- 
+  getClientNames,
+  getProposalType,
+  getResponsibleDepartments,
+  getAssignedTo,
   updateProposal,
   deleteProposal,
   getProposalById,
