@@ -68,6 +68,17 @@ const inventoryRoutes = require('./routes/inventoryRoutes');
 const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
 const quotationRoutes = require('./routes/qoutationRoutes');
 
+app.get("/", (req, res) => {
+  res.send(`
+    <html>
+      <head><title>Inventory</title></head>
+      <body>
+        <h1>Welcome to Inventory</h1>
+      </body>
+    </html>
+  `);
+});
+
 app.use('/api/tenders', tenderRoutes);
 app.use('/api/vendor', vendorRouter);
 app.use('/api/client', clientRouter);
