@@ -5,6 +5,7 @@ const createTender = async (req, res) => {
         console.log("Request Body:", req.body);
 
         const {
+            tenderID,
             tenderName,
             title,
             issueDate,
@@ -65,6 +66,7 @@ const createTender = async (req, res) => {
         // console.log("Extracted Documents:", documents);
 
         const newTender = new Tender({
+            tenderID,
             tenderName,
             title,
             issueDate,
