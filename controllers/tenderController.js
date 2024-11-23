@@ -2,7 +2,6 @@ const Tender = require('../models/tenderModel');
 
 const createTender = async (req, res) => {
     try {
-        console.log("Request Body:", req.body);
 
         const {
             tenderID,
