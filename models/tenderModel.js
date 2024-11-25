@@ -7,7 +7,6 @@ const stockItemSchema = new mongoose.Schema({
   unit: { type: String, required: true },
   description: { type: String, required: true },
   Rate: { type: Number, required: true },
-  projectBidTotal: { type: Number, required: true },
 }, { _id: false });
 
 // Tender Schema
