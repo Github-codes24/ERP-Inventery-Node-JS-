@@ -138,10 +138,10 @@ const createProposal = async (req, res) => {
     });
 
     const savedProposal = await newProposal.save();
-    return res.status(201).json({ success: true  ,savedProposal});
+    return res.status(201).json({ success: true , message: "Proposal created successfully" ,savedProposal});
   } catch (error) {
     console.error("Error saving proposal:", error);
-    return res.status(500).json({success: false , message: error.message });
+    return res.status(500).json({success: false , message: error.message });
 }
 };
 
