@@ -366,8 +366,8 @@ const getAssignedTo = (req, res) => {
     return res.status(500).json({
       message: "Error retrieving assigned to roles.",
       error: error.message,
-});
-}
+    });
+  }
 };
 
 const getProposalType = (req, res) => {
@@ -390,8 +390,8 @@ const getProposalType = (req, res) => {
     return res.status(500).json({
       message: "Error retrieving proposal types.",
       error: error.message,
-});
-}
+    });
+  }
 };
 const getClientNames = async (req, res) => {
   // Define a list of 5 client names
