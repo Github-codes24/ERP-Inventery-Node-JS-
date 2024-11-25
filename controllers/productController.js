@@ -210,10 +210,11 @@ const getStockNames = async (req, res) => {
     const productnames = await Product.find().select('productName -_id');
     const products = productnames.map((product) => product.productName);
     return res.status(200).json({
+      success: true,
       products // Returning the product names
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(500).json({
       message: error.message,
     });
   }
