@@ -5,8 +5,7 @@ const stockItemSchema = new mongoose.Schema({
     quantity: Number,
     unit: String,
     description: String,
-    Rate: Number,
-    projectBidTotal: Number,
+    Rate: Number
 }, { _id: false });
 
 
@@ -49,6 +48,7 @@ const tenderSchema = new mongoose.Schema({
     performanceSecurity: { type: String },
     methodOfSelection: { type: String },
     objectionCharges: { type: Number },
+    projectBidTotal: Number,
     authorizedManager: { type: String },
     authorizedPerson: { type: String },
     stockItems: [stockItemSchema],
