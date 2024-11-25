@@ -44,4 +44,5 @@ router.get("/getProposalType", proposalController.getProposalType);
 router.get("/getAssignedTo", proposalController.getAssignedTo);
 router.get("/getResponsibleDepartments", proposalController.getResponsibleDepartments);
 router.get("/getClientNames", proposalController.getClientNames);
+router.get("/getNewSrNumber", proposalController.getNewSrNumber);
 module.exports = router;

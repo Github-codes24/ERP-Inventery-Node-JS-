@@ -1,5 +1,5 @@
 const express = require("express");
-const { createVendor, findVendor, updateVendor, getVendorById } = require("../controllers/vendorController.js");
+const { createVendor, findVendor, updateVendor, getVendorById,getNewSrNumber } = require("../controllers/vendorController.js");
 
 const route = express.Router();
 
@@ -7,5 +7,7 @@ route.post("/createVendor", createVendor);
 route.get("/getVendorByQuery", findVendor);
 route.get("/getVendorById/:id", getVendorById);
 route.put("/updateVendor/:id", updateVendor);
+
+route.get("/getNewSrNumber", getNewSrNumber);
 
 module.exports = route;

@@ -1,5 +1,19 @@
 const Tender = require('../models/tenderModel');
 
+
+
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Tender.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
+
+
 const createTender = async (req, res) => {
   const {
     tenderID,
@@ -256,4 +270,4 @@ const getTenderById = async (req, res) => {
     }
 };
 
-module.exports = { createTender, getAllTenders, getTenderById };
+module.exports = { createTender, getAllTenders, getTenderById, getNewSrNumber };

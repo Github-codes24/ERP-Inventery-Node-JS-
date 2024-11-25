@@ -17,7 +17,8 @@ const {
     getEmergencyRequiredProducts,
     getProductDetails,
     getProductList,
-    getStockNames
+    getStockNames,
+    getNewSrNumber
 } = require('../controllers/productController');
 
 // More specific routes first
@@ -42,6 +43,8 @@ router.post('/createProduct', upload.fields([
 router.get("/getStockNames",getStockNames);
 
 router.put('/updateProduct/:id', updateProduct);
+
+router.get('/getNewSrNumber', getNewSrNumber);
 
 
 module.exports = router

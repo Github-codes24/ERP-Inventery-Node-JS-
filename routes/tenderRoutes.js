@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { createTender,getAllTenders, getTenderById } = require('../controllers/tenderController'); 
+const { createTender,getAllTenders, getTenderById, getNewSrNumber } = require('../controllers/tenderController'); 
 
 
 const router = express.Router();
@@ -23,5 +23,7 @@ router.get('/getAllTenders',getAllTenders);
 
 // Route to get a tender by ID
 router.get('/getTenderById/:id', getTenderById); 
+
+router.get('/getNewSrNumber', getNewSrNumber);
 
 module.exports = router;

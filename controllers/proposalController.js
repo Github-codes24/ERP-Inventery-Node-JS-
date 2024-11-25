@@ -1,5 +1,17 @@
 const Proposal = require("../models/proposalModel");
  
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Proposal.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
+
+
 // create a proposal
 // const createProposal = async (req, res) => {
 //   // console.log("Uploaded files:", req.files);
@@ -429,4 +441,5 @@ module.exports = {
   updateProposal,
   deleteProposal,
   getProposalById,
+  getNewSrNumber
 };

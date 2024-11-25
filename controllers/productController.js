@@ -1,5 +1,15 @@
 const Product = require('../models/productModel');
 
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Product.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
 
 // Get products by name
 const getProducts = async (req, res) => {
@@ -248,5 +258,6 @@ module.exports = {
     // getTopSellingProducts,
     getEmergencyRequiredProducts,
     getProductDetails,
-    getStockNames
+    getStockNames,
+    getNewSrNumber
 };
