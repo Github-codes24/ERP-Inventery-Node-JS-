@@ -1,5 +1,16 @@
 const Client = require("../models/clientModel");
 
+const getNewSrNumber = async (req,res) => {
+    try {
+        const clients = await Client.find();
+        const currentSrNo = clients.length + 1;
+        return res.status(200).json({ success: true, srNo: currentSrNo });
+    } catch (error) {
+        console.error("Error getting new sr number:", error);
+        return 1;
+    }
+}
+
 const createClient = async (req, res) => {
     try {
         const {
@@ -227,4 +238,5 @@ module.exports = {
     findClient,
     updateClient,
     getClientById,
+    getNewSrNumber
 };
