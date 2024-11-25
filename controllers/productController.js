@@ -203,6 +203,24 @@ const getProductDetails = async (req, res) => {
     }
 };
 
+const getStockNames = async (req, res) => {
+  console.log("hiiii");
+  
+  try {
+    // Fetch only the productName field from all products
+    const productnames = await Product.find().select('productName');
+console.log(productnames);
+
+    return res.status(200).json({
+      products: productnames, // Returning the product names
+    });
+  } catch (error) {
+    return res.status(404).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -210,5 +228,6 @@ module.exports = {
     updateProduct,
     // getTopSellingProducts,
     getEmergencyRequiredProducts,
-    getProductDetails
+    getProductDetails,
+    getStockNames
 };
