@@ -52,14 +52,41 @@ const tenderSchema = new mongoose.Schema({
     authorizedManager: { type: String },
     authorizedPerson: { type: String },
     stockItems: [stockItemSchema],
-    documents: [
-        {
-            fileName: { type: String },
-            fileType: { type: String },
-            filePath: { type: String },
-            uploadDate: { type: Date },
-        },
-    ],
+    tenderCopy:{
+        type: String 
+    },
+    technicalDocuments:{
+         type: String 
+       
+    },
+    tenderFees:{
+       type: String 
+       
+    },
+    emdCopy:{
+        type: String 
+
+    },
+    boq:{
+        type: String 
+
+    },
+    pricing:{
+        type: String 
+
+    },
+    performanceGuarantee:{
+        type: String 
+
+    },
+    mou:{
+        type: String 
+
+    },
+    other:{
+        type: String 
+
+    }
 },
 { timestamps: true }
 );
