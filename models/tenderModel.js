@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
+// Stock Item Schema
 const stockItemSchema = new mongoose.Schema({
-    stockName: String,
-    quantity: Number,
-    unit: String,
-    description: String,
-    Rate: Number
+  stockName: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  unit: { type: String, required: true },
+  description: { type: String, required: true },
+  Rate: { type: Number, required: true },
 }, { _id: false });
 
-
+// Tender Schema
 const tenderSchema = new mongoose.Schema({
     tenderID: { type: String, required: true },
     tenderName: { type: String, required: true },

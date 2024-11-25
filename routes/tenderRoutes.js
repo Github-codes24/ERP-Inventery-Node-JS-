@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { createTender, getAllTenders, getTenderById } = require('../controllers/tenderController'); 
+const { createTender,getAllTenders, getTenderById } = require('../controllers/tenderController'); 
 
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router.post('/createTender', upload.fields([
 ]), createTender);
 
 // Route to get all tenders
-router.get('/getTenders', getAllTenders); 
+router.get('/getAllTenders',getAllTenders); 
 
 // Route to get a tender by ID
 router.get('/getTenderById/:id', getTenderById); 
