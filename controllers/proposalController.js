@@ -72,6 +72,7 @@ const getNewSrNumber = async (req,res) => {
 
 const createProposal = async (req, res) => {
   const {
+    proposalID,
     subject,
     clientName,
     clientContactInfo,
@@ -127,6 +128,7 @@ const createProposal = async (req, res) => {
 
   try {
     const newProposal = new Proposal({
+      proposalID,
       subject,
       clientName,
       clientContactInfo,
