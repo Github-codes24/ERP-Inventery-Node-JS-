@@ -7,7 +7,7 @@ router.get('/getAllPurchaseOrders', getAllPurchaseOrders);
 router.get('/findOrdersByQueryParams', findOrdersByQueryParams);
 router.get('/getOrderById/:id', getOrderById);
 router.put('/updateOrder/:id', updateOrderById);
-router.get('/getNewSrNumber', getNewSrNumber);
+router.get('/getSrNoForPurchase', getNewSrNumber);
 
 
 module.exports = router;

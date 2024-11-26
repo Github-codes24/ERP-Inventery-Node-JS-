@@ -24,6 +24,6 @@ router.get('/getAllTenders',getAllTenders);
 // Route to get a tender by ID
 router.get('/getTenderById/:id', getTenderById); 
 
-router.get('/getNewSrNumber', getNewSrNumber);
+router.get('/getSrNoForTender', getNewSrNumber);
 
 module.exports = router;

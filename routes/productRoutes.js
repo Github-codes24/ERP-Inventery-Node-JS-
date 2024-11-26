@@ -44,7 +44,7 @@ router.get("/getStockNames",getStockNames);
 
 router.put('/updateProduct/:id', updateProduct);
 
-router.get('/getNewSrNumber', getNewSrNumber);
+router.get('/getSrNoForProduct', getNewSrNumber);
 
 
 module.exports = router
