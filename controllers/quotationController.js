@@ -374,7 +374,7 @@ const getCities = async (req, res) => {
   }
 };
 
-const getClientNames = (req,res)=>{
+const getCustomerNames = (req,res)=>{
   const names = ["Ramu","Shamu","Kalu"];
   res.status(200).json({
     success:true,
@@ -393,5 +393,5 @@ module.exports = {
   getStates,
   getCities,
   getCountry,
-  getClientNames
+  getCustomerNames
 };
