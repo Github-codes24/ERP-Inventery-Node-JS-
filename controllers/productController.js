@@ -41,7 +41,7 @@ const getProductById = async (req, res) => {
 // Create a new product
 const createProduct = async (req, res) => {
   try {
-    const {
+    let {
       srNo,
       productName,
       model,
