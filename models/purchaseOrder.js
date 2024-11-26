@@ -38,6 +38,11 @@ const purchaseOrderSchema = new mongoose.Schema({
   designation: { type: String, required: true },
   email: { type: String, required: true },
   contact: { type: String, required: true },
+  status:{
+    type:String,
+    default:"Pending",
+    enum:["Pending","Reject","Approved"]
+  }
 }, 
 { timestamps: true }
 );
