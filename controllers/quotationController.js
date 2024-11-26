@@ -281,11 +281,89 @@ const getAllQuotations = async (req, res) => {
   }
 };
 
+
+const getCountry =(req,res)=>{
+  try{
+    // const countries = State.getCountryList().map((country) => ({
+    //   name: country.name,
+    //   isoCode: country.isoCode,
+    // }));
+    const countries = [
+      {
+        name: "India",
+        isoCode: "IN",
+      }
+    ]
+    return res.status(200).json({
+      success: true,
+      data: countries,
+    });
+  }catch(error){
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+const getStates = async (req, res) => {
+  try {
+    const countries = req.query.country;
+    const states = State.getStatesOfCountry(countries).map((state) => ({
+      name: state.name,
+      isoCode: state.isoCode,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: states,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCities = async (req, res) => {
+  try {
+    const { stateCode, country } = req.query;
+
+    if (!stateCode) {
+      return res.status(400).json({
+        success: false,
+        message: "State code is required",
+      });
+    }
+
+    const cities = City.getCitiesOfState(country, stateCode).map((city) => ({
+      name: city.name,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: cities,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   createQuotation,
   getQuotationById,
   deleteQuotationById,
   updateQuotation,
   getAllQuotations,
-  getNewSrNumber
+  getNewSrNumber,
+  getStates,
+  getCities,
+  getCountry
 };
