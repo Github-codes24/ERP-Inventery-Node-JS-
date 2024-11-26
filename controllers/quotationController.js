@@ -130,14 +130,24 @@ const createQuotation = async (req, res) => {
       missingFields.push("from");
     } else {
       if (!from.companyName) missingFields.push("from.companyName");
-      if (!from.email) missingFields.push("from.email");
-      if (!from.mobile) missingFields.push("from.mobile");
+      if (!from.companyAddress) missingFields.push("from.companyAddress");
+      if (!from.companyCountry) missingFields.push("from.companyCountry");
+      if (!from.companyState) missingFields.push("from.companyState");
+      if (!from.companyCity) missingFields.push("from.companyCity");
+      if (!from.companyZipcode) missingFields.push("from.companyZipcode");
+      if (!from.companyEmail) missingFields.push("from.companyEmail");
+      if (!from.companyMobile) missingFields.push("from.companyMobile");
     }
     if (!to) {
       missingFields.push("to");
     } else {
       if (!to.customerName) missingFields.push("to.customerName");
-      if (!to.address) missingFields.push("to.address");
+      if (!to.customerAddress) missingFields.push("to.customerAddress");
+      if (!to.customerCountry) missingFields.push("to.customerCountry");
+      if (!to.customerState) missingFields.push("to.customerState");
+      if (!to.customerCity) missingFields.push("to.customerCity");
+      if (!to.customerZipcode) missingFields.push("to.customerZipcode");
+      if (!to.customerMobile) missingFields.push("to.customerMobile");
     }
     if (!bankDetails) {
       missingFields.push("bankDetails");

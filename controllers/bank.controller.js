@@ -15,8 +15,7 @@ const getBanksName = async (req, res) => {
   try {
     const banks = await Bank.find().select("bankName");
 
-    const bankNames = banks.map(bank => bank.bankName);
-    return res.status(200).json({ success: true, banks: bankNames });
+    return res.status(200).json({ success: true, banks });
   } catch (error) {
     return res.status(500).json({ message: "Server Error", error: error.message });
   }
