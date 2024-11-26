@@ -4,6 +4,6 @@ const dashboardController = require('../controllers/dashboardController');
 
 
 router.get('/totalOrder', dashboardController.totalOrder);
-router.get('/totalPendingOrder', dashboardController.totalPendingOrder);
+//router.get('/totalPendingOrder', dashboardController.totalPendingOrder);
 
 module.exports = router;
