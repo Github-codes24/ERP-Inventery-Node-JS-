@@ -97,7 +97,6 @@ const createProduct = async (req, res) => {
       gstRate, 
       applicableTaxes, 
       date,
-      stock,
       productImage,
       productBrochure,
       pptAvailable,
