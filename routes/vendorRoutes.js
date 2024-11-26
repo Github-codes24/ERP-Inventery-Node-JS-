@@ -8,6 +8,6 @@ route.get("/getVendorByQuery", findVendor);
 route.get("/getVendorById/:id", getVendorById);
 route.put("/updateVendor/:id", updateVendor);
 
-route.get("/getNewSrNumber", getNewSrNumber);
+route.get("/getSrNoForVendor", getNewSrNumber);
 
 module.exports = route;
