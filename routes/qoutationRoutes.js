@@ -11,4 +11,5 @@ router.get("/getSrNoForQuotation",quotationController.getNewSrNumber);
 router.get("/getStates", quotationController.getStates);
 router.get("/getCities", quotationController.getCities);
 router.get("/getCountry", quotationController.getCountry);
+router.get("/getClientNames", quotationController.getClientNames);
 module.exports = router;

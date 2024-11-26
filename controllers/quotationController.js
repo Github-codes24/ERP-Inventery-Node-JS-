@@ -374,7 +374,13 @@ const getCities = async (req, res) => {
   }
 };
 
-
+const getClientNames = (req,res)=>{
+  const names = ["Ramu","Shamu","Kalu"];
+  res.status(200).json({
+    success:true,
+    data:names
+  })
+}
 
 
 module.exports = {
@@ -386,5 +392,6 @@ module.exports = {
   getNewSrNumber,
   getStates,
   getCities,
-  getCountry
+  getCountry,
+  getClientNames
 };
