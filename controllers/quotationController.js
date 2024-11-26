@@ -12,7 +12,8 @@ const getNewSrNumber = async (req, res) => {
     const mobile = "9735792358";
     const state="Maharashtra";
     const city = "nashik";
-
+    const country = "India";
+    const zipCode = "422101";
     
     return res.status(200).json({
       success: true,
@@ -22,7 +23,9 @@ const getNewSrNumber = async (req, res) => {
       address:address,
       mobile:mobile,
       city:city,
-      state:state
+      state:state,
+      country:country,
+      zipCode:zipCode
     });
   } catch (error) {
     console.error("Error getting new serial number:", error);
