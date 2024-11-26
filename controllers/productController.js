@@ -75,6 +75,19 @@ const createProduct = async (req, res) => {
     const pptAvailable = req.files?.pptAvailable?.[0]?.path || null;
     const coveringLetter = req.files?.coveringLetter?.[0]?.path || null;
     const isoCertificate = req.files?.isoCertificate?.[0]?.path || null;
+     //check if data of expiryDate startDate endDate and date are in string if yes then parse it
+    if(typeof expiryDate === 'string'){
+      expiryDate = new Date(expiryDate);
+    }
+    if(typeof startDate === 'string'){
+      startDate = new Date(startDate);
+    }
+    if(typeof endDate === 'string'){
+      endDate = new Date(endDate);
+    }
+    if(typeof date === 'string'){
+      date = new Date(date);
+    }
 
     const product = new Product({
       srNo,
