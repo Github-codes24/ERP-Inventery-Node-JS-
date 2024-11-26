@@ -9,18 +9,24 @@ const QuotationSchema = new mongoose.Schema(
 
     from: {
       companyName: { type: String, required: true },
-      address: { type: String, required: true },
-      cityStateZip: { type: String, required: true },
-      email: { type: String, required: true },
-      mobile: { type: String, required: true },
+      companyAddress: { type: String, required: true },
+      companyCountry: { type: String, required: true },
+      companyState: { type: String, required: true },
+      companyCity: { type: String, required: true },
+      companyZipcode: { type: String, required: true },
+      companyEmail: { type: String, required: true },
+      companyMobile: { type: String, required: true },
     },
 
     to: {
       customerName: { type: String, required: true },
-      address: { type: String, required: true },
-      cityStateZip: { type: String, required: true },
-      email: { type: String, required: true },
-      mobile: { type: String, required: true },
+      customerAddress: { type: String, required: true },
+      customerCountry: { type: String, required: true },
+      customerState: { type: String, required: true },
+      customerCity: { type: String, required: true },
+      customerZipcode: { type: String, required: true },
+      customerEmail: { type: String, required: true },
+      customerMobile: { type: String, required: true },
     },
 
     bankDetails: {
