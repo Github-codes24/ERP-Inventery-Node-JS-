@@ -205,10 +205,10 @@ const deleteQuotationById = async (req, res) => {
     deletedQuotation.isDeleted = true;
     await deletedQuotation.save();
     
-    return res.status(200).json({ message: "Quotation deleted successfully", deletedQuotation });
+    return res.status(200).json({ success: true , message: "Quotation deleted successfully" });
   
   } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
+    return res.status(500).json({  success: false , message: "Server error", error });
   }
 };
 
