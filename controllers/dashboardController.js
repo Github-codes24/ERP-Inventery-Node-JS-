@@ -27,7 +27,7 @@ const totalOrder = async (req, res) => {
    
    
 
-   console.log(filter)
+   
 
     // Query the database based on the filter
     const totalOrder = await PurchaseOrder.countDocuments(filter);
