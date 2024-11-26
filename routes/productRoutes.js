@@ -16,7 +16,9 @@ const {
     getTopSellingProducts,
     getEmergencyRequiredProducts,
     getProductDetails,
-    getProductList
+    getProductList,
+    getStockNames,
+    getNewSrNumber
 } = require('../controllers/productController');
 
 // More specific routes first
@@ -25,8 +27,8 @@ router.get('/emergency-required', getEmergencyRequiredProducts);
 router.get('/product-details', getProductDetails);
 
 // Generic routes last
-router.get('/', getProducts); // Get all products
-router.get('/:id', getProductById); // Get product by ID
+router.get('/getProducts', getProducts); // Get all products
+router.get('/getProductById/:id', getProductById); // Get product by ID
 
 // Route for creating a new product with file uploads
 router.post('/createProduct', upload.fields([
@@ -38,6 +40,11 @@ router.post('/createProduct', upload.fields([
 ]), createProduct);
 
 // Route for updating a product by ID
-router.put('/:id', updateProduct);
+router.get("/getStockNames",getStockNames);
+
+router.put('/updateProduct/:id', updateProduct);
+
+router.get('/getSrNoForProduct', getNewSrNumber);
+
 
 module.exports = router

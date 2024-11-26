@@ -1,5 +1,15 @@
 const Product = require('../models/productModel');
 
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Product.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
 
 // Get products by name
 const getProducts = async (req, res) => {
@@ -171,36 +181,73 @@ const updateProduct = async (req, res) => {
 //===#### Needs to be fixed #######====
 // Get emergency-required products (items with low stock)   
 const getEmergencyRequiredProducts = async (req, res) => {
-    try {
-        const products = await Product.find({ stock: { $lte: 3 } }).sort({ stock: 1 });
-       return  res.status(200).json(products);
-    } catch (error) {
-        console.error("Error fetching emergency-required products:", error);
-       return  res.status(500).json({ message: 'Server Error', error: error.message });
+  try {
+    const products = await Product.aggregate([
+      {
+        $match: {
+          quantity: { $lte:3 } 
+        }
+      },
+      {
+        $project: { 
+          quantity: 1,
+          productName: 1,
+          _id: 1
+        }
+      },
+      {
+        $sort: { quantity: 1 } // Sort by quantity in ascending order
+      }
+    ]);
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: "No products found with low quantity." });
     }
+   
+    return res.status(200).json({ products });
+  } catch (error) {
+    console.error("Error fetching products with specified quantity values:", error);
+    return res.status(500).json({ message: "Error fetching products", error: error.message });
+  }
 }
 
 // Get Product Details Card for Product Management 
 const getProductDetails = async (req, res) => {
-    try {
-        // Get out of stock items count (assuming stock = 0 means out of stock)
-        const outOfStockCount = await Product.countDocuments({ stock: 0 });
+  try {
+      
+      const outOfStockCount = await Product.countDocuments({ quantity: 0 });
 
-        // Get total item groups count (assuming 'itemGroup' is a distinct field)
-        const totalItemGroups = await Product.distinct('itemGroup').length;
+      
+      const totalItemGroups = await Product.distinct('itemGroup').length;
 
-        // Get total item count
-        const totalItems = await Product.countDocuments({});
+      const totalItems = await Product.countDocuments({});
 
-       return  res.json({
-            outOfStock: outOfStockCount,
-            totalItemGroups: totalItemGroups,
-            totalItems: totalItems
-        });
-    } catch (error) {
-        console.error("Error fetching product details:", error);
-       return  res.status(500).json({ message: 'Server Error', error: error.message });
-    }
+     return  res.status(200).json({
+          outOfStock: outOfStockCount,
+          totalItemGroups: totalItemGroups,
+          totalItems: totalItems
+      });
+  } catch (error) {
+      console.error("Error fetching product details:", error);
+     return  res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
+const getStockNames = async (req, res) => {
+  
+  try {
+    // Fetch only the productName field from all products
+    const productnames = await Product.find().select('productName -_id');
+    const products = productnames.map((product) => product.productName);
+    return res.status(200).json({
+      success: true,
+      products // Returning the product names
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
@@ -210,5 +257,7 @@ module.exports = {
     updateProduct,
     // getTopSellingProducts,
     getEmergencyRequiredProducts,
-    getProductDetails
+    getProductDetails,
+    getStockNames,
+    getNewSrNumber
 };

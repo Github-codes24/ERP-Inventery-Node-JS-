@@ -1,5 +1,17 @@
 const Proposal = require("../models/proposalModel");
  
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Proposal.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
+
+
 // create a proposal
 // const createProposal = async (req, res) => {
 //   // console.log("Uploaded files:", req.files);
@@ -107,6 +119,7 @@ const createProposal = async (req, res) => {
   // If there are missing fields, return a detailed error message
   if (missingFields.length > 0) {
     return res.status(400).json({
+      success: false ,
       message: "The following fields are missing:",
       missingFields,
     });
@@ -137,10 +150,10 @@ const createProposal = async (req, res) => {
     });
 
     const savedProposal = await newProposal.save();
-    return res.status(201).json(savedProposal);
+    return res.status(201).json({ success: true , message: "Proposal created successfully" ,savedProposal});
   } catch (error) {
     console.error("Error saving proposal:", error);
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({success: false , message: error.message });
 }
 };
 
@@ -196,7 +209,7 @@ const getAllProposals = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({success: false , message: error.message });
   }
 };
  
@@ -263,11 +276,12 @@ const updateProposal = async (req, res) => {
     }
  
     return res.status(200).json({
+      success: true ,
       message: "Proposal updated successfully.",
       proposal: updatedProposal,
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({success: false , message: error.message });
   }
 };
  
@@ -306,11 +320,12 @@ const deleteProposal = async (req, res) => {
     proposal.isDeleted = true;
     await proposal.save();
 
-    return res.status(200).json({ message: "Proposal deleted successfully" });
+    return res.status(200).json({success: true , message: "Proposal deleted successfully" });
 
   } catch (error) {
     console.error("Error deleting proposal:", error);
     return res.status(500).json({ 
+      success: false ,
       message: "Error deleting proposal",
       error: error.message 
     });
@@ -363,8 +378,8 @@ const getAssignedTo = (req, res) => {
     return res.status(500).json({
       message: "Error retrieving assigned to roles.",
       error: error.message,
-});
-}
+    });
+  }
 };
 
 const getProposalType = (req, res) => {
@@ -387,8 +402,8 @@ const getProposalType = (req, res) => {
     return res.status(500).json({
       message: "Error retrieving proposal types.",
       error: error.message,
-});
-}
+    });
+  }
 };
 const getClientNames = async (req, res) => {
   // Define a list of 5 client names
@@ -426,4 +441,5 @@ module.exports = {
   updateProposal,
   deleteProposal,
   getProposalById,
+  getNewSrNumber
 };

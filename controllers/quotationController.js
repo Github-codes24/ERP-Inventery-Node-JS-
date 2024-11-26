@@ -1,6 +1,18 @@
 const Quotation = require("../models/quotation");
 
 
+
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Quotation.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
+
 // const createQuotation = async (req, res) => {
 //   try {
    
@@ -274,5 +286,6 @@ module.exports = {
   getQuotationById,
   deleteQuotationById,
   updateQuotation,
-  getAllQuotations
+  getAllQuotations,
+  getNewSrNumber
 };

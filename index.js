@@ -6,6 +6,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const userRoutes = require('./routes/user.route');
+const companyRoutes = require("./routes/company.route");
+
 
 
 dotenv.config();
@@ -69,6 +71,18 @@ const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
 const quotationRoutes = require('./routes/qoutationRoutes');
 const dashboardRoutes=require('./routes/dashboardRoute');
  
+
+app.get("/", (req, res) => {
+  res.send(`
+    <html>
+      <head><title>Inventory</title></head>
+      <body>
+        <h1>Welcome to Inventory</h1>
+      </body>
+    </html>
+  `);
+});
+
 app.use('/api/tenders', tenderRoutes);
 app.use('/api/vendor', vendorRouter);
 app.use('/api/client', clientRouter);
@@ -79,6 +93,8 @@ app.use('/api/purchase-orders', purchaseOrderRoutes);
 app.use('/api/quotations', quotationRoutes); 
 app.use('/api/users', userRoutes);
 app.use('/api/dashboard',dashboardRoutes);
+app.use("/api/company", companyRoutes);
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

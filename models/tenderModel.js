@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
+// Stock Item Schema
 const stockItemSchema = new mongoose.Schema({
-    stockName: String,
-    quantity: Number,
-    unit: String,
-    description: String,
-    Rate: Number,
-    projectBidTotal: Number,
+  stockName: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  unit: { type: String, required: true },
+  description: { type: String, required: true },
+  Rate: { type: Number, required: true },
 }, { _id: false });
 
-
+// Tender Schema
 const tenderSchema = new mongoose.Schema({
     tenderID: { type: String, required: true },
     tenderName: { type: String, required: true },
@@ -49,17 +49,45 @@ const tenderSchema = new mongoose.Schema({
     performanceSecurity: { type: String },
     methodOfSelection: { type: String },
     objectionCharges: { type: Number },
+    projectBidTotal: Number,
     authorizedManager: { type: String },
     authorizedPerson: { type: String },
     stockItems: [stockItemSchema],
-    documents: [
-        {
-            fileName: { type: String },
-            fileType: { type: String },
-            filePath: { type: String },
-            uploadDate: { type: Date },
-        },
-    ],
+    tenderCopy:{
+        type: String 
+    },
+    technicalDocuments:{
+         type: String 
+       
+    },
+    tenderFees:{
+       type: String 
+       
+    },
+    emdCopy:{
+        type: String 
+
+    },
+    boq:{
+        type: String 
+
+    },
+    pricing:{
+        type: String 
+
+    },
+    performanceGuarantee:{
+        type: String 
+
+    },
+    mou:{
+        type: String 
+
+    },
+    other:{
+        type: String 
+
+    }
 },
 { timestamps: true }
 );
