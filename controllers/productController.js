@@ -170,29 +170,63 @@ const updateProduct = async (req, res) => {
 // };
 //===#### Needs to be fixed #######====
 // Get emergency-required products (items with low stock)   
-const getEmergencyRequiredProducts = async (req, res) => {
-    try {
-        const products = await Product.find({ stock: { $lte: 3 } }).sort({ stock: 1 });
-       return  res.status(200).json(products);
-    } catch (error) {
-        console.error("Error fetching emergency-required products:", error);
-       return  res.status(500).json({ message: 'Server Error', error: error.message });
+const getRequiredEmergencyProducts = async (req, res) => {
+  try {
+    const products = await Product.aggregate([
+      {
+        $match: {
+          quantity: { $lte:3 } 
+        }
+      },
+      {
+        $project: { 
+          quantity: 1,
+          productName: 1,
+          _id: 1
+        }
+      },
+      {
+        $sort: { quantity: 1 } // Sort by quantity in ascending order
+      }
+    ]);
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: "No products found with low quantity." });
     }
+   
+    return res.status(200).json({ products });
+  } catch (error) {
+    console.error("Error fetching products with specified quantity values:", error);
+    return res.status(500).json({ message: "Error fetching products", error: error.message });
+  }
 }
 
-// Get Product Details Card for Product Management 
+const getStockNames = async (req, res) => {
+  try {
+    // Fetch only the productName field from all products
+    const productnames = await Product.find({}).select('productName');
+    const products=productnames.map((product)=>product.productName)
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+
 const getProductDetails = async (req, res) => {
     try {
-        // Get out of stock items count (assuming stock = 0 means out of stock)
-        const outOfStockCount = await Product.countDocuments({ stock: 0 });
+        
+        const outOfStockCount = await Product.countDocuments({ quantity: 0 });
 
-        // Get total item groups count (assuming 'itemGroup' is a distinct field)
+        
         const totalItemGroups = await Product.distinct('itemGroup').length;
 
-        // Get total item count
         const totalItems = await Product.countDocuments({});
 
-       return  res.json({
+       return  res.status(200).json({
             outOfStock: outOfStockCount,
             totalItemGroups: totalItemGroups,
             totalItems: totalItems
@@ -209,6 +243,7 @@ module.exports = {
     createProduct,
     updateProduct,
     // getTopSellingProducts,
-    getEmergencyRequiredProducts,
-    getProductDetails
+    getRequiredEmergencyProducts,
+    getProductDetails,
+    getStockNames
 };
