@@ -2,16 +2,37 @@ const Quotation = require("../models/quotation");
 const { State, City } = require("country-state-city");
 
 
-const getNewSrNumber = async (req,res) => {
+const getNewSrNumber = async (req, res) => {
   try {
-      const clients = await Quotation.find();
-      const currentSrNo = clients.length + 1;
-      return res.status(200).json({ success: true, srNo: currentSrNo });
+    const clients = await Quotation.find();
+     const currentSrNo = clients.length + 1;
+    const companyName = "unisol";
+    const email = "unisole@gmail.com";
+    const address = "nashik, Maharashtra";
+    const mobile = "9735792358";
+    const state="Maharashtra";
+    const city = "nashik";
+
+    
+    return res.status(200).json({
+      success: true,
+      srNo: currentSrNo,
+      companyName:companyName,
+      email:email,
+      address:address,
+      mobile:mobile,
+      city:city,
+      state:state
+    });
   } catch (error) {
-      console.error("Error getting new sr number:", error);
-      return 1;
+    console.error("Error getting new serial number:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the serial number.",
+      error: error.message,
+    });
   }
-}
+};
 
 // const createQuotation = async (req, res) => {
 //   try {
