@@ -83,10 +83,10 @@ const getRecentOrders = async (req, res) => {
     }
 
     const recentOrders = await PurchaseOrder.find({
-    $or: [
+      $or: [
         { createdAt: { $gte: startDate, $lte: endDate } },
-        { updatedAt: { $lte: endDate } },
-      ],
+        { updatedAt: { $gte: startDate, $lte: endDate } }
+      ]
     });
 
   
