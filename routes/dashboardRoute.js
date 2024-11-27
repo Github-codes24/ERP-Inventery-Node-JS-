@@ -7,5 +7,5 @@ router.get('/totalOrder', dashboardController.totalOrder);
 router.get('/getRecentOrders',dashboardController.getRecentOrders);
 //router.get('/totalPendingOrder', dashboardController.totalPendingOrder);
 router.get('/totalInventoryValue',dashboardController.totalInventoryValue);
-
+router.get('/getReplenishmentActions',dashboardController.getReplenishmentActions);
 module.exports = router;

@@ -169,11 +169,26 @@ const getRecentOrders = async (req, res) => {
 //   }
 // };
 
-
+const getReplenishmentActions = (req, res) => {
+  const replenishablestock = 12; // Example stock value
+  try {
+    // Send a successful response
+    return res.status(200).json({
+      success: true,
+      replenishablestock,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching replenishablestock",
+    });
+  }
+};
 
 module.exports = {
     totalOrder,
     getRecentOrders,
    // totalPendingOrder
-   totalInventoryValue
+   totalInventoryValue,
+   getReplenishmentActions
 }
