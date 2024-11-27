@@ -125,6 +125,12 @@ const createQuotation = async (req, res) => {
     // Validate required fields
     const missingFields = [];
     if (!quotationNo) missingFields.push("quotationNo");
+
+    const existingQuotation = await Quotation.findOne({ quotationNo });
+    if (existingQuotation) {
+      return res.status(400).json({ message: 'Quotation with the same quotatoin no. already exists' });
+    };
+
     if (!quotationDate) missingFields.push("quotationDate");
     if (!from) {
       missingFields.push("from");
@@ -152,12 +158,17 @@ const createQuotation = async (req, res) => {
     if (!bankDetails) {
       missingFields.push("bankDetails");
     } else {
-      if (!bankDetails.bankName) missingFields.push("bankDetails.bankName");
-      if (!bankDetails.accountName)
-        missingFields.push("bankDetails.accountName");
-      if (!bankDetails.accountType)
-        missingFields.push("bankDetails.accountType");
-      if (!bankDetails.ifscCode) missingFields.push("bankDetails.ifscCode");
+      bankDetails.forEach((detail, index) => {
+        if (!detail.bankName) missingFields.push(`bankDetails[${index}].bankName`);
+        if (!detail.accountNumber)
+          missingFields.push(`bankDetails[${index}].accountNumber`);
+        if (!detail.accountType)
+          missingFields.push(`bankDetails[${index}].accountType`);
+        if (!detail.ifscCode) missingFields.push(`bankDetails[${index}].ifscCode`);
+        if (!detail.branchName)
+          missingFields.push(`bankDetails[${index}].branchName`);
+        if (!detail.address) missingFields.push(`bankDetails[${index}].address`);
+      });
     }
     if (!subtotal) missingFields.push("subtotal");
     if (!netAmount) missingFields.push("netAmount");

@@ -31,10 +31,11 @@ const QuotationSchema = new mongoose.Schema(
 
     bankDetails: [{
       bankName: { type: String, required: true },
-      location: { type: String, required: true },
-      accountName: { type: String, required: true },
+      accountNumber: { type: String, required: true },
       accountType: { type: String, required: true },
       ifscCode: { type: String, required: true },
+      branchName: { type: String, required: true },
+      address: { type: String, required: true },
     }],
 
     items: [
