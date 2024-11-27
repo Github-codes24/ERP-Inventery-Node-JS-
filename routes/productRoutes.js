@@ -49,4 +49,6 @@ router.get('/getSrNoForProduct', getNewSrNumber);
 
 router.get('/getProductTypes', getProductTypes);
 
+router.get('/getTopSellingProducts', getTopSellingProducts);
+
 module.exports = router

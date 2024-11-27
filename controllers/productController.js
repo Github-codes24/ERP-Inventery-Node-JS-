@@ -285,6 +285,15 @@ const getProductTypes = async (req, res) => {
   }
 };
 
+const getTopSellingProducts = async (req, res) => {
+  try {
+    return res.json({products: ["Product 1", "Product 2", "Product 3", "Product 4", "Product 5"]});
+  } catch (error) {
+    console.error("Error fetching top-selling products:", error);
+    return res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+}
+
 module.exports = {
     getProducts,
     getProductById,
@@ -295,5 +304,6 @@ module.exports = {
     getProductDetails,
     getStockNames,
     getNewSrNumber,
-    getProductTypes
+    getProductTypes,
+    getTopSellingProducts
 };
