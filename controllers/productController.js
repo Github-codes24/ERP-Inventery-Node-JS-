@@ -230,13 +230,13 @@ const getProductDetails = async (req, res) => {
       const outOfStockCount = await Product.countDocuments({ quantity: 0 });
 
       
-      const totalItemGroups = await Product.distinct('productType').length;
+      const totalItemGroups = await Product.distinct('productType');
 
       const totalItems = await Product.countDocuments({});
 
      return  res.status(200).json({
           outOfStock: outOfStockCount,
-          totalItemGroups: totalItemGroups,
+          totalItemGroups: totalItemGroups.length,
           totalItems: totalItems
       });
   } catch (error) {
