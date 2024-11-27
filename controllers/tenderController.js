@@ -275,7 +275,6 @@ const updateTender = async (req, res) => {
         delete updateData[key];
       }
     });
-console.log(updateData);
 
     // Update tender
     const updatedTender = await Tender.findByIdAndUpdate(
