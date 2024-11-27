@@ -158,17 +158,14 @@ const createQuotation = async (req, res) => {
     if (!bankDetails) {
       missingFields.push("bankDetails");
     } else {
-      bankDetails.forEach((detail, index) => {
-        if (!detail.bankName) missingFields.push(`bankDetails[${index}].bankName`);
-        if (!detail.accountNumber)
-          missingFields.push(`bankDetails[${index}].accountNumber`);
-        if (!detail.accountType)
-          missingFields.push(`bankDetails[${index}].accountType`);
-        if (!detail.ifscCode) missingFields.push(`bankDetails[${index}].ifscCode`);
-        if (!detail.branchName)
-          missingFields.push(`bankDetails[${index}].branchName`);
-        if (!detail.address) missingFields.push(`bankDetails[${index}].address`);
-      });
+      if (!bankDetails.bankName) missingFields.push("bankDetails.bankName");
+      if (!bankDetails.accountNumber)
+        missingFields.push("bankDetails.accountNumber");
+      if (!bankDetails.accountType)
+        missingFields.push("bankDetails.accountType");
+      if (!bankDetails.ifscCode) missingFields.push("bankDetails.ifscCode");
+      if (!bankDetails.branchName) missingFields.push("bankDetails.branchName");
+      if (!bankDetails.address) missingFields.push("bankDetails.address");
     }
     if (!subtotal) missingFields.push("subtotal");
     if (!netAmount) missingFields.push("netAmount");
