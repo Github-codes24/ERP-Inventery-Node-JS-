@@ -108,7 +108,7 @@ const getRecentOrders = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: recentOrders  
+      data: recentOrders.length
     });
   } catch (error) {
     console.error("Error fetching recent orders:", error);
@@ -173,7 +173,7 @@ const getRecentOrders = async (req, res) => {
 
 module.exports = {
     totalOrder,
-    getRecentOrders
+    getRecentOrders,
    // totalPendingOrder
    totalInventoryValue
 }
