@@ -47,6 +47,69 @@ const totalOrder = async (req, res) => {
 
 
 
+const getRecentOrders = async (req, res) => {
+  try {
+    // Extract optional date filters from query parameters
+    const { fromDate, toDate } = req.query;
+
+    let startDate;
+    let endDate;
+
+    if ((fromDate && !toDate) || (!fromDate && toDate)) {
+      return res.status(400).json({
+        message: "Both 'fromDate' and 'toDate' are required if one is provided.",
+      });
+    }
+
+
+    // Validate and set the date range
+    if (fromDate && toDate) {
+      if (
+        !moment(fromDate, "YYYY-MM-DD", true).isValid() ||
+        !moment(toDate, "YYYY-MM-DD", true).isValid()
+      ) {
+        return res
+          .status(400)
+          .json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
+      }
+
+      
+      startDate = moment(fromDate).startOf('day').toDate();  
+      endDate = moment(toDate).endOf('day').toDate();  
+    } else {
+      // Default to the current month if no dates are provided
+      startDate = moment().startOf('month').toDate();
+      endDate = moment().endOf('month').toDate();
+    }
+
+    const recentOrders = await PurchaseOrder.find({
+    $or: [
+        { createdAt: { $gte: startDate, $lte: endDate } },
+        { updatedAt: { $lte: endDate } },
+      ],
+    });
+
+  
+    res.status(200).json({
+      success: true,
+      data: recentOrders.length,  
+    });
+  } catch (error) {
+    console.error('Error fetching recent orders:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching recent orders',
+    });
+  }
+};
+
+
+
+
+
+
+
+
 
 
 // const totalPendingOrder = async (req, res) => {
@@ -93,5 +156,6 @@ const totalOrder = async (req, res) => {
 
 module.exports = {
     totalOrder,
+    getRecentOrders
    // totalPendingOrder
 }

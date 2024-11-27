@@ -11,18 +11,6 @@ const getNewSrNumber = async (req,res) => {
   }
 }
 
-
-const getNewSrNumber = async (req,res) => {
-  try {
-      const clients = await Product.find();
-      const currentSrNo = clients.length + 1;
-      return res.status(200).json({ success: true, srNo: currentSrNo });
-  } catch (error) {
-      console.error("Error getting new sr number:", error);
-      return 1;
-  }
-}
-
 // Get products by name
 const getProducts = async (req, res) => {
   try {
@@ -204,11 +192,7 @@ const updateProduct = async (req, res) => {
 // };
 //===#### Needs to be fixed #######====
 // Get emergency-required products (items with low stock)   
-<<<<<<< HEAD
-const getRequiredEmergencyProducts = async (req, res) => {
-=======
 const getEmergencyRequiredProducts = async (req, res) => {
->>>>>>> f58a05f49eb07b9c4dcb18e518e1a751bb1ea044
   try {
     const products = await Product.aggregate([
       {
@@ -239,42 +223,8 @@ const getEmergencyRequiredProducts = async (req, res) => {
   }
 }
 
-const getStockNames = async (req, res) => {
-  try {
-    // Fetch only the productName field from all products
-    const productnames = await Product.find({}).select('productName');
-    const products=productnames.map((product)=>product.productName)
-    return res.status(200).json(products);
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-
+// Get Product Details Card for Product Management 
 const getProductDetails = async (req, res) => {
-<<<<<<< HEAD
-    try {
-        
-        const outOfStockCount = await Product.countDocuments({ quantity: 0 });
-
-        
-        const totalItemGroups = await Product.distinct('itemGroup').length;
-
-        const totalItems = await Product.countDocuments({});
-
-       return  res.status(200).json({
-            outOfStock: outOfStockCount,
-            totalItemGroups: totalItemGroups,
-            totalItems: totalItems
-        });
-    } catch (error) {
-        console.error("Error fetching product details:", error);
-       return  res.status(500).json({ message: 'Server Error', error: error.message });
-    }
-=======
   try {
       
       const outOfStockCount = await Product.countDocuments({ quantity: 0 });
@@ -310,7 +260,6 @@ const getStockNames = async (req, res) => {
       message: error.message,
     });
   }
->>>>>>> f58a05f49eb07b9c4dcb18e518e1a751bb1ea044
 };
 
 module.exports = {
@@ -319,11 +268,7 @@ module.exports = {
     createProduct,
     updateProduct,
     // getTopSellingProducts,
-<<<<<<< HEAD
-    getRequiredEmergencyProducts,
-=======
     getEmergencyRequiredProducts,
->>>>>>> f58a05f49eb07b9c4dcb18e518e1a751bb1ea044
     getProductDetails,
     getStockNames,
     getNewSrNumber
