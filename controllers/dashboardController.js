@@ -74,14 +74,14 @@ const getRecentOrders = async (req, res) => {
       }
 
       
-      startDate = moment(fromDate).startOf('day').toDate();  
-      endDate = moment(toDate).endOf('day').toDate();  
+      startDate = moment.utc(fromDate).startOf("day").toDate(); 
+      endDate = moment.utc(toDate).endOf("day").toDate();
     } else {
       // Default to the current month if no dates are provided
-      startDate = moment().startOf('month').toDate();
-      endDate = moment().endOf('month').toDate();
+      startDate = moment.utc().startOf("month").toDate();
+      endDate = moment.utc().endOf("month").toDate();
     }
-
+    console.log(endDate);
     const recentOrders = await PurchaseOrder.find({
       $or: [
         { createdAt: { $gte: startDate, $lte: endDate } },
@@ -92,7 +92,7 @@ const getRecentOrders = async (req, res) => {
   
     res.status(200).json({
       success: true,
-      data: recentOrders.length,  
+      data: recentOrders.length  
     });
   } catch (error) {
     console.error('Error fetching recent orders:', error);
