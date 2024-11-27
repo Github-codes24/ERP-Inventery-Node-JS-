@@ -62,6 +62,9 @@ const totalInventoryValue= async(req,res)=>{
 
 }
 
+const lowInventoryProduct = async(req,res)=>{
+  try{
+ const lowInventoryNumber = await Product.countDocuments({ quantity: { $lte: 3 } })
 
 const getRecentOrders = async (req, res) => {
   try {
@@ -128,6 +131,13 @@ const getRecentOrders = async (req, res) => {
 
 
 
+ return res.status(200).json(lowInventoryNumber)
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 
 // const totalPendingOrder = async (req, res) => {
 //   try {
@@ -175,5 +185,6 @@ module.exports = {
     totalOrder,
     getRecentOrders,
    // totalPendingOrder
-   totalInventoryValue
+   totalInventoryValue,
+   lowInventoryProduct
 }
