@@ -262,6 +262,29 @@ const getStockNames = async (req, res) => {
   }
 };
 
+//get product types
+
+const getProductTypes = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      
+        "productTypes": [
+          "Electronics",
+          "Furniture",
+          "Clothing",
+          "Accessories",
+          "Others"
+        ]
+      
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -271,5 +294,6 @@ module.exports = {
     getEmergencyRequiredProducts,
     getProductDetails,
     getStockNames,
-    getNewSrNumber
+    getNewSrNumber,
+    getProductTypes
 };
