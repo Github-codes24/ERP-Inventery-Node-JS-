@@ -26,6 +26,16 @@ router.get('/getTenderById/:id', getTenderById);
 
 router.get('/getSrNoForTender', getNewSrNumber);
 
-router.put('/updateTender/:id', updateTender);
+router.put('/updateTender/:id', upload.fields([
+    { name: 'tenderCopy', maxCount: 1 },
+    { name: 'technicalDocuments', maxCount: 1 },
+    { name: 'tenderFees', maxCount: 1 },
+    { name: 'emdCopy', maxCount: 1 },
+    { name: 'boq', maxCount: 1 },
+    { name: 'pricing', maxCount: 1 },
+    { name: 'performanceGuarantee', maxCount: 1 },
+    { name: 'mou', maxCount: 1 },
+    { name: 'other', maxCount: 1 },
+]), updateTender);
 
 module.exports = router;
