@@ -125,6 +125,12 @@ const createQuotation = async (req, res) => {
     // Validate required fields
     const missingFields = [];
     if (!quotationNo) missingFields.push("quotationNo");
+
+    const existingQuotation = await Quotation.findOne({ quotationNo });
+    if (existingQuotation) {
+      return res.status(400).json({ message: 'Quotation with the same quotatoin no. already exists' });
+    };
+
     if (!quotationDate) missingFields.push("quotationDate");
     if (!from) {
       missingFields.push("from");
@@ -153,11 +159,13 @@ const createQuotation = async (req, res) => {
       missingFields.push("bankDetails");
     } else {
       if (!bankDetails.bankName) missingFields.push("bankDetails.bankName");
-      if (!bankDetails.accountName)
-        missingFields.push("bankDetails.accountName");
+      if (!bankDetails.accountNumber)
+        missingFields.push("bankDetails.accountNumber");
       if (!bankDetails.accountType)
         missingFields.push("bankDetails.accountType");
       if (!bankDetails.ifscCode) missingFields.push("bankDetails.ifscCode");
+      if (!bankDetails.branchName) missingFields.push("bankDetails.branchName");
+      if (!bankDetails.address) missingFields.push("bankDetails.address");
     }
     if (!subtotal) missingFields.push("subtotal");
     if (!netAmount) missingFields.push("netAmount");

@@ -38,4 +38,10 @@ router.post(
 
 router.get("/getSrNumberForClient", clientController.getNewSrNumber);
 
+router.get("/getMouValidity", clientController.getMouValidity);
+
+router.get("/getApplicableGst", clientController.getApplicableGst);
+
+router.get("/getManufacturerName", clientController.getManufacturerName);
+
 module.exports = router;

@@ -1,4 +1,5 @@
 const PurchaseOrder = require('../models/purchaseOrder');
+const Product = require('../models/productModel');
 
 const moment = require('moment');
 
@@ -44,7 +45,22 @@ const totalOrder = async (req, res) => {
 };
 
 
+const totalInventoryValue= async(req,res)=>{
+  try{
+    const inventoryValue = await Product.find().select('companyPrice');
+    const totalValue = inventoryValue.reduce((sum,product)=>{
+      const price = parseInt(product.companyPrice, 10) || 0; 
+      return sum + price;
+    }, 0);
+   return res.status(200).json({message:"total inventory Value",
+    totalValue
+   })
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 
+}
 
 
 const getRecentOrders = async (req, res) => {
@@ -159,4 +175,5 @@ module.exports = {
     totalOrder,
     getRecentOrders
    // totalPendingOrder
+   totalInventoryValue
 }
