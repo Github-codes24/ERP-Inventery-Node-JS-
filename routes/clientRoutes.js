@@ -40,4 +40,6 @@ router.get("/getSrNumberForClient", clientController.getNewSrNumber);
 
 router.get("/getMouValidity", clientController.getMouValidity);
 
+router.get("/getApplicableGst", clientController.getApplicableGst);
+
 module.exports = router;

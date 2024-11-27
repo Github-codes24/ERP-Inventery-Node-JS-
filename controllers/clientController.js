@@ -283,6 +283,17 @@ const getMouValidity = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+//get applicable gst 
+const getApplicableGst = async (req, res) => {
+    try {
+        const applicableGst = ["5%", "12%", "18%"];
+        
+        return res.status(200).json({ success: true, applicableGst });
+    } catch (error) {
+        console.error("Error getting applicable GST:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 // Export all the functions at the end
 module.exports = {
@@ -291,5 +302,6 @@ module.exports = {
     updateClient,
     getClientById,
     getNewSrNumber,
-    getMouValidity
+    getMouValidity,
+    getApplicableGst
 };
