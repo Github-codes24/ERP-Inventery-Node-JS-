@@ -167,6 +167,15 @@ const createQuotation = async (req, res) => {
       if (!bankDetails.branchName) missingFields.push("bankDetails.branchName");
       if (!bankDetails.address) missingFields.push("bankDetails.address");
     }
+    if(!totalDiscountPercentage){
+      missingFields.push("totalDiscountPercentage");
+    }
+    if(!totalDiscountAmount){
+      missingFields.push("totalDiscountAmount");
+    }
+    if(!taxes){
+      missingFields.push("taxes");
+    }
     if (!subtotal) missingFields.push("subtotal");
     if (!netAmount) missingFields.push("netAmount");
 
