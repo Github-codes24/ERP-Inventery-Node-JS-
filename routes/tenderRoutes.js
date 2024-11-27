@@ -15,7 +15,7 @@ router.post('/createTender', upload.fields([
     { name: 'pricing', maxCount: 1 },
     { name: 'performanceGuarantee', maxCount: 1 },
     { name: 'mou', maxCount: 1 },
-    { name: 'otherDocuments', maxCount: 1 },
+    { name: 'other', maxCount: 1 },
 ]), createTender);
 
 // Route to get all tenders
