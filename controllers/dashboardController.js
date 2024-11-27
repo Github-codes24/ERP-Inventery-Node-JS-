@@ -66,6 +66,12 @@ const lowInventoryProduct = async(req,res)=>{
   try{
  const lowInventoryNumber = await Product.countDocuments({ quantity: { $lte: 3 } })
 
+  return res.status(200).json(lowInventoryNumber)
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
 const getRecentOrders = async (req, res) => {
   try {
     // Extract optional date filters from query parameters
@@ -123,20 +129,6 @@ const getRecentOrders = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
- return res.status(200).json(lowInventoryNumber)
-  }catch(error){
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-}
 
 
 // const totalPendingOrder = async (req, res) => {
