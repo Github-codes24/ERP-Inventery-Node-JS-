@@ -287,7 +287,7 @@ const getProductTypes = async (req, res) => {
 
 const getTopSellingProducts = async (req, res) => {
   try {
-    return res.json({products: ["Product 1", "Product 2", "Product 3", "Product 4", "Product 5"]});
+    return res.json({products: [{productName:"Product 1", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"}, {productName:"Product 2", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"},{productName:"Product 2", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"}]});
   } catch (error) {
     console.error("Error fetching top-selling products:", error);
     return res.status(500).json({ message: 'Server Error', error: error.message });
