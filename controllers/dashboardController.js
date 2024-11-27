@@ -66,7 +66,7 @@ const lowInventoryProduct = async(req,res)=>{
   try{
  const lowInventoryNumber = await Product.countDocuments({ quantity: { $lte: 3 } })
 
-  return res.status(200).json(lowInventoryNumber)
+  return res.status(200).json({data:lowInventoryNumber})
   }catch(error){
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
