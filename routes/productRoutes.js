@@ -18,6 +18,7 @@ const {
     getProductDetails,
     getProductList,
     getStockNames,
+    getProductTypes,
     getNewSrNumber
 } = require('../controllers/productController');
 
@@ -46,5 +47,6 @@ router.put('/updateProduct/:id', updateProduct);
 
 router.get('/getSrNoForProduct', getNewSrNumber);
 
+router.get('/getProductTypes', getProductTypes);
 
 module.exports = router
