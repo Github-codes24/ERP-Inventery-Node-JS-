@@ -286,7 +286,7 @@ const getMouValidity = async (req, res) => {
 //get applicable gst 
 const getApplicableGst = async (req, res) => {
     try {
-        const applicableGst = ["5%", "12%", "18%"];
+        const applicableGst = ["5", "12", "18"];
         
         return res.status(200).json({ success: true, applicableGst });
     } catch (error) {
