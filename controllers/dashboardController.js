@@ -61,7 +61,6 @@ const getRecentOrders = async (req, res) => {
       });
     }
 
-
     // Validate and set the date range
     if (fromDate && toDate) {
       if (
@@ -73,15 +72,17 @@ const getRecentOrders = async (req, res) => {
           .json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
       }
 
-      
       startDate = moment.utc(fromDate).startOf("day").toDate(); 
       endDate = moment.utc(toDate).endOf("day").toDate();
     } else {
-      // Default to the current month if no dates are provided
-      startDate = moment.utc().startOf("month").toDate();
-      endDate = moment.utc().endOf("month").toDate();
+      
+      startDate = moment.utc().subtract(30, "days").startOf("day").toDate();
+      endDate = moment.utc().endOf("day").toDate();
     }
-    console.log(endDate);
+
+    console.log("startDate:", startDate);
+    console.log("endDate:", endDate);
+
     const recentOrders = await PurchaseOrder.find({
       $or: [
         { createdAt: { $gte: startDate, $lte: endDate } },
@@ -89,19 +90,19 @@ const getRecentOrders = async (req, res) => {
       ]
     });
 
-  
     res.status(200).json({
       success: true,
-      data: recentOrders.length  
+      data: recentOrders  
     });
   } catch (error) {
-    console.error('Error fetching recent orders:', error);
+    console.error("Error fetching recent orders:", error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching recent orders',
+      message: "Error fetching recent orders",
     });
   }
 };
+
 
 
 
