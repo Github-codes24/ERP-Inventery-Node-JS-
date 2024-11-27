@@ -403,6 +403,27 @@ const getCustomerNames = (req,res)=>{
   })
 }
 
+//get terms and conditions
+
+const getTermsAndConditions = async (req, res) => {
+  try {
+  const terms = {
+    paymentTerms: "50% advance and 50% after delivery",
+    deliveryTime: "30 days from the date of order",
+    warranty: "1 year warranty on all products",
+  }
+    
+    return res.status(200).json({
+      success: true,
+      terms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
   createQuotation,
@@ -414,5 +435,6 @@ module.exports = {
   getStates,
   getCities,
   getCountry,
-  getCustomerNames
+  getCustomerNames,
+  getTermsAndConditions
 };
