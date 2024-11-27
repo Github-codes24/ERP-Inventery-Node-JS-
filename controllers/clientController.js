@@ -272,11 +272,24 @@ const getClientById = async (req, res) => {
     }
 };
 
+// get mou validity , send data in years 1 to 10
+const getMouValidity = async (req, res) => {
+    try {
+        const mouValidity = ["1 year", "2 years", "3 years", "4 years", "5 years", "6 years", "7 years", "8 years", "9 years", "10 years"];
+        
+        return res.status(200).json({ success: true, mouValidity });
+    } catch (error) {
+        console.error("Error getting MOU validity:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 // Export all the functions at the end
 module.exports = {
     createClient,
     findClient,
     updateClient,
     getClientById,
-    getNewSrNumber
+    getNewSrNumber,
+    getMouValidity
 };
