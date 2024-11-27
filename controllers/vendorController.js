@@ -220,9 +220,24 @@ const updateVendor = async (req, res) => {
 };
 //add sucess messages pending//
 
+
+const getNewSrNumber = async (req,res) => {
+  try {
+      const clients = await Vendor.find();
+      const currentSrNo = clients.length + 1;
+      return res.status(200).json({ success: true, srNo: currentSrNo });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
+}
+
+
+
 module.exports = {
   createVendor,
   findVendor,
   updateVendor,
   getVendorById,
+  getNewSrNumber
 };

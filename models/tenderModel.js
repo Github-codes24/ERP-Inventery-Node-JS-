@@ -11,50 +11,87 @@ const stockItemSchema = new mongoose.Schema({
 
 // Tender Schema
 const tenderSchema = new mongoose.Schema({
-  tenderID: { type: String, required: true },
-  tenderName: { type: String, required: true },
-  title: { type: String, required: true },
-  issueDate: { type: Date, required: true },
-  tenderFloatingDate: { type: Date, required: true },
-  description: { type: String, required: true },
-  bidderName: { type: String, required: true },
-  documentDownloadStartDate: { type: Date, required: true },
-  documentDownloadEndDate: { type: Date, required: true },
-  bidSubmissionStartDate: { type: Date, required: true },
-  bidSubmissionEndDate: { type: Date, required: true },
-  bidValidity: { type: String, required: true },
-  prebidMeetingAddressPortal: { type: String, required: true },
-  technicalBidOpeningDate: { type: Date, required: true },
-  periodOfWork: { type: String, required: true },
-  location: { type: String, required: true },
-  pincode: { type: String, required: true },
-  bidOpeningPlace: { type: String, required: true },
-  productCategory: { type: String, required: true },
-  natureOfWork: { type: String, required: true },
-  proposalsInvitedBy: { type: String, required: true },
-  dateOfOpeningFinancialProposals: { type: Date, required: true },
-  modeOfSubmittingProposals: { type: String, required: true },
-  tenderWebsite: { type: String, required: true },
-  costOfRPFDocument: { type: Number, required: true },
-  earnestMoneyDeposit: { type: Number, required: true },
-  modeOfPayment: { type: String, required: true },
-  amount: { type: Number, required: true },
-  bankName: { type: String, required: true },
-  performanceSecurity: { type: String, required: true },
-  methodOfSelection: { type: String, required: true },
-  objectionCharges: { type: Number, required: true },
-  authorizedManager: { type: String, required: true },
-  authorizedPerson: { type: String, required: true },
-  stockItems: { type: [stockItemSchema], required: true },
-  documents: [
-    {
-      fileName: { type: String, required: true },
-      fileType: { type: String, required: true },
-      filePath: { type: String, required: true },
-      uploadDate: { type: Date, required: true },
+    tenderID: { type: String, required: true },
+    tenderName: { type: String, required: true },
+    title: { type: String, required: true },
+    issueDate: { type: Date, required: true },
+    tenderFloatingDate: { type: Date, required: true },
+    description: { type: String },
+    bidderName: { type: String },
+    documentDownloadStartDate: { type: Date },
+    documentDownloadEndDate: { type: Date },
+    bidSubmissionStartDate: { type: Date },
+    bidSubmissionEndDate: { type: Date },
+    bidValidity: { type: String },
+    prebidMeetingAddressPortal: { type: String },
+    technicalBidOpeningDate: { type: Date },
+    periodOfWork: { type: String },
+    location: { type: String },
+    pincode: { type: String },
+    bidOpeningPlace: { type: String },
+    productCategory: { type: String },
+    natureOfWork: { type: String },
+    proposalsInvitedBy: { type: String },
+    dateOfOpeningFinancialProposals: { type: Date },
+    modeOfSubmittingProposals: { type: String },
+    tenderWebsite: { type: String },
+    costOfRPFDocument: { type: Number },
+    earnestMoneyDeposit: { type: Number },
+    modeOfPayment: { type: String },
+    amount: { type: Number },
+    bankName: { type: String },
+    // stockName: { type: String },
+    // stockDescription: { type: String },
+    // quantity: { type: Number },
+    // unit: { type: String },
+    // Rate: { type: Number },
+    // projectBidTotal: { type: Number },
+    performanceSecurity: { type: String },
+    methodOfSelection: { type: String },
+    objectionCharges: { type: Number },
+    projectBidTotal: Number,
+    authorizedManager: { type: String },
+    authorizedPerson: { type: String },
+    stockItems: [stockItemSchema],
+    tenderCopy:{
+        type: String 
+    },
+    technicalDocuments:{
+         type: String 
+       
+    },
+    tenderFees:{
+       type: String 
+       
+    },
+    emdCopy:{
+        type: String 
+
+    },
+    boq:{
+        type: String 
+
+    },
+    pricing:{
+        type: String 
+
+    },
+    performanceGuarantee:{
+        type: String 
+
+    },
+    mou:{
+        type: String 
+
+    },
+    other:{
+        type: String 
+
     }
-  ],
-}, { timestamps: true });
+},
+{ timestamps: true }
+);
+
 
 const Tender = mongoose.model('Tender', tenderSchema);
 module.exports = Tender;

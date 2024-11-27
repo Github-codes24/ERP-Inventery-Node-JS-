@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const Company = require('../models/company.model');
 
 // Nodemailer setup for sending emails
 const transporter = nodemailer.createTransport({
@@ -180,9 +181,11 @@ const transporter = nodemailer.createTransport({
           sameSite: 'Strict',    // Ensures the cookie is not sent with cross-site requests
           maxAge: 3600000        // Cookie expiration time (1 hour in milliseconds)
         });
+        const company = await Company.findById(user.companyId).select('name');
+        
         // Send a response with user details or redirect URL
         // const redirectUrl = accessRecord.allowedPages.length ? accessRecord.allowedPages[0] : '/default'; // Default or first allowed page
-        return res.status(200).json({ message: 'Login successful',token,id: user._id, companyId: user.companyId, name: user.name});
+        return res.status(200).json({ message: 'Login successful',token,id: user._id, companyId: user.companyId, companyName:company.name, name: user.name});
       } catch (error) {
         return res.status(500).json({ message: 'Error logging in', error: error.message });
       }

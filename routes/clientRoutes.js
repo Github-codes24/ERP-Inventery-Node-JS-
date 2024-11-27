@@ -36,6 +36,6 @@ router.post(
     clientController.createClient,
 );
 
-router.get("/getNewSrNumber", clientController.getNewSrNumber);
+router.get("/getSrNumberForClient", clientController.getNewSrNumber);
 
 module.exports = router;

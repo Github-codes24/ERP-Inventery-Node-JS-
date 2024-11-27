@@ -6,6 +6,9 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const userRoutes = require('./routes/user.route');
+const companyRoutes = require("./routes/company.route");
+const bankRoutes = require("./routes/bank.routes");
+
 
 
 dotenv.config();
@@ -67,6 +70,8 @@ const proposalRoutes = require('./routes/proposalRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
 const quotationRoutes = require('./routes/qoutationRoutes');
+const dashboardRoutes=require('./routes/dashboardRoute');
+ 
 
 app.get("/", (req, res) => {
   res.send(`
@@ -88,6 +93,9 @@ app.use("/api/proposals",proposalRoutes);
 app.use('/api/purchase-orders', purchaseOrderRoutes); 
 app.use('/api/quotations', quotationRoutes); 
 app.use('/api/users', userRoutes);
+app.use('/api/dashboard',dashboardRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/bank", bankRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

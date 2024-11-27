@@ -1,5 +1,41 @@
 const Quotation = require("../models/quotation");
+const { State, City } = require("country-state-city");
 
+
+const getNewSrNumber = async (req, res) => {
+  try {
+    const clients = await Quotation.find();
+     const currentSrNo = clients.length + 1;
+    const companyName = "unisol";
+    const email = "unisole@gmail.com";
+    const address = "nashik, Maharashtra";
+    const mobile = "9735792358";
+    const state="Maharashtra";
+    const city = "nashik";
+    const country = "India";
+    const zipCode = "422101";
+    
+    return res.status(200).json({
+      success: true,
+      srNo: currentSrNo,
+      companyName:companyName,
+      email:email,
+      address:address,
+      mobile:mobile,
+      city:city,
+      state:state,
+      country:country,
+      zipCode:zipCode
+    });
+  } catch (error) {
+    console.error("Error getting new serial number:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the serial number.",
+      error: error.message,
+    });
+  }
+};
 
 // const createQuotation = async (req, res) => {
 //   try {
@@ -94,14 +130,24 @@ const createQuotation = async (req, res) => {
       missingFields.push("from");
     } else {
       if (!from.companyName) missingFields.push("from.companyName");
-      if (!from.email) missingFields.push("from.email");
-      if (!from.mobile) missingFields.push("from.mobile");
+      if (!from.companyAddress) missingFields.push("from.companyAddress");
+      if (!from.companyCountry) missingFields.push("from.companyCountry");
+      if (!from.companyState) missingFields.push("from.companyState");
+      if (!from.companyCity) missingFields.push("from.companyCity");
+      if (!from.companyZipcode) missingFields.push("from.companyZipcode");
+      if (!from.companyEmail) missingFields.push("from.companyEmail");
+      if (!from.companyMobile) missingFields.push("from.companyMobile");
     }
     if (!to) {
       missingFields.push("to");
     } else {
       if (!to.customerName) missingFields.push("to.customerName");
-      if (!to.address) missingFields.push("to.address");
+      if (!to.customerAddress) missingFields.push("to.customerAddress");
+      if (!to.customerCountry) missingFields.push("to.customerCountry");
+      if (!to.customerState) missingFields.push("to.customerState");
+      if (!to.customerCity) missingFields.push("to.customerCity");
+      if (!to.customerZipcode) missingFields.push("to.customerZipcode");
+      if (!to.customerMobile) missingFields.push("to.customerMobile");
     }
     if (!bankDetails) {
       missingFields.push("bankDetails");
@@ -193,10 +239,10 @@ const deleteQuotationById = async (req, res) => {
     deletedQuotation.isDeleted = true;
     await deletedQuotation.save();
     
-    return res.status(200).json({ message: "Quotation deleted successfully", deletedQuotation });
+    return res.status(200).json({ success: true , message: "Quotation deleted successfully" });
   
   } catch (error) {
-    return res.status(500).json({ message: "Server error", error });
+    return res.status(500).json({  success: false , message: "Server error", error });
   }
 };
 
@@ -269,10 +315,96 @@ const getAllQuotations = async (req, res) => {
   }
 };
 
+
+const getCountry =(req,res)=>{
+  try{
+    // const countries = State.getCountryList().map((country) => ({
+    //   name: country.name,
+    //   isoCode: country.isoCode,
+    // }));
+    const countries = [
+      {
+        name: "India",
+        isoCode: "IN",
+      }
+    ]
+    return res.status(200).json({
+      success: true,
+      data: countries,
+    });
+  }catch(error){
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+const getStates = async (req, res) => {
+  try {
+    const countries = req.query.country;
+    const states = State.getStatesOfCountry(countries).map((state) => ({
+      name: state.name,
+      isoCode: state.isoCode,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: states,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCities = async (req, res) => {
+  try {
+    const { stateCode, country } = req.query;
+
+    if (!stateCode) {
+      return res.status(400).json({
+        success: false,
+        message: "State code is required",
+      });
+    }
+
+    const cities = City.getCitiesOfState(country, stateCode).map((city) => ({
+      name: city.name,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: cities,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCustomerNames = (req,res)=>{
+  const names = ["Ramu","Shamu","Kalu"];
+  res.status(200).json({
+    success:true,
+    data:names
+  })
+}
+
+
 module.exports = {
   createQuotation,
   getQuotationById,
   deleteQuotationById,
   updateQuotation,
-  getAllQuotations
+  getAllQuotations,
+  getNewSrNumber,
+  getStates,
+  getCities,
+  getCountry,
+  getCustomerNames
 };
