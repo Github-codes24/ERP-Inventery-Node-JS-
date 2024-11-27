@@ -197,4 +197,107 @@ const getTenderById = async (req, res) => {
     }
 };
 
-module.exports = { createTender, getAllTenders, getTenderById, getNewSrNumber };
+
+
+const updateTender = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Tender ID is required.",
+      });
+    }
+
+    const tender = await Tender.findById(id);
+
+    if (!tender) {
+      return res.status(404).json({
+        success: false,
+        message: "Tender not found.",
+      });
+    }
+
+    // Extract fields from request body
+    const {
+      tenderID, tenderName, title, issueDate, tenderFloatingDate, description,
+      bidderName, documentDownloadStartDate, documentDownloadEndDate,
+      bidSubmissionStartDate, bidSubmissionEndDate, bidValidity,
+      prebidMeetingAddressPortal, technicalBidOpeningDate, periodOfWork,
+      location, pincode, bidOpeningPlace, productCategory, natureOfWork,
+      proposalsInvitedBy, dateOfOpeningFinancialProposals, modeOfSubmittingProposals,
+      tenderWebsite, costOfRPFDocument, earnestMoneyDeposit, modeOfPayment,
+      amount, bankName, performanceSecurity, methodOfSelection, objectionCharges,
+      authorizedManager, authorizedPerson
+    } = req.body;
+
+    // Process stock items
+    const stockItems = Array.isArray(req.body.stockItems) ? 
+      req.body.stockItems.map(item => ({
+        stockName: item.stockName,
+        quantity: Number(item.quantity),
+        unit: item.unit,
+        description: item.description,
+        Rate: Number(item.Rate),
+        projectBidTotal: Number(item.projectBidTotal)
+      })) : [];
+
+    // Process file uploads
+    const documents = {};
+    const fileFields = [
+      'tenderCopy', 'technicalDocuments', 'tenderFees', 'emdCopy',
+      'boq', 'pricing', 'performanceGuarantee', 'mou', 'other'
+    ];
+
+    fileFields.forEach(field => {
+      if (req.files && req.files[field]) {
+        documents[field] = req.files[field][0].path;
+      }
+    });
+
+    // Build update object
+    const updateData = {
+      tenderID, tenderName, title, issueDate, tenderFloatingDate, description,
+      bidderName, documentDownloadStartDate, documentDownloadEndDate,
+      bidSubmissionStartDate, bidSubmissionEndDate, bidValidity,
+      prebidMeetingAddressPortal, technicalBidOpeningDate, periodOfWork,
+      location, pincode, bidOpeningPlace, productCategory, natureOfWork,
+      proposalsInvitedBy, dateOfOpeningFinancialProposals, modeOfSubmittingProposals,
+      tenderWebsite, costOfRPFDocument, earnestMoneyDeposit, modeOfPayment,
+      amount, bankName, performanceSecurity, methodOfSelection, objectionCharges,
+      authorizedManager, authorizedPerson, stockItems, ...documents
+    };
+
+    // Remove undefined fields
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined) {
+        delete updateData[key];
+      }
+    });
+console.log(updateData);
+
+    // Update tender
+    const updatedTender = await Tender.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Tender updated successfully.",
+      data: updatedTender
+    });
+
+  } catch (error) {
+    console.error("Error updating tender:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the tender.",
+      error: error.message
+    });
+  }
+};
+
+module.exports = { createTender, getAllTenders, getTenderById, getNewSrNumber, updateTender };
