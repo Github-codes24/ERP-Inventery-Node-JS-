@@ -295,6 +295,14 @@ const getApplicableGst = async (req, res) => {
     }
 };
 
+const getManufacturerName = async (req, res) => {
+    try {
+        return res.status(200).json({ success: true, manufacturerNames:["Ramu","Shamu","Kalu"] });
+    } catch (error) {
+        console.error("Error getting manufacturer names:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 // Export all the functions at the end
 module.exports = {
     createClient,
@@ -303,5 +311,6 @@ module.exports = {
     getClientById,
     getNewSrNumber,
     getMouValidity,
-    getApplicableGst
+    getApplicableGst,
+    getManufacturerName
 };

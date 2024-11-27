@@ -42,4 +42,6 @@ router.get("/getMouValidity", clientController.getMouValidity);
 
 router.get("/getApplicableGst", clientController.getApplicableGst);
 
+router.get("/getManufacturerName", clientController.getManufacturerName);
+
 module.exports = router;
