@@ -29,14 +29,14 @@ const QuotationSchema = new mongoose.Schema(
       customerMobile: { type: String, required: true },
     },
 
-    bankDetails: [{
+    bankDetails: {
       bankName: { type: String, required: true },
       accountNumber: { type: String, required: true },
       accountType: { type: String, required: true },
       ifscCode: { type: String, required: true },
       branchName: { type: String, required: true },
       address: { type: String, required: true },
-    }],
+    },
 
     items: [
       {
