@@ -18,13 +18,15 @@ const {
     getProductDetails,
     getProductList,
     getStockNames,
-    getNewSrNumber
+    getNewSrNumber,
+    getModelName
 } = require('../controllers/productController');
 
 // More specific routes first
 // router.get('/top-selling', getTopSellingProducts);
 router.get('/emergency-required', getEmergencyRequiredProducts);
 router.get('/product-details', getProductDetails);
+router.get('/getModelName', getModelName);
 
 // Generic routes last
 router.get('/getProducts', getProducts); // Get all products

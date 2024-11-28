@@ -43,7 +43,21 @@ const totalOrder = async (req, res) => {
   }
 };
 
-
+const getReplenishmentActions = (req, res) => {
+  const replenishablestock = 12; // Example stock value
+  try {
+    // Send a successful response
+    return res.status(200).json({
+      success: true,
+      replenishablestock,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching replenishablestock",
+    });
+  }
+};
 
 
 
@@ -72,12 +86,12 @@ const getRecentOrders = async (req, res) => {
           .json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
       }
 
-      startDate = moment.utc(fromDate).startOf("day").toDate(); 
+      startDate = moment.utc(fromDate).startOf("day").toDate();
       endDate = moment.utc(toDate).endOf("day").toDate();
     } else {
-      
-      startDate = moment.utc().subtract(30, "days").startOf("day").toDate();
-      endDate = moment.utc().endOf("day").toDate();
+      // Use the start and end of the current month if no dates are provided
+      startDate = moment.utc().startOf("month").toDate();
+      endDate = moment.utc().endOf("month").toDate();
     }
 
     console.log("startDate:", startDate);
@@ -86,13 +100,13 @@ const getRecentOrders = async (req, res) => {
     const recentOrders = await PurchaseOrder.find({
       $or: [
         { createdAt: { $gte: startDate, $lte: endDate } },
-        { updatedAt: { $gte: startDate, $lte: endDate } }
-      ]
+        { updatedAt: { $gte: startDate, $lte: endDate } },
+      ],
     });
 
     res.status(200).json({
       success: true,
-      data: recentOrders  
+      data: recentOrders.length
     });
   } catch (error) {
     console.error("Error fetching recent orders:", error);
@@ -102,6 +116,7 @@ const getRecentOrders = async (req, res) => {
     });
   }
 };
+
 
 
 
@@ -157,6 +172,7 @@ const getRecentOrders = async (req, res) => {
 
 module.exports = {
     totalOrder,
-    getRecentOrders
+    getRecentOrders,
+    getReplenishmentActions
    // totalPendingOrder
 }

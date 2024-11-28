@@ -261,6 +261,40 @@ const getStockNames = async (req, res) => {
     });
   }
 };
+const getModelName = async (req, res) => {
+  const models = {
+    Asus: {
+      modelName: "TUF Dash F15",
+      modelNo: "FX516PM",
+    },
+    vivobook: {
+      modelName: "VivoBook 14",
+      modelNo: "X415EA",
+    },
+    rogFlow13: {
+      modelName: "ROG Flow 13",
+      modelNo: "X13GV",
+    },
+    MacBook: {
+      modelName: "MacBook Pro 14",
+      modelNo: "A2442",
+    },
+  };
+
+  try {
+    res.status(200).json({
+      success: true,
+      data: models,
+    });
+  } catch (error) {
+    console.error("Error fetching model names:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching model names",
+    });
+  }
+};
+
 
 module.exports = {
     getProducts,
@@ -271,5 +305,6 @@ module.exports = {
     getEmergencyRequiredProducts,
     getProductDetails,
     getStockNames,
-    getNewSrNumber
+    getNewSrNumber,
+    getModelName
 };
