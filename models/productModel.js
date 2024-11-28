@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
     model: { type: String },
     productType: { type: String },
     skuCode: { type: String },
+    warehouse: { type: String },
     amcCmc: { type: String },
     companyName: { type: String },
     availableModelNos: { type: Number },
