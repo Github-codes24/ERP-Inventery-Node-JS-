@@ -2,6 +2,8 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
 const router = express.Router();
+const companyMiddleware = require("../middleware/companyMiddleware");
+router.use(companyMiddleware);
 // POST endpoint to add a user
 router.post('/createUser', userController.createUser);
 

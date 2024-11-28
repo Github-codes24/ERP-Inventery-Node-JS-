@@ -1,9 +1,9 @@
 const express = require('express');
 const multer = require('multer');
 const { createTender,getAllTenders, getTenderById, getNewSrNumber, updateTender } = require('../controllers/tenderController'); 
-
-
 const router = express.Router();
+const companyMiddleware = require("../middleware/companyMiddleware");
+router.use(companyMiddleware);
 const upload = multer({ dest: 'uploads/' }); 
 
 router.post('/createTender', upload.fields([
