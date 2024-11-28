@@ -169,9 +169,7 @@ const createQuotation = async (req, res) => {
     if(!totalDiscountPercentage){
       missingFields.push("totalDiscountPercentage");
     }
-    if(!totalDiscountAmount){
-      missingFields.push("totalDiscountAmount");
-    }
+  
     if(!taxes){
       missingFields.push("taxes");
     }

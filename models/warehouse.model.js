@@ -30,11 +30,12 @@ const warehouseSchema = new mongoose.Schema({
         type: String, required: true
     },
     personalEmail: {
-    products: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-    }]
-}, 
-{ timestamps: true });
+        products: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product"
+            }]
+    }, 
+},
+{timestamps : true});
 
 module.exports = mongoose.model("Warehouse", warehouseSchema);
