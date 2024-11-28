@@ -63,6 +63,7 @@ const createProduct = async (req, res) => {
       gstRate,
       applicableTaxes,
       date,
+      warehouse,
       subTotal,
       freight,
       taxes,
