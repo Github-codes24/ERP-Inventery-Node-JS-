@@ -206,6 +206,7 @@ const createQuotation = async (req, res) => {
 
     // Send success response
     return res.status(201).json({
+      success: true,
       message: "Quotation created successfully!",
       quotation: savedQuotation,
     });
