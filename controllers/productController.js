@@ -42,7 +42,7 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const {
+    let {
       srNo,
       productName,
       model,
@@ -207,8 +207,9 @@ const updateProduct = async (req, res) => {
       productDescription,
       quantity,
       companyPrice,
-      gstRate, 
-      applicableTaxes, 
+      gstRate,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
       subTotal,
       freight,
@@ -271,7 +272,8 @@ const updateProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxes,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
       warehouse, 
       productImage,
