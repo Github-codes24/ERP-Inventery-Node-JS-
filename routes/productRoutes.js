@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const companyMiddleware = require("../middleware/companyMiddleware");
-//router.use(companyMiddleware);
+router.use(companyMiddleware);
 // Configure multer for file uploads
 const upload = multer({ 
     dest: 'uploads/', 
