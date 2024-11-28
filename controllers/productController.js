@@ -244,7 +244,7 @@ const updateProduct = async (req, res) => {
       gstRate,
       applicableTaxes,
       date,
-      warehouse,  // Include the warehouse field
+      warehouse, 
       productImage,
       productBrochure,
       pptAvailable,

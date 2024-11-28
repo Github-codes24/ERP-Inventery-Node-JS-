@@ -91,13 +91,13 @@ const getRecentOrders = async (req, res) => {
           .status(400)
           .json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
       }
-
+      // Use fromDate and toDate from the query
       startDate = moment.utc(fromDate).startOf("day").toDate();
       endDate = moment.utc(toDate).endOf("day").toDate();
     } else {
-      // Use the start and end of the current month if no dates are provided
-      startDate = moment.utc().startOf("month").toDate();
-      endDate = moment.utc().endOf("month").toDate();
+      
+      endDate = moment.utc().endOf("day").toDate();
+      startDate = moment.utc().subtract(30, "days").startOf("day").toDate();
     }
 
     console.log("startDate:", startDate);
@@ -112,7 +112,7 @@ const getRecentOrders = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: recentOrders.length
+      data: recentOrders.length,
     });
   } catch (error) {
     console.error("Error fetching recent orders:", error);
@@ -122,6 +122,7 @@ const getRecentOrders = async (req, res) => {
     });
   }
 };
+
 // const totalPendingOrder = async (req, res) => {
 //   try {
 //     const { month, year } = req.query;
