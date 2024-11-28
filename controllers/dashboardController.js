@@ -1,10 +1,6 @@
 const PurchaseOrder = require('../models/purchaseOrder');
-
+const Product = require('../models/productModel');
 const moment = require('moment');
-
-
-
-
 const totalOrder = async (req, res) => {
   try {
     const { fromDate, toDate } = req.query; // Dates should be in 'YYYY-MM-DD' format
@@ -30,7 +26,7 @@ const totalOrder = async (req, res) => {
    
 
     // Query the database based on the filter
-    const totalOrder = await PurchaseOrder.countDocuments(filter);
+ const totalOrder = await PurchaseOrder.countDocuments(filter);
 
     if (totalOrder === 0) {
       return res.status(404).json({ message: "No orders found" });
@@ -43,24 +39,34 @@ const totalOrder = async (req, res) => {
   }
 };
 
-const getReplenishmentActions = (req, res) => {
-  const replenishablestock = 12; // Example stock value
-  try {
-    // Send a successful response
-    return res.status(200).json({
-      success: true,
-      replenishablestock,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error fetching replenishablestock",
-    });
+const totalInventoryValue= async(req,res)=>{
+  try{
+    const inventoryValue = await Product.find().select('companyPrice');
+    const totalValue = inventoryValue.reduce((sum,product)=>{
+      const price = parseInt(product.companyPrice, 10) || 0; 
+      return sum + price;
+    }, 0);
+   return res.status(200).json({message:"total inventory Value",
+    totalValue
+   })
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-};
 
 
+}
 
+const lowInventoryProduct = async(req,res)=>{
+  try{
+ const lowInventoryNumber = await Product.countDocuments({ quantity: { $lte: 3 } })
+
+  return res.status(200).json({data:lowInventoryNumber})
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
 const getRecentOrders = async (req, res) => {
   try {
     // Extract optional date filters from query parameters
@@ -116,18 +122,6 @@ const getRecentOrders = async (req, res) => {
     });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
 // const totalPendingOrder = async (req, res) => {
 //   try {
 //     const { month, year } = req.query;
@@ -168,11 +162,27 @@ const getRecentOrders = async (req, res) => {
 //   }
 // };
 
-
+const getReplenishmentActions = (req, res) => {
+  const replenishablestock = 12; // Example stock value
+  try {
+    // Send a successful response
+    return res.status(200).json({
+      success: true,
+      replenishablestock,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching replenishablestock",
+    });
+  }
+};
 
 module.exports = {
     totalOrder,
     getRecentOrders,
-    getReplenishmentActions
-   // totalPendingOrder
+    getReplenishmentActions,
+// totalPendingOrder
+   totalInventoryValue,
+   lowInventoryProduct
 }

@@ -125,6 +125,12 @@ const createQuotation = async (req, res) => {
     // Validate required fields
     const missingFields = [];
     if (!quotationNo) missingFields.push("quotationNo");
+
+    const existingQuotation = await Quotation.findOne({ quotationNo });
+    if (existingQuotation) {
+      return res.status(400).json({ message: 'Quotation with the same quotatoin no. already exists' });
+    };
+
     if (!quotationDate) missingFields.push("quotationDate");
     if (!from) {
       missingFields.push("from");
@@ -153,11 +159,22 @@ const createQuotation = async (req, res) => {
       missingFields.push("bankDetails");
     } else {
       if (!bankDetails.bankName) missingFields.push("bankDetails.bankName");
-      if (!bankDetails.accountName)
-        missingFields.push("bankDetails.accountName");
+      if (!bankDetails.accountNumber)
+        missingFields.push("bankDetails.accountNumber");
       if (!bankDetails.accountType)
         missingFields.push("bankDetails.accountType");
       if (!bankDetails.ifscCode) missingFields.push("bankDetails.ifscCode");
+      if (!bankDetails.branchName) missingFields.push("bankDetails.branchName");
+      if (!bankDetails.address) missingFields.push("bankDetails.address");
+    }
+    if(!totalDiscountPercentage){
+      missingFields.push("totalDiscountPercentage");
+    }
+    if(!totalDiscountAmount){
+      missingFields.push("totalDiscountAmount");
+    }
+    if(!taxes){
+      missingFields.push("taxes");
     }
     if (!subtotal) missingFields.push("subtotal");
     if (!netAmount) missingFields.push("netAmount");
@@ -395,6 +412,27 @@ const getCustomerNames = (req,res)=>{
   })
 }
 
+//get terms and conditions
+
+const getTermsAndConditions = async (req, res) => {
+  try {
+  const terms = {
+    paymentTerms: "50% advance and 50% after delivery",
+    deliveryTime: "30 days from the date of order",
+    warranty: "1 year warranty on all products",
+  }
+    
+    return res.status(200).json({
+      success: true,
+      terms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
   createQuotation,
@@ -406,5 +444,6 @@ module.exports = {
   getStates,
   getCities,
   getCountry,
-  getCustomerNames
+  getCustomerNames,
+  getTermsAndConditions
 };

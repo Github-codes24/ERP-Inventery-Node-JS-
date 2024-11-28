@@ -31,11 +31,18 @@ router.post(
         { name: "pptFile", maxCount: 1 },
         { name: "productCertificate", maxCount: 1 },
         { name: "isoCertificate", maxCount: 1 },
+        { name: "coverLetterFile", maxCount: 1 },
         { name: "brochureFile", maxCount: 1 },
     ]),
     clientController.createClient,
 );
 
 router.get("/getSrNumberForClient", clientController.getNewSrNumber);
+
+router.get("/getMouValidity", clientController.getMouValidity);
+
+router.get("/getApplicableGst", clientController.getApplicableGst);
+
+router.get("/getManufacturerName", clientController.getManufacturerName);
 
 module.exports = router;

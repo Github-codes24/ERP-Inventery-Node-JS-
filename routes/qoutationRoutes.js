@@ -12,4 +12,5 @@ router.get("/getStates", quotationController.getStates);
 router.get("/getCities", quotationController.getCities);
 router.get("/getCountry", quotationController.getCountry);
 router.get("/getCustomerNames", quotationController.getCustomerNames);
+router.get("/getTermsAndConditions", quotationController.getTermsAndConditions);
 module.exports = router;

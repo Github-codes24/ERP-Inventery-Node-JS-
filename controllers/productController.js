@@ -230,13 +230,13 @@ const getProductDetails = async (req, res) => {
       const outOfStockCount = await Product.countDocuments({ quantity: 0 });
 
       
-      const totalItemGroups = await Product.distinct('itemGroup').length;
+      const totalItemGroups = await Product.distinct('productType');
 
       const totalItems = await Product.countDocuments({});
 
      return  res.status(200).json({
           outOfStock: outOfStockCount,
-          totalItemGroups: totalItemGroups,
+          totalItemGroups: totalItemGroups.length,
           totalItems: totalItems
       });
   } catch (error) {
@@ -261,25 +261,60 @@ const getStockNames = async (req, res) => {
     });
   }
 };
+
+
+
+//get product types
+
+const getProductTypes = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      
+        "productTypes": [
+          "Electronics",
+          "Furniture",
+          "Clothing",
+          "Accessories",
+          "Others"
+        ]
+      
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getTopSellingProducts = async (req, res) => {
+  try {
+    return res.json({products: [{productName:"Product 1", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"}, {productName:"Product 2", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"},{productName:"Product 2", productImage:"https://res.cloudinary.com/dd8f3ggi2/image/upload/v1728321619/samples/breakfast.jpg"}]});
+  } catch (error) {
+    console.error("Error fetching top-selling products:", error);
+    return res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+}
+
 const getModelName = async (req, res) => {
-  const models = {
-    Asus: {
+  const models = [
+    {
       modelName: "TUF Dash F15",
       modelNo: "FX516PM",
     },
-    vivobook: {
+    {
       modelName: "VivoBook 14",
       modelNo: "X415EA",
     },
-    rogFlow13: {
+    {
       modelName: "ROG Flow 13",
       modelNo: "X13GV",
     },
-    MacBook: {
+    {
       modelName: "MacBook Pro 14",
       modelNo: "A2442",
-    },
-  };
+    }
+  ];
 
   try {
     res.status(200).json({
@@ -306,5 +341,9 @@ module.exports = {
     getProductDetails,
     getStockNames,
     getNewSrNumber,
+    getModelName,
+    getProductTypes,
+    getTopSellingProducts,
     getModelName
 };
+
