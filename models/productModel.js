@@ -29,6 +29,15 @@ const productSchema = new mongoose.Schema({
     isoCertificate: { type: String },
     applicableTaxes: Number, 
     date: { type: Date },
+    subTotal: { type: Number },
+    freight: { type: Number },
+    taxes: { type: Number },
+    netAmount: { type: Number },
+    approvedBy: { type: String },
+    dimensions: { type: String },
+    materials: { type: String },
+    performance: { type: String },
+    technicalSpecification: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('product', productSchema);

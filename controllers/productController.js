@@ -62,6 +62,15 @@ const createProduct = async (req, res) => {
       gstRate, 
       applicableTaxes, 
       date,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     } = req.body;
 
 
@@ -114,7 +123,16 @@ const createProduct = async (req, res) => {
       productBrochure,
       pptAvailable,
       coveringLetter,
-      isoCertificate
+      isoCertificate,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     });
 
     const createdProduct = await product.save();
@@ -150,6 +168,15 @@ const updateProduct = async (req, res) => {
       gstRate, 
       applicableTaxes, 
       date,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     } = req.body;
 
     const product = await Product.findOne({ productName: productName });
@@ -328,6 +355,25 @@ const getModelName = async (req, res) => {
   }
 };
 
+const getWarrantyPeriod = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      warrantyPeriods: [
+        "1 Year",
+        "2 Years",
+        "3 Years",
+        "4 Years",
+        "5 Years",
+        "6 Years"
+      ],
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
     getProducts,
@@ -341,5 +387,6 @@ module.exports = {
     getNewSrNumber,
     getProductTypes,
     getTopSellingProducts,
-    getModelName
+    getModelName,
+    getWarrantyPeriod
 };

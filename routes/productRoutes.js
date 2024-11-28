@@ -20,7 +20,8 @@ const {
     getStockNames,
     getProductTypes,
     getNewSrNumber,
-    getModelName
+    getModelName,
+    getWarrantyPeriod
 } = require('../controllers/productController');
 
 // More specific routes first
@@ -53,5 +54,7 @@ router.get('/getProductTypes', getProductTypes);
 router.get('/getTopSellingProducts', getTopSellingProducts);
 
 router.get('/getModelName', getModelName);
+
+router.get('/getWarrantyPeriod', getWarrantyPeriod);
 
 module.exports = router
