@@ -1,9 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const proposalController = require("../controllers/proposalController");
-
 const router = express.Router();
-
+const companyMiddleware = require("../middleware/companyMiddleware");
+router.use(companyMiddleware);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
