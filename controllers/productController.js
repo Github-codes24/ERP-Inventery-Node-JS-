@@ -474,6 +474,28 @@ const getWarrantyPeriod = async (req, res) => {
   }
 }
 
+const getProposedCompany = async (req, res) => {
+  try {
+
+    const proposedCompanies = [
+      "ABC Electronics",
+      "XYZ Industries",
+      "PQR Retailers",
+      "DEF Distributors",
+      "GHI Manufacturing"
+    ]
+  
+    return res.status(200).json({
+      success: true,
+      proposedCompanies: proposedCompanies,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -488,6 +510,7 @@ module.exports = {
     getProductTypes,
     getTopSellingProducts,
     getModelName,
-    getWarrantyPeriod
+    getWarrantyPeriod,
+    getProposedCompany,
 };
 
