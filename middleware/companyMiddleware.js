@@ -8,7 +8,7 @@ const checkCompanyId = async (req, res, next) => {
 
     // Check if companyId is provided
     if (!companyId) {
-      return res.status(400).json({ error: 'Company ID is required.' });
+      return res.status(400).json({ message: 'Company ID is required in Headers.' });
     }
 
     // Find the company by ID
@@ -16,7 +16,7 @@ const checkCompanyId = async (req, res, next) => {
 
     // If the company is not found, return an error
     if (!company) {
-      return res.status(404).json({ error: 'Company not found.' });
+      return res.status(404).json({  message: 'Company not found.' });
     }
 
 
