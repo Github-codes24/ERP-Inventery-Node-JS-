@@ -4,7 +4,7 @@ const Company = require('../models/company.model');
 const checkCompanyId = async (req, res, next) => {
   try {
     // Get companyId from request body, query, or headers
-    const companyId =req.headers['companyid'];
+    const companyId =req.headers['companyId'];
 
     // Check if companyId is provided
     if (!companyId) {
