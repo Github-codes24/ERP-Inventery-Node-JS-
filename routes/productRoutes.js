@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-
+const companyMiddleware = require("../middleware/companyMiddleware");
+//router.use(companyMiddleware);
 // Configure multer for file uploads
 const upload = multer({ 
     dest: 'uploads/', 
@@ -24,10 +25,12 @@ const {
     getWarrantyPeriod
 } = require('../controllers/productController');
 
+
 // More specific routes first
 // router.get('/top-selling', getTopSellingProducts);
 router.get('/emergency-required', getEmergencyRequiredProducts);
 router.get('/product-details', getProductDetails);
+router.get('/getModelName', getModelName);
 
 // Generic routes last
 router.get('/getProducts', getProducts); // Get all products

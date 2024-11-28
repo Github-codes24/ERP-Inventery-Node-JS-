@@ -117,7 +117,6 @@ const createQuotation = async (req, res) => {
       termsAndConditions,
       subtotal,
       totalDiscountPercentage,
-      totalDiscountAmount,
       taxes,
       netAmount,
     } = req.body;
@@ -200,7 +199,6 @@ const createQuotation = async (req, res) => {
       termsAndConditions,
       subtotal,
       totalDiscountPercentage,
-      totalDiscountAmount,
       taxes,
       netAmount,
     });

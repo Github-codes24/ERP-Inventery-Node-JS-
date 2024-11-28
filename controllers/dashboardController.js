@@ -1,11 +1,6 @@
 const PurchaseOrder = require('../models/purchaseOrder');
 const Product = require('../models/productModel');
-
 const moment = require('moment');
-
-
-
-
 const totalOrder = async (req, res) => {
   try {
     const { fromDate, toDate } = req.query; // Dates should be in 'YYYY-MM-DD' format
@@ -31,7 +26,7 @@ const totalOrder = async (req, res) => {
    
 
     // Query the database based on the filter
-    const totalOrder = await PurchaseOrder.countDocuments(filter);
+ const totalOrder = await PurchaseOrder.countDocuments(filter);
 
     if (totalOrder === 0) {
       return res.status(404).json({ message: "No orders found" });
@@ -43,7 +38,6 @@ const totalOrder = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 const totalInventoryValue= async(req,res)=>{
   try{
@@ -59,6 +53,7 @@ const totalInventoryValue= async(req,res)=>{
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
+
 
 }
 
@@ -96,13 +91,13 @@ const getRecentOrders = async (req, res) => {
           .status(400)
           .json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
       }
-
-      startDate = moment.utc(fromDate).startOf("day").toDate(); 
+      // Use fromDate and toDate from the query
+      startDate = moment.utc(fromDate).startOf("day").toDate();
       endDate = moment.utc(toDate).endOf("day").toDate();
     } else {
       
-      startDate = moment.utc().subtract(30, "days").startOf("day").toDate();
       endDate = moment.utc().endOf("day").toDate();
+      startDate = moment.utc().subtract(30, "days").startOf("day").toDate();
     }
 
     console.log("startDate:", startDate);
@@ -111,13 +106,13 @@ const getRecentOrders = async (req, res) => {
     const recentOrders = await PurchaseOrder.find({
       $or: [
         { createdAt: { $gte: startDate, $lte: endDate } },
-        { updatedAt: { $gte: startDate, $lte: endDate } }
-      ]
+        { updatedAt: { $gte: startDate, $lte: endDate } },
+      ],
     });
 
     res.status(200).json({
       success: true,
-      data: recentOrders.length
+      data: recentOrders.length,
     });
   } catch (error) {
     console.error("Error fetching recent orders:", error);
@@ -127,9 +122,6 @@ const getRecentOrders = async (req, res) => {
     });
   }
 };
-
-
-
 
 // const totalPendingOrder = async (req, res) => {
 //   try {
@@ -190,8 +182,8 @@ const getReplenishmentActions = (req, res) => {
 module.exports = {
     totalOrder,
     getRecentOrders,
-   // totalPendingOrder
+    getReplenishmentActions,
+// totalPendingOrder
    totalInventoryValue,
-   getReplenishmentActions,
    lowInventoryProduct
 }

@@ -1,34 +1,34 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-
-const productSchema = new mongoose.Schema({
-    srNo: { type: String},
-    productName: { type: String, unique: true },
-    model: { type: String },
-    productType: { type: String },
-    skuCode: { type: String },
-    warehouse: { type: String },
-    amcCmc: { type: String },
-    companyName: { type: String },
-    availableModelNos: { type: Number },
-    proposedCompany: { type: String },
-    hsnOrSacCode: { type: String },
-    warranty: { type: String },
-    expiryDate: { type: Date },
-    startDate: { type: Date },
-    endDate: { type: Date },
-    productDescription: { type: String },
-    quantity: { type: String },
-    stock: { type: Number, default: 0 },
-    productImage: { type: String },
-    companyPrice:{ type: Number },
-    gstRate: { type: Number }, 
-    productBrochure: { type: String },
-    pptAvailable: { type: String },
-    coveringLetter: { type: String },
-    isoCertificate: { type: String },
-    applicableTaxes: Number, 
-    date: { type: Date },
+const productSchema = new mongoose.Schema(
+  {
+    srNo: { type: String, required: true },
+    productName: { type: String, required: true },
+    model: { type: String, required: true },
+    productType: { type: String, required: true },
+    skuCode: { type: String, required: true },
+    warehouse: { type: String, required: true },
+    amcCmc: { type: String, required: true },
+    companyName: { type: String, required: true },
+    availableModelNos: { type: Number, required: true },
+    proposedCompany: { type: String, required: true },
+    hsnOrSacCode: { type: String, required: true },
+    warranty: { type: String, required: true },
+    expiryDate: { type: Date, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    productDescription: { type: String, required: true },
+    quantity: { type: String, required: true },
+    stock: { type: Number, default: 0, required: true },
+    productImage: { type: String, required: true },
+    companyPrice: { type: Number, required: true },
+    gstRate: { type: Number, required: true },
+    productBrochure: { type: String, required: true },
+    pptAvailable: { type: String, required: true },
+    coveringLetter: { type: String, required: true },
+    isoCertificate: { type: String, required: true },
+    applicableTaxes: { type: Number, required: true },
+    date: { type: Date, required: true },
     subTotal: { type: Number },
     freight: { type: Number },
     taxes: { type: Number },
@@ -38,6 +38,8 @@ const productSchema = new mongoose.Schema({
     materials: { type: String },
     performance: { type: String },
     technicalSpecification: { type: String },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('product', productSchema);
+module.exports = mongoose.model("product", productSchema);

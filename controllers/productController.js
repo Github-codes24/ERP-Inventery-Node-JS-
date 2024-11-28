@@ -39,9 +39,10 @@ const getProductById = async (req, res) => {
 };
 
 // Create a new product
+
 const createProduct = async (req, res) => {
   try {
-    let {
+    const {
       srNo,
       productName,
       model,
@@ -59,8 +60,8 @@ const createProduct = async (req, res) => {
       productDescription,
       quantity,
       companyPrice,
-      gstRate, 
-      applicableTaxes, 
+      gstRate,
+      applicableTaxes,
       date,
       subTotal,
       freight,
@@ -73,31 +74,59 @@ const createProduct = async (req, res) => {
       technicalSpecification
     } = req.body;
 
+    // Validate required fields
+    const error = {};
+    if (!srNo) error.srNo = "Serial Number (srNo) is required.";
+    if (!productName) error.productName = "Product Name is required.";
+    if (!model) error.model = "Model is required.";
+    if (!productType) error.productType = "Product Type is required.";
+    if (!skuCode) error.skuCode = "SKU Code is required.";
+    if (!companyName) error.companyName = "Company Name is required.";
+    if (!availableModelNos) error.availableModelNos = "Available Model Numbers are required.";
+    if (!proposedCompany) error.proposedCompany = "Proposed Company is required.";
+    if (!hsnOrSacCode) error.hsnOrSacCode = "HSN or SAC Code is required.";
+    if (!warranty) error.warranty = "Warranty is required.";
+    if (!expiryDate) error.expiryDate = "Expiry Date is required.";
+    if (!startDate) error.startDate = "Start Date is required.";
+    if (!endDate) error.endDate = "End Date is required.";
+    if (!productDescription) error.productDescription = "Product Description is required.";
+    if (!quantity) error.quantity = "Quantity is required.";
+    if (!companyPrice) error.companyPrice = "Company Price is required.";
+    if (!gstRate) error.gstRate = "GST Rate is required.";
+    if (!applicableTaxes) error.applicableTaxes = "Applicable Taxes are required.";
+    if (!date) error.date = "Date is required.";
+    if (!warehouse) error.warehouse = "Warehouse is required."; 
 
-    const existingProduct = await Product.findOne({ productName });
-    if (existingProduct) {
-      return res.status(400).json({ message: 'Product with the same name already exists' });
+    // Validate required files
+    const requiredFiles = ['productImage', 'productBrochure', 'pptAvailable', 'coveringLetter', 'isoCertificate'];
+    for (const file of requiredFiles) {
+      if (!req.files?.[file]?.[0]?.path) {
+        error[file] = `${file} is required`;
+      }
+    } 
+
+    // If there are missing fields or files, return a detailed error message
+    if (Object.keys(error).length > 0) {
+      return res.status(400).json({
+        message: "The following fields are missing or invalid:",
+        error,
+      });
     }
 
-    const productImage = req.files?.productImage?.[0]?.path || null;
-    const productBrochure = req.files?.productBrochure?.[0]?.path || null;
-    const pptAvailable = req.files?.pptAvailable?.[0]?.path || null;
-    const coveringLetter = req.files?.coveringLetter?.[0]?.path || null;
-    const isoCertificate = req.files?.isoCertificate?.[0]?.path || null;
-     //check if data of expiryDate startDate endDate and date are in string if yes then parse it
-    if(typeof expiryDate === 'string'){
-      expiryDate = new Date(expiryDate);
-    }
-    if(typeof startDate === 'string'){
-      startDate = new Date(startDate);
-    }
-    if(typeof endDate === 'string'){
-      endDate = new Date(endDate);
-    }
-    if(typeof date === 'string'){
-      date = new Date(date);
-    }
+    // Extract file paths
+    const productImage = req.files.productImage[0].path;
+    const productBrochure = req.files.productBrochure[0].path;
+    const pptAvailable = req.files.pptAvailable[0].path;
+    const coveringLetter = req.files.coveringLetter[0].path;
+    const isoCertificate = req.files.isoCertificate[0].path;
 
+    // Convert date strings to Date objects
+    expiryDate = new Date(expiryDate);
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    date = new Date(date);
+
+    // Create the product
     const product = new Product({
       srNo,
       productName,
@@ -116,9 +145,10 @@ const createProduct = async (req, res) => {
       productDescription,
       quantity,
       companyPrice,
-      gstRate, 
-      applicableTaxes, 
+      gstRate,
+      applicableTaxes,
       date,
+      warehouse, 
       productImage,
       productBrochure,
       pptAvailable,
@@ -135,18 +165,26 @@ const createProduct = async (req, res) => {
       technicalSpecification
     });
 
+    // Save the product
     const createdProduct = await product.save();
-   return  res.status(201).json({ success: true ,createdProduct});
+    return res.status(201).json({ success: true, createdProduct });
+
   } catch (error) {
-   return res.status(500).json({ message: 'Error creating product', error: error.message });
+    console.error("Error creating product:", error);
+    return res.status(500).json({
+      message: "Error creating product.",
+      error: error.message,
+    });
   }
 };
+
 
 
 const updateProduct = async (req, res) => {
   try {
     const { id: productId } = req.params;
 
+    // Extract form data from req.body
     const {
       srNo,
       productName,
@@ -179,31 +217,90 @@ const updateProduct = async (req, res) => {
       technicalSpecification
     } = req.body;
 
-    const product = await Product.findOne({ productName: productName });
-    if (product) {
-      return res.status(409).json({ message: 'Product with product name already exists' });
+    // Initialize file paths
+    let productImage = req.files?.productImage
+      ? req.files.productImage[0].path
+      : null;
+    let productBrochure = req.files?.productBrochure
+      ? req.files.productBrochure[0].path
+      : null;
+    let pptAvailable = req.files?.pptAvailable
+      ? req.files.pptAvailable[0].path
+      : null;
+    let coveringLetter = req.files?.coveringLetter
+      ? req.files.coveringLetter[0].path
+      : null;
+    let isoCertificate = req.files?.isoCertificate
+      ? req.files.isoCertificate[0].path
+      : null;
+
+    // Find the existing product to retain old file paths if no new file is uploaded
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    // Update product
+    // Update the file paths only if the new files are uploaded, else retain old ones
+    productImage = productImage || product.productImage;
+    productBrochure = productBrochure || product.productBrochure;
+    pptAvailable = pptAvailable || product.pptAvailable;
+    coveringLetter = coveringLetter || product.coveringLetter;
+    isoCertificate = isoCertificate || product.isoCertificate;
+
+    // Prepare the update data object
+    const updateData = {
+      srNo,
+      productName,
+      model,
+      productType,
+      skuCode,
+      amcCmc,
+      companyName,
+      availableModelNos,
+      proposedCompany,
+      hsnOrSacCode,
+      warranty,
+      expiryDate,
+      startDate,
+      endDate,
+      productDescription,
+      quantity,
+      companyPrice,
+      gstRate,
+      applicableTaxes,
+      date,
+      warehouse, 
+      productImage,
+      productBrochure,
+      pptAvailable,
+      coveringLetter,
+      isoCertificate,
+    };
+
+    // Update the product data
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { $set: req.body },
-      { new: true, runValidators: true }
+      updateData,
+      { new: true }
     );
 
     if (!updatedProduct) {
-      return res.status(404).json({ message: 'Product not found after update' });
+      return res.status(404).json({ message: "Product not found after update" });
     }
 
-    return res.status(200).json({ success: true, updatedProduct});
+    return res.status(200).json({ success: true, updatedProduct });
 
   } catch (error) {
-    return res.status(500).json({ 
-      message: 'Error updating product',
-      error: error.message 
+    console.error("Error updating product:", error);
+    return res.status(500).json({
+      message: "Error updating product",
+      error: error.message
     });
   }
 };
+
+
+
 
 
 
@@ -288,6 +385,8 @@ const getStockNames = async (req, res) => {
     });
   }
 };
+
+
 
 //get product types
 
@@ -385,8 +484,10 @@ module.exports = {
     getProductDetails,
     getStockNames,
     getNewSrNumber,
+    getModelName,
     getProductTypes,
     getTopSellingProducts,
     getModelName,
     getWarrantyPeriod
 };
+

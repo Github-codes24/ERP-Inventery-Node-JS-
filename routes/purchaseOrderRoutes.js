@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const companyMiddleware = require("../middleware/companyMiddleware");
+router.use(companyMiddleware);
 const { createPurchaseOrder,getAllPurchaseOrders,getOrderById,updateOrderById,findOrdersByQueryParams,getAllOrders,getNewSrNumber} = require('../controllers/purchaseOrderController');
 
 router.post('/createPurchaseOrder', createPurchaseOrder);

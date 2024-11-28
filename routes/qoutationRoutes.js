@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const companyMiddleware = require("../middleware/companyMiddleware");
+router.use(companyMiddleware);
 const quotationController = require("../controllers/quotationController");
 
 router.post("/createQuotation", quotationController.createQuotation);
