@@ -8,6 +8,7 @@ const fs = require('fs');
 const userRoutes = require('./routes/user.route');
 const companyRoutes = require("./routes/company.route");
 const bankRoutes = require("./routes/bank.routes");
+const warehouseRoutes = require('./routes/wareHouse.route');
 
 
 
@@ -96,6 +97,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/dashboard',dashboardRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/bank", bankRoutes);
+app.use("/api/warehouse", warehouseRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

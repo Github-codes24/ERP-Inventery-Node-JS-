@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const clientController = require("../controllers/clientController");
+const companyMiddleware = require("../middleware/companyMiddleware");
 const multer = require("multer");
 const upload = multer({
     dest: "uploads/",
@@ -25,7 +26,7 @@ router.put(
 );
 router.get("/getClientById/:id", clientController.getClientById);
 router.post(
-    "/createClient",
+    "/createClient", companyMiddleware,
     upload.fields([
         { name: "teritaryAuthFile", maxCount: 1 },
         { name: "pptFile", maxCount: 1 },
