@@ -496,6 +496,29 @@ const getProposedCompany = async (req, res) => {
   }
 };
 
+const getAMCCMCList = async (req, res) => {
+  try {
+
+    const getAMCCMCList = [
+      "HDFC Asset Management Company",
+      "ICICI Prudential Asset Management",
+      "SBI Mutual Fund",
+      "Kotak Mahindra Asset Management",
+      "Nippon India Mutual Fund"
+    ];
+    
+  
+    return res.status(200).json({
+      success: true,
+      AMCCMCList: getAMCCMCList,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
     getProducts,
     getProductById,
@@ -512,5 +535,6 @@ module.exports = {
     getModelName,
     getWarrantyPeriod,
     getProposedCompany,
+    getAMCCMCList,
 };
 

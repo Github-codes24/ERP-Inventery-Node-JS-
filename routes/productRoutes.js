@@ -23,7 +23,8 @@ const {
     getNewSrNumber,
     getModelName,
     getWarrantyPeriod,
-    getProposedCompany
+    getProposedCompany,
+    getAMCCMCList,
 } = require('../controllers/productController');
 
 
@@ -61,5 +62,6 @@ router.get('/getModelName', getModelName);
 
 router.get('/getWarrantyPeriod', getWarrantyPeriod);
 router.get('/getProposedCompany', getProposedCompany);
+router.get('/getAMCCMCList', getAMCCMCList);
 
 module.exports = router
