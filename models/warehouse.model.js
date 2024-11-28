@@ -30,11 +30,36 @@ const warehouseSchema = new mongoose.Schema({
         type: String, required: true
     },
     personalEmail: {
-        products: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product"
-            }]
-    }, 
+        type: String, required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    postalAddress: {
+        type: String,
+        required: true
+    },
+    pincode: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        required: true
+    },
+    storedMaterials: [
+        {
+            storedMaterialName: {
+                type: String,
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            }
+        }
+    ]
 },
 {timestamps : true});
 

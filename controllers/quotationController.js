@@ -302,7 +302,7 @@ const getAllQuotations = async (req, res) => {
     // Get total count of matching documents
     const totalCount = await Quotation.countDocuments(filter);
 
-    const quotations = await Quotation.find(filter).select('quotationNo quotationName customerName to.cityStateZip validity ').skip(skip)
+    const quotations = await Quotation.find(filter).select('quotationNo quotationName customerName to.customerState validity ').skip(skip)
     .limit(itemsPerPage).sort({createdAt: -1 });
 
     const totalPages = Math.ceil(totalCount / itemsPerPage);
