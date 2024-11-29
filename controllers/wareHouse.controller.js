@@ -60,7 +60,7 @@ const createWarehouse = async (req, res) => {
     }
 
     // Check if the warehouse ID already exists in the database
-    const existingWarehouse = await Warehouse.findOne({ warehouseID });
+    const existingWarehouse = await warehouseModel.findOne({ warehouseID });
     if (existingWarehouse) {
       return res.status(400).json({
         success: false,
@@ -69,7 +69,7 @@ const createWarehouse = async (req, res) => {
     }
 
     // Create a new warehouse record
-    const newWarehouse = new Warehouse({
+    const newWarehouse = new warehouseModel({
       warehouseID,
       warehouseName,
       contactPerson1Name,
@@ -104,8 +104,6 @@ const createWarehouse = async (req, res) => {
   }
 };
 
-
-
 const getAllWareHouses = async (req, res) => {
     try {
         return res.status(200).json({
@@ -123,8 +121,9 @@ const getAllWareHouses = async (req, res) => {
         message: error.message,
         });
     }
-    }
+}
 
 module.exports = {
+    createWarehouse,
     getAllWareHouses
 }
