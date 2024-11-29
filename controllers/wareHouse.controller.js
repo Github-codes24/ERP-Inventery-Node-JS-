@@ -123,6 +123,34 @@ const getAllWareHouses = async (req, res) => {
     }
 };
 
+// Dropdown API for warehouse types
+const getWarehouseTypes = (req, res) => {
+  try {
+    // Predefined warehouse types
+    const warehouseTypes = [
+      "Cold Storage",
+      "Dry Storage",
+      "Automated Storage",
+      "Hazardous Materials",
+      "Distribution Center",
+    ];
+
+    // Respond with the list
+    return res.status(200).json({
+      success: true,
+      message: "Warehouse types retrieved successfully.",
+      data: warehouseTypes,
+    });
+  } catch (error) {
+    // Handle errors
+    return res.status(500).json({
+      success: false,
+      message: "Error retrieving warehouse types.",
+      error: error.message,
+    });
+  }
+};
+
 const getNewIDNumber = async (req,res) => {
   try {
       const wareHouses = await warehouseModel.find();
@@ -137,5 +165,6 @@ const getNewIDNumber = async (req,res) => {
 module.exports = {
     createWarehouse,
     getAllWareHouses,
+    getWarehouseTypes,
     getNewIDNumber,
 }
