@@ -9,4 +9,8 @@ router.post('/createWarehouse', wareHouseController.createWarehouse);
 
 router.get('/getAllWareHouses', wareHouseController.getAllWareHouses);
 
+router.get('/getNewIDNumber', wareHouseController.getNewIDNumber);
+
+getNewIDNumber
+
 module.exports = router;

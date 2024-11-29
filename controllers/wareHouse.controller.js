@@ -121,9 +121,21 @@ const getAllWareHouses = async (req, res) => {
         message: error.message,
         });
     }
+};
+
+const getNewIDNumber = async (req,res) => {
+  try {
+      const wareHouses = await warehouseModel.find();
+      const wareHousesID = wareHouses.length + 1;
+      return res.status(200).json({ success: true, ID: wareHousesID });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
 }
 
 module.exports = {
     createWarehouse,
-    getAllWareHouses
+    getAllWareHouses,
+    getNewIDNumber,
 }
