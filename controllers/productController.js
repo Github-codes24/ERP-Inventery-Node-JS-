@@ -15,8 +15,14 @@ const getNewSrNumber = async (req,res) => {
 const getProducts = async (req, res) => {
   try {
       const {productName} = req.query;
-      const products = await Product.find(req.query);
-      return res.status(200).json({ success: true, products }); 
+      const products = await Product.find(req.query).select("productName srNo productType date quantity companyPrice");
+
+      // Modify the data to add `lastPurchase`
+      const modifiedData = products.map((product) => ({
+        ...product._doc, // Spread the original document
+        lastPurchase: "abcd", // Add the `lastPurchase` property
+      }));
+      return res.status(200).json({ success: true, products: modifiedData }); 
   } catch (error) {
      return  res.status(500).json({ message: 'Server Error', error: error.message });
   }
