@@ -1,5 +1,6 @@
 const PurchaseOrder = require('../models/purchaseOrder');
 const Product = require('../models/productModel');
+const Tender = require('../models/tenderModel');
 const moment = require('moment');
 const totalOrder = async (req, res) => {
   try {
@@ -298,6 +299,63 @@ const getInventoryLevel = async (req, res) => {
 };
 
 
+const getLatestTender = async (req, res) => {
+  try {
+    // Extract query parameters for pagination
+    const { page = 1, limit = 10 } = req.query;
+
+    // Parse page and limit as integers
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    // Calculate the date range for the past 30 days
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+    const endDate = new Date(now);
+
+    // Fetch all tenders for the past 30 days
+    const tendersInRange = await Tender.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+    }).select("tenderID title issueDate authorizedPerson").sort({ createdAt: -1 }); 
+
+    // Calculate total count for all tenders in the range
+    const totalItemsInRange = tendersInRange.length;
+
+    // Paginate the tenders for the current page
+    const tenders = tendersInRange.slice(skip, skip + itemsPerPage);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItemsInRange / itemsPerPage);
+
+    // Set `totalCount` to the number of items on the current page
+    const totalCount = tenders.length;
+
+    // Respond with tenders and pagination data
+    return res.status(200).json({
+      success: true,
+      message: "Tenders retrieved successfully.",
+      data: {
+        tenders,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching latest tenders:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching tenders.",
+      error: error.message,
+    });
+  }
+};
+
 
 
 
@@ -312,5 +370,6 @@ module.exports = {
 // totalPendingOrder
    totalInventoryValue,
    lowInventoryProduct,
-   getInventoryLevel
+   getInventoryLevel,
+   getLatestTender
 }
