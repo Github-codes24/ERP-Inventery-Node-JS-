@@ -1,5 +1,29 @@
 //get warehouse
 
+const createWarehouse =  async (req, res) => {
+    try {
+        const {
+            warehouseID,
+            warehouseName,
+            contactPerson1Name,
+            contactPerson2Name,
+            contactNumber,
+            officialEmail,
+            alternateNumber,
+            personalEmail,
+            location,
+            postalAddress,
+            pincode,
+            type,
+            storedMaterials
+        } = req.body;
+    } catch (err) {
+        return res
+        .status(500)
+        .json({ message: "Error updating vendor", error: error.message });
+    }
+}
+
 const getAllWareHouses = async (req, res) => {
     try {
         return res.status(200).json({
