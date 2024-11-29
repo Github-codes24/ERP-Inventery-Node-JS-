@@ -302,12 +302,34 @@ const findOrdersByQueryParams = async (req, res) => {
   }
 };
 
+const getTermsAndConditions = async (req, res) => {
+  try {
+  const terms = {
+    expiryTerms: "This order is valid until DD/MM/YYYY.",
+    paymentTerms: "Payment due within 30 days of invoice date.",
+    deliveryTime: "Shipping detais, expected delivery date, etc.",
+    warranty: "Conditions under which items can be returned",
+  }
+    
+    return res.status(200).json({
+      success: true,
+      terms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   createPurchaseOrder,
   getAllPurchaseOrders,
   getOrderById,
   updateOrderById,
   findOrdersByQueryParams,
-  getNewSrNumber
+  getNewSrNumber,
+  getTermsAndConditions,
 };
 
