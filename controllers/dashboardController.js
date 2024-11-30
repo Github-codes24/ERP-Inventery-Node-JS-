@@ -182,7 +182,7 @@ const getReplenishmentActions = (req, res) => {
 
 const getLatestQuotation = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 3 } = req.query;
 
     // Parse page and limit as integers
     const currentPage = parseInt(page, 10);
