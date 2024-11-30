@@ -11,5 +11,6 @@ router.get('/getReplenishmentActions',dashboardController.getReplenishmentAction
 router.get('/lowInventoryProduct',dashboardController.lowInventoryProduct);
 router.get('/getInventoryLevel',dashboardController.getInventoryLevel);
 router.get('/getLatestTender',dashboardController.getLatestTender);
+router.get('/getLatestQuotation',dashboardController.getLatestQuotation);
 
 module.exports = router;

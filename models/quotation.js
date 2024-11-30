@@ -49,6 +49,8 @@ const QuotationSchema = new mongoose.Schema(
         sgstAmount: { type: Number, default: 0, required: true },
         cgstRate: { type: Number, default: 0, required: true },
         cgstAmount: { type: Number, default: 0, required: true },
+        igstRate: { type: Number, default: 0 },
+        igstAmount: { type: Number, default: 0 },
         total: { type: Number, required: true },
       },
     ],
@@ -61,7 +63,6 @@ const QuotationSchema = new mongoose.Schema(
 
     subtotal: { type: Number, required: true },
     totalDiscountPercentage: { type: Number, default: 0, required: true },
-    totalDiscountAmount: { type: Number, default: 0, required: true },
     taxes: { type: Number, default: 0, required: true },
     netAmount: { type: Number, required: true },
     isDeleted: { type: Boolean, default: false, required: true },

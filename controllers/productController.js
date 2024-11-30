@@ -15,8 +15,14 @@ const getNewSrNumber = async (req,res) => {
 const getProducts = async (req, res) => {
   try {
       const {productName} = req.query;
-      const products = await Product.find(req.query);
-      return res.status(200).json({ success: true, products }); 
+      const products = await Product.find(req.query).select("productName srNo productType date quantity companyPrice");
+
+      // Modify the data to add `lastPurchase`
+      const modifiedData = products.map((product) => ({
+        ...product._doc, // Spread the original document
+        lastPurchase: "abcd", // Add the `lastPurchase` property
+      }));
+      return res.status(200).json({ success: true, products: modifiedData }); 
   } catch (error) {
      return  res.status(500).json({ message: 'Server Error', error: error.message });
   }
@@ -42,7 +48,7 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const {
+    let {
       srNo,
       productName,
       model,
@@ -61,9 +67,19 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxes,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
-      warehouse, // Add warehouse to the request body
+      warehouse,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     } = req.body;
 
     // Validate required fields
@@ -85,7 +101,8 @@ const createProduct = async (req, res) => {
     if (!quantity) error.quantity = "Quantity is required.";
     if (!companyPrice) error.companyPrice = "Company Price is required.";
     if (!gstRate) error.gstRate = "GST Rate is required.";
-    if (!applicableTaxes) error.applicableTaxes = "Applicable Taxes are required.";
+    if (!applicableTaxesRate) error.applicableTaxesRate = "Applicable Taxes rate is required.";
+    if (!applicableTaxesAmount) error.applicableTaxesAmount = "Applicable Taxes amount is required.";
     if (!date) error.date = "Date is required.";
     if (!warehouse) error.warehouse = "Warehouse is required."; 
 
@@ -138,7 +155,8 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxes,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
       warehouse, 
       productImage,
@@ -146,6 +164,15 @@ const createProduct = async (req, res) => {
       pptAvailable,
       coveringLetter,
       isoCertificate,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     });
 
     // Save the product
@@ -186,10 +213,19 @@ const updateProduct = async (req, res) => {
       productDescription,
       quantity,
       companyPrice,
-      gstRate, 
-      applicableTaxes, 
+      gstRate,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
-      warehouse,  // Include the warehouse field
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     } = req.body;
 
     // Initialize file paths
@@ -242,7 +278,8 @@ const updateProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxes,
+      applicableTaxesRate,
+      applicableTaxesAmount,
       date,
       warehouse, 
       productImage,
@@ -429,6 +466,70 @@ const getModelName = async (req, res) => {
   }
 };
 
+const getWarrantyPeriod = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      warrantyPeriods: [
+        "1 Year",
+        "2 Years",
+        "3 Years",
+        "4 Years",
+        "5 Years",
+        "6 Years"
+      ],
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+const getProposedCompany = async (req, res) => {
+  try {
+
+    const proposedCompanies = [
+      "ABC Electronics",
+      "XYZ Industries",
+      "PQR Retailers",
+      "DEF Distributors",
+      "GHI Manufacturing"
+    ]
+  
+    return res.status(200).json({
+      success: true,
+      proposedCompanies: proposedCompanies,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const getAMCCMCList = async (req, res) => {
+  try {
+
+    const getAMCCMCList = [
+      "HDFC Asset Management Company",
+      "ICICI Prudential Asset Management",
+      "SBI Mutual Fund",
+      "Kotak Mahindra Asset Management",
+      "Nippon India Mutual Fund"
+    ];
+    
+  
+    return res.status(200).json({
+      success: true,
+      AMCCMCList: getAMCCMCList,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
     getProducts,
@@ -443,6 +544,9 @@ module.exports = {
     getModelName,
     getProductTypes,
     getTopSellingProducts,
-    getModelName
+    getModelName,
+    getWarrantyPeriod,
+    getProposedCompany,
+    getAMCCMCList,
 };
 
