@@ -1,5 +1,6 @@
 const PurchaseOrder = require('../models/purchaseOrder');
 const Product = require('../models/productModel');
+const Tender = require('../models/tenderModel');
 const Quotation = require('../models/quotation');
 const moment = require('moment');
 const totalOrder = async (req, res) => {
@@ -180,10 +181,185 @@ const getReplenishmentActions = (req, res) => {
   }
 };
 
+
+const getInventoryLevel = async (req, res) => {
+  const { filterby } = req.query;
+
+  try {
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999); // End of today
+    let startDate = new Date();
+
+    // Determine the date range based on the filter
+    if (filterby === "weekly") {
+      startDate.setDate(endDate.getDate() - 7); // Past 7 days
+    } else if (filterby === "monthly") {
+      startDate.setDate(endDate.getDate() - 30); // Past 30 days
+    } else if (filterby === "yearly") {
+      startDate.setFullYear(endDate.getFullYear() - 1); // Past 12 months
+    } else {
+      return res.status(400).json({
+        error: "Please specify a valid filter: weekly, monthly, or yearly.",
+      });
+    }
+
+    // Dynamically construct the aggregation pipeline
+    const pipeline = [];
+    if (filterby === "weekly" || filterby === "monthly") {
+      pipeline.push(
+        {
+          $match: {
+            date: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $group: {
+            _id: filterby === "weekly" ? { $dateToString: { format: "%Y-%m-%d", date: "$date" } } : null,
+            totalQuantity: { $sum: { $toInt: "$quantity" } },
+          },
+        },
+        { $sort: { _id: 1 } }
+      );
+    } else if (filterby === "yearly") {
+      pipeline.push(
+        {
+          $match: {
+            date: { $gte: startDate, $lte: endDate },
+          },
+        },
+        {
+          $group: {
+            _id: { year: { $year: "$date" }, month: { $month: "$date" } },
+            totalQuantity: { $sum: { $toInt: "$quantity" } },
+          },
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+      );
+    }
+
+    const results = await Product.aggregate(pipeline);
+
+    // Handle the response based on the filter type
+    if (filterby === "weekly" || filterby === "monthly") {
+      const dailyTotals = results.map((day) => ({
+        date: day._id,
+        totalQuantity: day.totalQuantity,
+      }));
+
+      if (filterby === "weekly") {
+        // Calculate daily percentage changes for weekly
+        const dailyPercentageChanges = dailyTotals.map((day, index) => {
+          const previousTotal = index > 0 ? dailyTotals[index - 1].totalQuantity : 0;
+          const percentageChange =
+            previousTotal > 0 ? ((day.totalQuantity - previousTotal) / previousTotal) * 100 : 0;
+          return {
+            date: day.date,
+            totalQuantity: day.totalQuantity,
+            percentageChange: percentageChange.toFixed(2), // Limit to 2 decimals
+          };
+        });
+
+        return res.status(200).json({
+          dailyTotals,
+          dailyPercentageChanges,
+        });
+      }
+
+      // Return total quantities for monthly
+      return res.status(200).json({
+        dailyTotals,
+      });
+    } else if (filterby === "yearly") {
+      // Calculate percentage changes for yearly
+      const monthlyTotals = results.map((month) => ({
+        month: `${month._id.year}-${String(month._id.month).padStart(2, "0")}`,
+        totalQuantity: month.totalQuantity,
+      }));
+
+      const percentageChanges = monthlyTotals.map((month, index) => {
+        if (index === 0) return { month: month.month, percentageChange: null }; // No comparison for the first month
+        const previousTotal = monthlyTotals[index - 1].totalQuantity;
+        const percentageChange =
+          previousTotal > 0 ? ((month.totalQuantity - previousTotal) / previousTotal) * 100 : 0;
+        return {
+          month: month.month,
+          percentageChange: percentageChange.toFixed(2),
+        };
+      });
+
+      return res.status(200).json({
+        monthlyTotals,
+        percentageChanges,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching inventory levels:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 const getLatestQuotation = async (req, res) => {
   try {
     const { page = 1, limit = 3 } = req.query;
 
+    // Parse page and limit as integers
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    // Calculate the date range for the past 30 days
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+    const endDate = new Date(now);
+
+    // Fetch all tenders for the past 30 days
+    const tendersInRange = await Tender.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+    }).select("tenderID title issueDate authorizedPerson").sort({ createdAt: -1 }); 
+
+    // Calculate total count for all tenders in the range
+    const totalItemsInRange = tendersInRange.length;
+
+    // Paginate the tenders for the current page
+    const tenders = tendersInRange.slice(skip, skip + itemsPerPage);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalItemsInRange / itemsPerPage);
+
+    // Set `totalCount` to the number of items on the current page
+    const totalCount = tenders.length;
+
+    // Respond with tenders and pagination data
+    return res.status(200).json({
+      success: true,
+      message: "Tenders retrieved successfully.",
+      data: {
+        tenders,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching latest tenders:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching tenders.",
+      error: error.message,
+    });
+  }
+};
+  
+const getLatestTender = async (req, res) => {
+  try {
+    // Extract query parameters for pagination
+    const { page = 1, limit = 10 } = req.query;
+    
     // Parse page and limit as integers
     const currentPage = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);
@@ -239,8 +415,6 @@ const getLatestQuotation = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
     totalOrder,
     getRecentOrders,
@@ -248,5 +422,7 @@ module.exports = {
 // totalPendingOrder
    totalInventoryValue,
    lowInventoryProduct,
+   getInventoryLevel,
+   getLatestTender,
   getLatestQuotation
 }
