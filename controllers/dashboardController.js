@@ -318,7 +318,7 @@ const getLatestTender = async (req, res) => {
       createdAt: { $gte: startDate, $lte: endDate },
     }).select("tenderID title issueDate authorizedPerson").sort({ createdAt: -1 }); 
 
-    // Calculate total count for all tenders in the range
+    // Calculate total count for all tend*ers in the range
     const totalItemsInRange = tendersInRange.length;
 
     // Paginate the tenders for the current page
@@ -366,11 +366,15 @@ const getLatestQuotation = async (req, res) => {
 
     const skip = (currentPage - 1) * itemsPerPage;
 
-    // Get the total count of documents
-    const totalCount = await Quotation.countDocuments();
+    // Calculate the date range for the past 30 days
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+    const endDate = new Date(now);
 
     // Fetch quotations with pagination and sort by creation date
-    const data = await Quotation.find()
+    const data = await Quotation.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+    })
       .select(
         "quotationNo quotationDate quotationName items.quantity from.companyAddress"
       )
@@ -383,6 +387,8 @@ const getLatestQuotation = async (req, res) => {
       return res.status(404).json({ message: "Quotations not found" });
     }
 
+    const totalData = data.length;
+
     // Extract the first quantity item manually
     const processedData = data.map((quotation) => ({
       quotationNo: quotation.quotationNo,
@@ -393,13 +399,12 @@ const getLatestQuotation = async (req, res) => {
     }));
 
     // Calculate total pages
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const totalPages = Math.ceil(totalData / itemsPerPage);
 
     return res.status(200).json({
       success: true,
       currentPage,
       totalPages,
-      totalCount,
       hasNextPage: currentPage < totalPages,
       hasPrevPage: currentPage > 1,
       itemsPerPage,
