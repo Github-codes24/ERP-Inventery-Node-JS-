@@ -26,6 +26,7 @@ const {
     getWarrantyPeriod,
     getProposedCompany,
     getAMCCMCList,
+    getAllSerialNumbers
 } = require('../controllers/productController');
 
 
@@ -64,5 +65,6 @@ router.get('/getModelName', getModelName);
 router.get('/getWarrantyPeriod', getWarrantyPeriod);
 router.get('/getProposedCompany', getProposedCompany);
 router.get('/getAMCCMCList', getAMCCMCList);
+router.get('/getAllSerialNumbers', getAllSerialNumbers);
 
 module.exports = router
