@@ -12,5 +12,6 @@ router.get('/lowInventoryProduct',dashboardController.lowInventoryProduct);
 router.get('/getInventoryLevel',dashboardController.getInventoryLevel);
 router.get('/getLatestTender',dashboardController.getLatestTender);
 router.get('/getLatestQuotation',dashboardController.getLatestQuotation);
+router.get('/getProductById',dashboardController.getProductById);
 
 module.exports = router;
