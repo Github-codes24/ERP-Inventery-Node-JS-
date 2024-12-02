@@ -302,7 +302,7 @@ const getInventoryLevel = async (req, res) => {
 const getLatestTender = async (req, res) => {
   try {
     // Extract query parameters for pagination
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 3 } = req.query;
 
     // Parse page and limit as integers
     const currentPage = parseInt(page, 10);
