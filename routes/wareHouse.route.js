@@ -13,5 +13,7 @@ router.get('/getNewIDNumber', wareHouseController.getNewIDNumber);
 
 router.get('/getWarehouseTypes', wareHouseController.getWarehouseTypes);
 
+router.get('/getWarehousePercentages', wareHouseController.getWarehousePercentages);
+
 
 module.exports = router;

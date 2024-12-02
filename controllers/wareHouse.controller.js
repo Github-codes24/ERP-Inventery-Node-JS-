@@ -162,9 +162,46 @@ const getNewIDNumber = async (req,res) => {
   }
 }
 
+const getWarehousePercentages = async (req, res) => {
+  try {
+    // Get all warehouses from the database
+    const warehouses = await warehouseModel.find();
+
+    // Calculate the total quantity of all warehouses
+    const totalQuantity = warehouses.reduce((total, warehouse) => {
+      return total + warehouse.storedMaterials.reduce((sum, material) => sum + material.quantity, 0);
+    }, 0);
+
+    // Initialize an array to store the warehouse percentages
+    const warehousePercentages = warehouses.map((warehouse) => {
+      const warehouseQuantity = warehouse.storedMaterials.reduce((sum, material) => sum + material.quantity, 0);
+      const percentage = (warehouseQuantity / totalQuantity) * 100;
+      return {
+        warehouseID: warehouse.warehouseID,
+        warehouseName: warehouse.warehouseName,
+        percentage: percentage.toFixed(2) // Round to 2 decimal places
+      };
+    });
+
+    // Return the calculated percentages
+    return res.status(200).json({
+      success: true,
+      data: warehousePercentages
+    });
+  } catch (error) {
+    // Handle errors
+    return res.status(500).json({
+      success: false,
+      message: "Error retrieving warehouse percentages.",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
     createWarehouse,
     getAllWareHouses,
     getWarehouseTypes,
     getNewIDNumber,
+    getWarehousePercentages,
 }
