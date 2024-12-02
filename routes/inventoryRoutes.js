@@ -8,6 +8,6 @@ router.use(companyMiddleware);
 
 // Route for getting available brand names
 router.get('/brands', getAvailableBrandNames);
-router.get('/getProductById',getProductById);
+router.get('/getProductById/:id',getProductById);
 
 module.exports = router;
