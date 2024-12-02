@@ -7,7 +7,6 @@ const bankSchema = new mongoose.Schema({
     },
     accountNumber: {
         type: String,
-        unique: true,
         required: true,
     },
     accountType: {
@@ -16,7 +15,6 @@ const bankSchema = new mongoose.Schema({
     },
     ifscCode: {
         type: String,
-        unique: true,
         required: true,
     },
     branchName: {

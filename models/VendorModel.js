@@ -14,21 +14,26 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    unique: true,
   },
   alternateNumber: {
     type: String,
-    unique: true,
     required: true,
+    unique: true,
+
   },
   contactEmail: {
     type: String,
     unique: true,
     required: true,
+    unique: true,
+
   },
   alternateEmail: {
     type: String,
-    unique: true,
     required: true,
+    unique: true,
+
   },
   productOrService: {
     type: String,

@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const companyMiddleware = require("../middleware/companyMiddleware");
- router.use(companyMiddleware);
+
+router.use(companyMiddleware);
 // Configure multer for file uploads
 const upload = multer({ 
     dest: 'uploads/', 
@@ -21,7 +22,10 @@ const {
     getStockNames,
     getProductTypes,
     getNewSrNumber,
-    getModelName
+    getModelName,
+    getWarrantyPeriod,
+    getProposedCompany,
+    getAMCCMCList,
 } = require('../controllers/productController');
 
 
@@ -56,5 +60,9 @@ router.get('/getProductTypes', getProductTypes);
 router.get('/getTopSellingProducts', getTopSellingProducts);
 
 router.get('/getModelName', getModelName);
+
+router.get('/getWarrantyPeriod', getWarrantyPeriod);
+router.get('/getProposedCompany', getProposedCompany);
+router.get('/getAMCCMCList', getAMCCMCList);
 
 module.exports = router
