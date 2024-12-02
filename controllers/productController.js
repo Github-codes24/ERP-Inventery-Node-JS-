@@ -67,7 +67,7 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxesRate,
+      amount,
       applicableTaxesAmount,
       date,
       warehouse,
@@ -101,7 +101,7 @@ const createProduct = async (req, res) => {
     if (!quantity) error.quantity = "Quantity is required.";
     if (!companyPrice) error.companyPrice = "Company Price is required.";
     if (!gstRate) error.gstRate = "GST Rate is required.";
-    if (!applicableTaxesRate) error.applicableTaxesRate = "Applicable Taxes rate is required.";
+    if (!amount) error.amount = "Amount is required.";
     if (!applicableTaxesAmount) error.applicableTaxesAmount = "Applicable Taxes amount is required.";
     if (!date) error.date = "Date is required.";
     if (!warehouse) error.warehouse = "Warehouse is required."; 
@@ -155,7 +155,7 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxesRate,
+      amount,
       applicableTaxesAmount,
       date,
       warehouse, 

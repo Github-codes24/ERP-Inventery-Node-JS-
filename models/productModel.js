@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema(
     pptAvailable: { type: String, required: true },
     coveringLetter: { type: String, required: true },
     isoCertificate: { type: String, required: true },
-    applicableTaxesRate: { type: String, required: true },
+    amount: { type: Number, required: true },
     applicableTaxesAmount: { type: String, required: true },
     date: { type: Date, required: true },
     subTotal: { type: Number },
