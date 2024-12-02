@@ -49,6 +49,8 @@ const QuotationSchema = new mongoose.Schema(
         sgstAmount: { type: Number, default: 0, required: true },
         cgstRate: { type: Number, default: 0, required: true },
         cgstAmount: { type: Number, default: 0, required: true },
+        igstRate: { type: Number, default: 0 },
+        igstAmount: { type: Number, default: 0 },
         total: { type: Number, required: true },
       },
     ],

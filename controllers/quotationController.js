@@ -169,9 +169,7 @@ const createQuotation = async (req, res) => {
     if(!totalDiscountPercentage){
       missingFields.push("totalDiscountPercentage");
     }
-    if(!totalDiscountAmount){
-      missingFields.push("totalDiscountAmount");
-    }
+  
     if(!taxes){
       missingFields.push("taxes");
     }
@@ -208,6 +206,7 @@ const createQuotation = async (req, res) => {
 
     // Send success response
     return res.status(201).json({
+      success: true,
       message: "Quotation created successfully!",
       quotation: savedQuotation,
     });
@@ -303,8 +302,8 @@ const getAllQuotations = async (req, res) => {
     // Get total count of matching documents
     const totalCount = await Quotation.countDocuments(filter);
 
-    const quotations = await Quotation.find(filter).select('quotationNo quotationName customerName to.cityStateZip validity ').skip(skip)
-    .limit(itemsPerPage);
+    const quotations = await Quotation.find(filter).select('quotationNo quotationName customerName to.customerState validity ').skip(skip)
+    .limit(itemsPerPage).sort({createdAt: -1 });
 
     const totalPages = Math.ceil(totalCount / itemsPerPage);
 
