@@ -11,7 +11,7 @@ const stockItemSchema = new mongoose.Schema({
 
 // Tender Schema
 const tenderSchema = new mongoose.Schema({
-    tenderID: { type: String, required: true },
+    tenderID: { type: String, unique: true, required: true },
     tenderName: { type: String, required: true },
     title: { type: String, required: true },
     issueDate: { type: Date, required: true },
