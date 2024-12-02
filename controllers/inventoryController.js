@@ -20,7 +20,7 @@ const getProductById = async (req, res) => {
 
     // Get main product
     const mainProduct = await Product.findById(id)
-      .select("productImage productName model companyPrice productDescription");
+      .select("productImage productName companyName companyPrice productDescription");
 
     if (!mainProduct) {
       return res.status(404).json({ message: 'Product not found' });
