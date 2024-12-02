@@ -4,6 +4,7 @@ const vendorSchema = new mongoose.Schema({
   vendorId: {
     type: String,
     required: true,
+    unique: true,
   },
   vendorName: {
     type: String,
