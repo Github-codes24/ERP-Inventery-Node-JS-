@@ -14,8 +14,8 @@ const QuotationSchema = new mongoose.Schema(
       companyState: { type: String, required: true },
       companyCity: { type: String, required: true },
       companyZipcode: { type: String, required: true },
-      companyEmail: { type: String, required: true },
-      companyMobile: { type: String, required: true },
+      companyEmail: { type: String, unique: true,required: true },
+      companyMobile: { type: String, unique: true,required: true },
     },
 
     to: {
@@ -25,22 +25,22 @@ const QuotationSchema = new mongoose.Schema(
       customerState: { type: String, required: true },
       customerCity: { type: String, required: true },
       customerZipcode: { type: String, required: true },
-      customerEmail: { type: String, required: true },
-      customerMobile: { type: String, required: true },
+      customerEmail: { type: String,unique: true,required: true },
+      customerMobile: { type: String,unique: true, required: true },
     },
 
     bankDetails: {
       bankName: { type: String, required: true },
-      accountNumber: { type: String, required: true },
+      accountNumber: { type: String,unique: true, required: true },
       accountType: { type: String, required: true },
-      ifscCode: { type: String, required: true },
+      ifscCode: { type: String,unique: true, required: true },
       branchName: { type: String, required: true },
       address: { type: String, required: true },
     },
 
     items: [
       {
-        itemNo: { type: Number, required: true },
+        itemNo: { type: Number,unique: true, required: true },
         quantity: { type: Number, required: true },
         unitPrice: { type: Number, required: true },
         discountPercentage: { type: Number, default: 0, required: true },

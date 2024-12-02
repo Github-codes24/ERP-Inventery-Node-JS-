@@ -7,7 +7,7 @@ const purchaseOrderSchema = new mongoose.Schema({
     clientName: { type: String, required: true },
     address: { type: String, required: true },
     cityStateZip: { type: String, required: true },
-    contact: { type: String, required: true },
+    contact: { type: String,unique: true, required: true },
   },
   purchaseForm: {
     vendorName: { type: String, required: true },
@@ -17,7 +17,7 @@ const purchaseOrderSchema = new mongoose.Schema({
   },
   orderDetails: [
     {
-      itemNo: { type: Number, required: true },
+      itemNo: { type: Number,unique: true, required: true },
       quantity: { type: Number, required: true },
       unitPrice: { type: Number, required: true },
       taxableTotalValue: { type: Number, required: true },
@@ -36,8 +36,8 @@ const purchaseOrderSchema = new mongoose.Schema({
   returnPolicy: { type: String, default: ""},
   name: { type: String, required: true },
   designation: { type: String, required: true },
-  email: { type: String, required: true },
-  contact: { type: String, required: true },
+  email: { type: String,unique: true, required: true },
+  contact: { type: String,unique: true, required: true },
   status:{
     type:String,
     default:"Pending",

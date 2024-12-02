@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const vendorSchema = new mongoose.Schema({
   vendorId: {
     type: String,
+    unique: true,
     required: true,
   },
   vendorName: {
@@ -11,18 +12,22 @@ const vendorSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: String,
+    unique: true,
     required: true,
   },
   alternateNumber: {
     type: String,
+    unique: true,
     required: true,
   },
   contactEmail: {
     type: String,
+    unique: true,
     required: true,
   },
   alternateEmail: {
     type: String,
+    unique: true,
     required: true,
   },
   productOrService: {
@@ -51,6 +56,7 @@ const vendorSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
+    unique: true,
     required: true,
   },
   bankingName: {
