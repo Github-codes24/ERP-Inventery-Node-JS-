@@ -17,15 +17,42 @@ const getAvailableBrandNames = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const id = req.params.id;
-    const product = await Product.findById(id).select("productImage productName model companyPrice productDescription");
 
-    if (!product) {
-      return  res.status(404).json({ message: 'Product not found' });
+    // Get main product
+    const mainProduct = await Product.findById(id)
+      .select("productImage productName model companyPrice productDescription");
+
+    if (!mainProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Find similar products with same name but different brands
+    const similarProducts = await Product.find({
+      productName: mainProduct.productName,
+      companyName: { $ne: mainProduct.companyName },
+    }).select("companyName companyPrice -_id");
+
+    // Format the response
+    const response = {
+      success: true,
+      product: {
+        ...mainProduct.toObject(),
+        sameProductInOtherBrands: similarProducts.map(product => ({
+          brandName: product.companyName,
+          price: product.companyPrice,
+          ratings: 0 
+        }))
+      }
     };
 
-    return res.status(200).json({ success: true, product });
+    return res.status(200).json(response);
+
   } catch (error) {
-     return res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error('Error fetching product:', error);
+    return res.status(500).json({ 
+      message: 'Server Error', 
+      error: error.message 
+    });
   }
 };
 
