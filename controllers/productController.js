@@ -275,6 +275,15 @@ const updateProduct = async (req, res) => {
       pptAvailable,
       coveringLetter,
       isoCertificate,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     };
 
     // Update the product data
