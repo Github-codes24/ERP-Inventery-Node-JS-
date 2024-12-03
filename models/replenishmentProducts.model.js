@@ -9,4 +9,4 @@ const replenishmentProductSchema = new mongoose.Schema({
   productImage: { type: String, required: true },
 });
 
-module.exports = mongoose.model('Product', replenishmentProductSchema);
+module.exports = mongoose.model('ReplenishmentProducts', replenishmentProductSchema);

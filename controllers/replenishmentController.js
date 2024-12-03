@@ -32,9 +32,6 @@ const products = [
 // Seed the products into the database
 const seedProducts = async () => {
   try {
-    // Clear existing products
-    await ReplenishmentProduct.deleteMany({});
-    console.log('Existing products cleared.');
 
     // Insert sample products
     await ReplenishmentProduct.insertMany(products);
