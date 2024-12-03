@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const nodemailer = require('nodemailer');
 const Company = require('../models/company.model');
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 // Nodemailer setup for sending emails
 const transporter = nodemailer.createTransport({
@@ -55,7 +58,7 @@ const transporter = nodemailer.createTransport({
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         // to: user.email,
-        to :email,
+        to: email,
         subject: 'Password Reset Request',
         html: message
       });
