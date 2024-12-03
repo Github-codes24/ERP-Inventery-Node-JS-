@@ -14,15 +14,45 @@ const getNewSrNumber = async (req,res) => {
 // Get products by name
 const getProducts = async (req, res) => {
   try {
-      const {productName} = req.query;
-      const products = await Product.find(req.query).select("productName srNo productType date quantity companyPrice");
+      const { productName, page = 1, limit = 10 } = req.query;
+
+      // Parse page and limit as integers
+      const currentPage = parseInt(page);
+      const itemsPerPage = parseInt(limit);
+  
+      const skip = (currentPage - 1) * itemsPerPage;
+
+      // Build the filter object
+      const filter = { isDeleted: false };
+      if (clientName) {
+        filter.clientName = clientName;
+      }
+ 
+      // Get total count of matching documents
+      const totalCount = await Proposal.countDocuments(filter);
+
+      const products = await Product.find(filter).select("productName srNo productType date quantity companyPrice")
+      .skip(skip)
+      .limit(itemsPerPage)
+      .sort({ createdAt: -1 });
+
+      // Calculate total pages
+      const totalPages = Math.ceil(totalCount / itemsPerPage);
 
       // Modify the data to add `lastPurchase`
       const modifiedData = products.map((product) => ({
         ...product._doc, // Spread the original document
         lastPurchase: "abcd", // Add the `lastPurchase` property
       }));
-      return res.status(200).json({ success: true, products: modifiedData }); 
+      return res.status(200).json({ success: true, products: modifiedData,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount,
+        },
+      }); 
   } catch (error) {
      return  res.status(500).json({ message: 'Server Error', error: error.message });
   }
