@@ -29,7 +29,7 @@ const getProducts = async (req, res) => {
       }
  
       // Get total count of matching documents
-      const totalCount = await Proposal.countDocuments(filter);
+      const totalCount = await Product.countDocuments(filter);
 
       const products = await Product.find(filter).select("productName srNo productType date quantity companyPrice")
       .skip(skip)
