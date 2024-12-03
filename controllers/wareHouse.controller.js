@@ -164,12 +164,12 @@ const getNewIDNumber = async (req,res) => {
       return 1;
   }
 }
-getInventoryManagement = async (req, res) => {
+const getInventoryManagement = async (req, res) => {
   try {
-    const { page = 1, limit = 2 } = req.query;
+    let { page = 1, limit = 2 } = req.query;
     // Extract page and limit from query parameters, with default values
-    const page = parseInt(page) || 1;
-    const limit = parseInt(limit) || 10;
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
 
     // Calculate the number of documents to skip
     const skip = (page - 1) * limit;
@@ -216,9 +216,6 @@ getInventoryManagement = async (req, res) => {
     });
   }
 };
-
-
-
 
 const getWarehousePercentages = async (req, res) => {
   try {
