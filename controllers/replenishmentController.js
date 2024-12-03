@@ -81,7 +81,7 @@ const getReplenishmentProductById = async (req, res) => {
     const { id } = req.params; // Extract product ID from request parameters
 
     // Find the product by ID
-    const product = await Product.findById(id);
+    const product = await ReplenishmentProduct.findById(id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
