@@ -15,5 +15,6 @@ router.get('/getWarehouseTypes', wareHouseController.getWarehouseTypes);
 
 router.get('/getWarehousePercentages', wareHouseController.getWarehousePercentages);
 
+router.get('/getOrdersAndShipments',wareHouseController.getOrdersAndShipments);
 
 module.exports = router;
