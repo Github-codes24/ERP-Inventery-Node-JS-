@@ -1,5 +1,7 @@
 //get warehouse
 const warehouseModel = require("../models/warehouse.model")
+const Product =require('../models/productModel');
+
 
 const createWarehouse = async (req, res) => {
   try {
@@ -122,8 +124,63 @@ const getAllWareHouses = async (req, res) => {
         });
     }
 }
+getInventoryManagement = async (req, res) => {
+  try {
+    // Extract page and limit from query parameters, with default values
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch the paginated data
+    const inventoryData = await Product.find()
+      .select('productName quantity')
+      .skip(skip)
+      .limit(limit);
+
+    if (!inventoryData || inventoryData.length === 0) {
+      return res.status(404).json({ message: "Inventory not found." });
+    }
+
+    // Fetch total count for pagination metadata
+    const totalCount = await Product.countDocuments();
+
+    // Combine data with status
+    const dataWithStatus = inventoryData.map(data => {
+      const status = data.quantity > 5 ? "In Stock" : "Low Stock";
+      return {
+        productName: data.productName,
+        quantity: data.quantity,
+        status: status
+      };
+    });
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // Return the paginated data with additional metadata
+    return res.status(200).json({
+      currentPage: page,
+      itemsPerPage: limit,
+      totalPages: totalPages,
+      totalItems: totalCount,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+      data: dataWithStatus
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+
 
 module.exports = {
     createWarehouse,
-    getAllWareHouses
+    getAllWareHouses,
+    getInventoryManagement
 }
