@@ -43,14 +43,14 @@ const seedProducts = async () => {
 };
 
 // Run the seeding script
-seedProducts();
+// seedProducts();
 
 const getTopSellingProducts = async (req, res) => {
   try {
     const { productName } = req.query; // Extract filter criteria from query params
 
     // Fetch products from the database
-    let products = await ReplenishmentProduct.find();
+    let products = await ReplenishmentProduct.find().limit(5).sort({ createdAt: -1 });
 
     // Add calculated fields: totalValue and status
     const enrichedProducts = products.map((product) => ({
