@@ -23,7 +23,7 @@ const getProducts = async (req, res) => {
       const skip = (currentPage - 1) * itemsPerPage;
 
       // Build the filter object
-      const filter = { isDeleted: false };
+      const filter = {};
       if (productName) {
         filter.productName = productName;
       }
