@@ -109,7 +109,7 @@ const createTender = async (req, res) => {
 const getAllTenders = async (req, res) => {
   try {
     // Extract the query parameters (page, limit, and other filters)
-    const { tenderID,page = 1, limit = 10  } = req.query;
+    const { tenderID, title,page = 1, limit = 10  } = req.query;
 
     // Initialize the filter object
     const filter = { };
@@ -117,6 +117,9 @@ const getAllTenders = async (req, res) => {
     // If tenderID is provided, add it to the filter
     if (tenderID) {
       filter.tenderID = tenderID;
+    }
+    if (title) {
+      filter.title = title;
     }
 
     // Parse page and limit as integers
