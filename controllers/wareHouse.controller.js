@@ -303,6 +303,90 @@ const getOrdersAndShipments = async (req, res) => {
   }
 };
 
+
+const getWarehouseInventoryStats = async (req, res) => {
+  try {
+    const { warehouse } = req.query;
+    
+    const matchCondition = warehouse ? { warehouse: warehouse } : {};
+
+    const stats = await Product.aggregate([
+      {
+        $match: matchCondition
+      },
+      {
+        $facet: {
+          totalItems: [
+            { $count: "count" }
+          ],
+          highStock: [
+            {
+              $match: {
+                $expr: { 
+                  $gt: [{ $convert: { input: "$quantity", to: "int" }}, 500] 
+                }
+              }
+            },
+            { $count: "count" }
+          ],
+          lowStock: [
+            {
+              $match: {
+                $expr: { 
+                  $and: [
+                    { $lt: [{ $convert: { input: "$quantity", to: "int" }}, 10] },
+                    { $gt: [{ $convert: { input: "$quantity", to: "int" }}, 0] }
+                  ]
+                }
+              }
+            },
+            { $count: "count" }
+          ],
+          outOfStock: [
+            {
+              $match: {
+                $expr: { 
+                  $eq: [{ $convert: { input: "$quantity", to: "int" }}, 0] 
+                }
+              }
+            },
+            { $count: "count" }
+          ]
+        }
+      },
+      {
+        $project: {
+          totalItems: { $arrayElemAt: ["$totalItems.count", 0] },
+          highStock: { $arrayElemAt: ["$highStock.count", 0] },
+          lowStock: { $arrayElemAt: ["$lowStock.count", 0] },
+          outOfStock: { $arrayElemAt: ["$outOfStock.count", 0] }
+        }
+      }
+    ]);
+
+    const result = {
+      totalItems: stats[0]?.totalItems || 0,
+      highStock: stats[0]?.highStock || 0,
+      lowStock: stats[0]?.lowStock || 0,
+      outOfStock: stats[0]?.outOfStock || 0
+    };
+
+    return res.status(200).json({
+      success: true,
+      stats: result,
+      warehouse: warehouse || 'All Warehouses'
+    });
+
+  } catch (error) {
+    console.error("Error fetching inventory stats:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching inventory statistics",
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   createWarehouse,
   getAllWareHouses,
@@ -310,5 +394,6 @@ module.exports = {
   getNewIDNumber,
   getWarehousePercentages,
   getOrdersAndShipments,
-  getInventoryManagement
+  getInventoryManagement,
+  getWarehouseInventoryStats
 }
