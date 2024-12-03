@@ -18,4 +18,7 @@ router.get('/getWarehousePercentages', wareHouseController.getWarehousePercentag
 
 router.get('/getOrdersAndShipments',wareHouseController.getOrdersAndShipments);
 
+router.get('/getWarehouseInventoryStats', wareHouseController.getWarehouseInventoryStats);
+
+
 module.exports = router;
