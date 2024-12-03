@@ -38,20 +38,10 @@ const saleBySalesPerson = async (req, res) => {
     }
 }
 
-const salesByDistributor = async (req, res) => {
-    try{
-        const data = [{ distributor: 'Distributor 1', sales: 2200 }, { distributor: 'Distributor 2', sales: 3000 }, { distributor: 'Distributor 3', sales: 2500 }, { distributor: 'Distributor 4', sales: 2800 }];
-        return res.status(200).json(data);
-    }catch(error){
-        console.log("Error getting sales by distributor:", error);
-        return res.status(500).json({ message: 'Error getting sales by distributor', error: error.message });
-    }
-}
 
 module.exports = {
     salesByCompany,
     salesByProduct,
     salesByRegion,
     saleBySalesPerson,
-    salesByDistributor
 }

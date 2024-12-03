@@ -6,5 +6,4 @@ router.get('/salesByCompany', reportController.salesByCompany);
 router.get('/salesByProduct', reportController.salesByProduct);
 router.get('/salesByRegion', reportController.salesByRegion);
 router.get('/saleBySalesPerson', reportController.saleBySalesPerson);
-router.get('/salesByDistributor', reportController.salesByDistributor);
 module.exports = router;
