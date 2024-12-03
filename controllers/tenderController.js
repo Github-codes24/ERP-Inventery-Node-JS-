@@ -73,6 +73,16 @@ const createTender = async (req, res) => {
     });
 
 
+  const existingtenderID = await Tender.findOne({ tenderID });
+   
+   if (existingtenderID) {
+      return res.status(400).json({
+        success: false,
+        message: `tender ID '${tenderID}' already exists.`,
+      });
+    }
+
+
     // Create and save tender
     const newTender = new Tender({
       tenderID, tenderName, title, issueDate, tenderFloatingDate, description,
@@ -275,6 +285,15 @@ const updateTender = async (req, res) => {
         delete updateData[key];
       }
     });
+    
+    const existingtenderID = await Tender.findOne({ tenderID });
+   
+    if (existingtenderID) {
+       return res.status(400).json({
+         success: false,
+         message: `tender ID '${tenderID}' already exists.`,
+       });
+     }
 
     // Update tender
     const updatedTender = await Tender.findByIdAndUpdate(

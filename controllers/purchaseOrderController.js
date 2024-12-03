@@ -144,6 +144,30 @@ const createPurchaseOrder = async (req, res) => {
       });
     }
 
+    // Check for existing records with the same poOrderNo, email, or contact
+    const existingPoOrderNo = await PurchaseOrder.findOne({ poOrderNo });
+    const existingEmail = await PurchaseOrder.findOne({ email });
+    const existingContact = await PurchaseOrder.findOne({ contact });
+
+    if (existingPoOrderNo) {
+      return res.status(400).json({
+        success: false,
+        message: `Purchase Order with order number '${poOrderNo}' already exists.`,
+      });
+    }
+    if (existingEmail) {
+      return res.status(400).json({
+        success: false,
+        message: `Email '${email}' is already associated with another purchase order.`,
+      });
+    }
+    if (existingContact) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact '${contact}' is already associated with another purchase order.`,
+      });
+    }
+
     // Create a new purchase order
     const newPurchaseOrder = new PurchaseOrder({
       poOrderNo,
@@ -174,7 +198,16 @@ const createPurchaseOrder = async (req, res) => {
       purchaseOrder: savedPurchaseOrder,
     });
   } catch (error) {
-    // Send error response
+    // Handle validation error
+    if (error.code === 11000) {
+      // Duplicate key error (unique validation failure)
+      return res.status(400).json({
+        message: "Unique validation failed",
+        error: error.message,
+      });
+    }
+
+    // General error handling
     console.error("Error creating purchase order:", error);
     return res.status(500).json({
       message: "Error creating purchase order",
@@ -182,6 +215,7 @@ const createPurchaseOrder = async (req, res) => {
     });
   }
 };
+
 
 
 const getAllPurchaseOrders = async (req, res) => {

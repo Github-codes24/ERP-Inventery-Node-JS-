@@ -2,7 +2,6 @@ const Vendor = require("../models/VendorModel.js");
 
 const createVendor = async (req, res) => {
   try {
-    
     const {
       vendorId,
       vendorName,
@@ -18,36 +17,64 @@ const createVendor = async (req, res) => {
       branchName,
       ifscCode,
       bankingName,
-      date
+      date,
     } = req.body;
 
-    
-    const error = {};  
-    if (!vendorId) error.vendorId = "Vendor ID is required.";
-    if (!vendorName) error.vendorName = "Vendor Name is required.";
-    if (!contactNumber) error.contactNumber = "Contact Number is required.";
-    if (!alternateNumber) error.alternateNumber = "Alternate Number is required.";
-    if (!contactEmail) error.contactEmail = "Contact Email is required.";
-    if (!alternateEmail) error.alternateEmail = "Alternate Email is required.";
-    if (!productOrService) error.productOrService = "Product or Service is required.";
-    if (!category) error.category = "Category is required.";
-    if (!productManufacture) error.productManufacture = "Product Manufacture is required.";
-    if (!additionalInfo) error.additionalInfo = "Additional Info is required.";
-    if (!bankName) error.bankName = "Bank Name is required.";
-    if (!branchName) error.branchName = "Branch Name is required.";
-    if (!ifscCode) error.ifscCode = "IFSC Code is required.";
-    if (!bankingName) error.bankingName = "Banking Name is required.";
-    if (!date) error.date = "Date is required.";
+    // Initialize error object for validation
+    const errors = {};
 
-    // If any required fields are missing, return an error response
-    if (Object.keys(error).length > 0) {
+    // Validate required fields
+    if (!vendorId) errors.vendorId = "Vendor ID is required.";
+    if (!vendorName) errors.vendorName = "Vendor Name is required.";
+    if (!contactNumber) errors.contactNumber = "Contact Number is required.";
+    if (!alternateNumber) errors.alternateNumber = "Alternate Number is required.";
+    if (!contactEmail) errors.contactEmail = "Contact Email is required.";
+    if (!alternateEmail) errors.alternateEmail = "Alternate Email is required.";
+    if (!productOrService) errors.productOrService = "Product or Service is required.";
+    if (!category) errors.category = "Category is required.";
+    if (!productManufacture) errors.productManufacture = "Product Manufacture is required.";
+    if (!additionalInfo) errors.additionalInfo = "Additional Info is required.";
+    if (!bankName) errors.bankName = "Bank Name is required.";
+    if (!branchName) errors.branchName = "Branch Name is required.";
+    if (!ifscCode) errors.ifscCode = "IFSC Code is required.";
+    if (!bankingName) errors.bankingName = "Banking Name is required.";
+    if (!date) errors.date = "Date is required.";
+
+    // If any validation errors exist, return an error response
+    if (Object.keys(errors).length > 0) {
       return res.status(400).json({
-        message: "The following fields are missing or invalid:",
-        error
+        success: false,
+        message: "Validation errors found.",
+        errors,
       });
     }
 
-    // Create the new vendor document
+    // Check for unique constraints in the database
+    const existingVendorId = await Vendor.findOne({ vendorId });
+    const existingContactNumber = await Vendor.findOne({ contactNumber });
+    const existingContactEmail = await Vendor.findOne({ contactEmail });
+
+    if (existingVendorId) {
+      return res.status(400).json({
+        success: false,
+        message: `Vendor ID '${vendorId}' already exists.`,
+      });
+    }
+    if (existingContactNumber) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact Number '${contactNumber}' already exists.`,
+      });
+    }
+    if (existingContactEmail) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact Email '${contactEmail}' already exists.`,
+      });
+    }
+  
+
+    // Create a new vendor document
     const newVendor = new Vendor({
       vendorId,
       vendorName,
@@ -63,24 +90,24 @@ const createVendor = async (req, res) => {
       branchName,
       ifscCode,
       bankingName,
-      date
+      date,
     });
 
     // Save the vendor to the database
-    await newVendor.save();
+    const savedVendor = await newVendor.save();
 
-    // Return success response with the created vendor
+    // Respond with success
     return res.status(201).json({
       success: true,
-      message: "Vendor created successfully",
-      vendor: newVendor
+      message: "Vendor created successfully.",
+      vendor: savedVendor,
     });
   } catch (error) {
-    // Return error response if something goes wrong
+    // Handle server errors
     return res.status(500).json({
       success: false,
-      message: "Error creating vendor",
-      error: error.message
+      message: "Error creating vendor.",
+      error: error.message,
     });
   }
 };
@@ -203,6 +230,27 @@ const updateVendor = async (req, res) => {
       bankingName,
     };
 
+    const existingVendor = await Vendor.findOne({ vendorId });
+    const existingContactNumber = await Vendor.findOne({ contactNumber});
+    const existingContactEmail = await Vendor.findOne({ contactEmail});
+    if (existingVendor) {
+      return res.status(400).json({
+        message: "Vendor ID already exists. Please use a unique Vendor ID.",
+      });
+    }
+    if (existingContactEmail) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact Email '${contactEmail}' already exists.`,
+      });
+    }
+
+ if (existingContactNumber) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact Number '${contactNumber}' already exists.`,
+      });
+    }
     const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
       new: true 
     });

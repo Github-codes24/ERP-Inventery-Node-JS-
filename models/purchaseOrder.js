@@ -17,7 +17,7 @@ const purchaseOrderSchema = new mongoose.Schema({
   },
   orderDetails: [
     {
-      itemNo: { type: Number,unique: true, required: true },
+      itemNo: { type: Number, required: true },
       quantity: { type: Number, required: true },
       unitPrice: { type: Number, required: true },
       taxableTotalValue: { type: Number, required: true },

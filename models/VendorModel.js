@@ -14,12 +14,10 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    unique: true,
   },
   alternateNumber: {
     type: String,
     required: true,
-    unique: true,
 
   },
   contactEmail: {
@@ -32,7 +30,6 @@ const vendorSchema = new mongoose.Schema({
   alternateEmail: {
     type: String,
     required: true,
-    unique: true,
 
   },
   productOrService: {
@@ -61,7 +58,6 @@ const vendorSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
-    unique: true,
     required: true,
   },
   bankingName: {
