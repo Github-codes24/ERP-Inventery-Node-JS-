@@ -9,6 +9,7 @@ const userRoutes = require('./routes/user.route');
 const companyRoutes = require("./routes/company.route");
 const bankRoutes = require("./routes/bank.routes");
 const warehouseRoutes = require('./routes/wareHouse.route');
+const reportRoutes = require('./routes/report.routes');
 
 
 
@@ -98,6 +99,7 @@ app.use('/api/dashboard',dashboardRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/bank", bankRoutes);
 app.use("/api/warehouse", warehouseRoutes);
+app.use("/api/report", reportRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
