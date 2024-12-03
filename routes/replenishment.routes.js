@@ -4,6 +4,6 @@ const replenishmentController = require('../controllers/replenishmentController'
 const companyMiddleware = require("../middleware/companyMiddleware");
 router.use(companyMiddleware);
 
-router.get('getTopSellingProducts', replenishmentController.getTopSellingProducts);
+router.get('/getTopSellingProducts', replenishmentController.getTopSellingProducts);
 
 module.exports = router;
