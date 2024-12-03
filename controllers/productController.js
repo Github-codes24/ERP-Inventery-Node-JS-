@@ -24,8 +24,8 @@ const getProducts = async (req, res) => {
 
       // Build the filter object
       const filter = { isDeleted: false };
-      if (clientName) {
-        filter.clientName = clientName;
+      if (productName) {
+        filter.productName = productName;
       }
  
       // Get total count of matching documents
