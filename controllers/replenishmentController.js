@@ -74,18 +74,11 @@ const getTopSellingProducts = async (req, res) => {
   }
 };
 
-module.exports = { getTopSellingProducts };
-
 
 // Get product by ID
 const getReplenishmentProductById = async (req, res) => {
   try {
     const { id } = req.params; // Extract product ID from request parameters
-
-    // Validate the ID
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: 'Invalid product ID' });
-    }
 
     // Find the product by ID
     const product = await Product.findById(id);
