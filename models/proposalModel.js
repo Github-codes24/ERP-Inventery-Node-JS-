@@ -4,6 +4,7 @@ const ProposalSchema = new mongoose.Schema(
   {
     proposalID: {
       type: String,
+      unique: true,
      // required: true,
     },
     proposalName: { 

@@ -2,6 +2,7 @@
 const warehouseModel = require("../models/warehouse.model")
 const Product =require('../models/productModel');
 
+const PurchaseOrder = require('../models/purchaseOrder');
 
 const createWarehouse = async (req, res) => {
   try {
@@ -123,6 +124,45 @@ const getAllWareHouses = async (req, res) => {
         message: error.message,
         });
     }
+};
+
+// Dropdown API for warehouse types
+const getWarehouseTypes = (req, res) => {
+  try {
+    // Predefined warehouse types
+    const warehouseTypes = [
+      "Cold Storage",
+      "Dry Storage",
+      "Automated Storage",
+      "Hazardous Materials",
+      "Distribution Center",
+    ];
+
+    // Respond with the list
+    return res.status(200).json({
+      success: true,
+      message: "Warehouse types retrieved successfully.",
+      data: warehouseTypes,
+    });
+  } catch (error) {
+    // Handle errors
+    return res.status(500).json({
+      success: false,
+      message: "Error retrieving warehouse types.",
+      error: error.message,
+    });
+  }
+};
+
+const getNewIDNumber = async (req,res) => {
+  try {
+      const wareHouses = await warehouseModel.find();
+      const wareHousesID = wareHouses.length + 1;
+      return res.status(200).json({ success: true, ID: wareHousesID });
+  } catch (error) {
+      console.error("Error getting new sr number:", error);
+      return 1;
+  }
 }
 getInventoryManagement = async (req, res) => {
   try {
@@ -180,8 +220,98 @@ getInventoryManagement = async (req, res) => {
 
 
 
+const getWarehousePercentages = async (req, res) => {
+  try {
+    // Get all warehouses from the database
+    const warehouses = await warehouseModel.find();
+
+    // Calculate the total quantity of all warehouses
+    const totalQuantity = warehouses.reduce((total, warehouse) => {
+      return total + warehouse.storedMaterials.reduce((sum, material) => sum + material.quantity, 0);
+    }, 0);
+
+    // Initialize an array to store the warehouse percentages
+    const warehousePercentages = warehouses.map((warehouse) => {
+      const warehouseQuantity = warehouse.storedMaterials.reduce((sum, material) => sum + material.quantity, 0);
+      const percentage = (warehouseQuantity / totalQuantity) * 100;
+      return {
+        warehouseID: warehouse.warehouseID,
+        warehouseName: warehouse.warehouseName,
+        percentage: percentage.toFixed(2) // Round to 2 decimal places
+      };
+    });
+
+    // Return the calculated percentages
+    return res.status(200).json({
+      success: true,
+      data: warehousePercentages
+    });
+  } catch (error) {
+    // Handle errors
+    return res.status(500).json({
+      success: false,
+      message: "Error retrieving warehouse percentages.",
+      error: error.message,
+    });
+  }
+};
+
+const getOrdersAndShipments = async (req, res) => {
+  try {
+    const { page = 1, limit = 2 } = req.query;
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    // Fetch paginated data
+    const ordersandshipments = await PurchaseOrder.find({})
+      .select("poOrderNo poDate orderDetails.quantity purchaseForm.vendorName status")
+      .skip(skip)
+      .limit(itemsPerPage);
+
+    // Transform orders into the desired structure
+    const transformedOrders = ordersandshipments.map(order => {
+      const totalQuantity = order.orderDetails.reduce((sum, detail) => sum + detail.quantity, 0);
+      return {
+        totalItems: totalQuantity,
+        orderId: order.poOrderNo,
+        _id: order._id,
+        customerName: order.purchaseForm.vendorName,
+        orderId: order.poOrderNo,
+        orderDate: order.poDate,
+        status: order.status, 
+      };
+    });
+       const ordersandshipmentlength=ordersandshipments.length;
+    // Calculate pagination data
+    const totalOrders = await PurchaseOrder.countDocuments({});
+    const totalPages = Math.ceil(totalOrders / itemsPerPage);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        ordersandshipments: transformedOrders,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount: transformedOrders.length,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching orders and shipments:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 module.exports = {
-    createWarehouse,
-    getAllWareHouses,
-    getInventoryManagement
+  createWarehouse,
+  getAllWareHouses,
+  getWarehouseTypes,
+  getNewIDNumber,
+  getWarehousePercentages,
+  getOrdersAndShipments,
+  getInventoryManagement
 }

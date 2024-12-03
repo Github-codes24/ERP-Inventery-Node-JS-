@@ -67,7 +67,7 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxesRate,
+      amount,
       applicableTaxesAmount,
       date,
       warehouse,
@@ -101,7 +101,7 @@ const createProduct = async (req, res) => {
     if (!quantity) error.quantity = "Quantity is required.";
     if (!companyPrice) error.companyPrice = "Company Price is required.";
     if (!gstRate) error.gstRate = "GST Rate is required.";
-    if (!applicableTaxesRate) error.applicableTaxesRate = "Applicable Taxes rate is required.";
+    if (!amount) error.amount = "Amount is required.";
     if (!applicableTaxesAmount) error.applicableTaxesAmount = "Applicable Taxes amount is required.";
     if (!date) error.date = "Date is required.";
     if (!warehouse) error.warehouse = "Warehouse is required."; 
@@ -155,7 +155,7 @@ const createProduct = async (req, res) => {
       quantity,
       companyPrice,
       gstRate,
-      applicableTaxesRate,
+      amount,
       applicableTaxesAmount,
       date,
       warehouse, 
@@ -287,6 +287,15 @@ const updateProduct = async (req, res) => {
       pptAvailable,
       coveringLetter,
       isoCertificate,
+      subTotal,
+      freight,
+      taxes,
+      netAmount,
+      approvedBy,
+      dimensions,
+      materials,
+      performance,
+      technicalSpecification
     };
 
     // Update the product data
@@ -531,6 +540,30 @@ const getAMCCMCList = async (req, res) => {
   }
 };
 
+const getAllSerialNumbers = async (req, res) => {
+  try {
+    // Get all products from the database
+    const products = await Product.find({}, 'srNo'); // Fetch only the srNo field
+
+    // Extract the serial numbers
+    const serialNumbers = products.map(product => product.srNo);
+
+    // Return the serial numbers
+    return res.status(200).json({
+      success: true,
+      data: serialNumbers
+    });
+  } catch (error) {
+    // Handle errors
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// get existing serial number
+
 module.exports = {
     getProducts,
     getProductById,
@@ -548,5 +581,6 @@ module.exports = {
     getWarrantyPeriod,
     getProposedCompany,
     getAMCCMCList,
+    getAllSerialNumbers // Add the new function to module exports
 };
 
