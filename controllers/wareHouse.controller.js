@@ -1,5 +1,6 @@
 //get warehouse
 const warehouseModel = require("../models/warehouse.model")
+const PurchaseOrder = require('../models/purchaseOrder');
 
 const createWarehouse = async (req, res) => {
   try {
@@ -196,12 +197,63 @@ const getWarehousePercentages = async (req, res) => {
       error: error.message,
     });
   }
-}
+};
+
+const getOrdersAndShipments = async (req, res) => {
+  try {
+    const { page = 1, limit = 2 } = req.query;
+    const currentPage = parseInt(page, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    // Fetch paginated data
+    const ordersandshipments = await PurchaseOrder.find({})
+      .select("poOrderNo poDate orderDetails.quantity purchaseForm.vendorName status")
+      .skip(skip)
+      .limit(itemsPerPage);
+
+    // Transform orders into the desired structure
+    const transformedOrders = ordersandshipments.map(order => {
+      const totalQuantity = order.orderDetails.reduce((sum, detail) => sum + detail.quantity, 0);
+      return {
+        totalItems: totalQuantity,
+        orderId: order.poOrderNo,
+        _id: order._id,
+        customerName: order.purchaseForm.vendorName,
+        orderId: order.poOrderNo,
+        orderDate: order.poDate,
+        status: order.status, 
+      };
+    });
+       const ordersandshipmentlength=ordersandshipments.length;
+    // Calculate pagination data
+    const totalOrders = await PurchaseOrder.countDocuments({});
+    const totalPages = Math.ceil(totalOrders / itemsPerPage);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        ordersandshipments: transformedOrders,
+        pagination: {
+          currentPage,
+          totalPages,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          totalCount: transformedOrders.length,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching orders and shipments:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
 
 module.exports = {
-    createWarehouse,
-    getAllWareHouses,
-    getWarehouseTypes,
-    getNewIDNumber,
-    getWarehousePercentages,
+  createWarehouse,
+  getAllWareHouses,
+  getWarehouseTypes,
+  getNewIDNumber,
+  getWarehousePercentages,
+  getOrdersAndShipments,
 }
