@@ -101,7 +101,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/bank", bankRoutes);
 app.use("/api/warehouse", warehouseRoutes);
 app.use("/api/report", reportRoutes);
-api.use("/api/replenishment", replenishmentRoues);
+app.use("/api/replenishment", replenishmentRoues);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
