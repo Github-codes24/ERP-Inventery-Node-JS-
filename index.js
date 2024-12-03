@@ -73,6 +73,7 @@ const inventoryRoutes = require('./routes/inventoryRoutes');
 const purchaseOrderRoutes = require('./routes/purchaseOrderRoutes');
 const quotationRoutes = require('./routes/qoutationRoutes');
 const dashboardRoutes=require('./routes/dashboardRoute');
+const replenishmentRoues = require('./routes/replenishment.routes');
  
 
 app.get("/", (req, res) => {
@@ -100,6 +101,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/bank", bankRoutes);
 app.use("/api/warehouse", warehouseRoutes);
 app.use("/api/report", reportRoutes);
+api.use("/api/replenishment", replenishmentRoues);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
