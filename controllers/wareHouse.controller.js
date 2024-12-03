@@ -126,9 +126,10 @@ const getAllWareHouses = async (req, res) => {
 }
 getInventoryManagement = async (req, res) => {
   try {
+    const { page = 1, limit = 2 } = req.query;
     // Extract page and limit from query parameters, with default values
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(page) || 1;
+    const limit = parseInt(limit) || 10;
 
     // Calculate the number of documents to skip
     const skip = (page - 1) * limit;
