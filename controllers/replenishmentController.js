@@ -86,12 +86,19 @@ const getReplenishmentProductById = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Return the product details
-    return res.status(200).json({ product });
+    // Add calculated fields: totalValue and status
+    const enrichedProduct = {
+      ...product.toObject(), // Convert Mongoose document to plain JS object
+      status: product.inStock > 0 ? "In Stock" : "Out of Stock", // Determine status
+    };
+
+    // Return the product details with additional fields
+    return res.status(200).json({ product: enrichedProduct });
   } catch (error) {
     console.error('Error fetching product by ID:', error);
     return res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
+
 
 module.exports = { getTopSellingProducts, getReplenishmentProductById };
