@@ -41,10 +41,10 @@ const saleBySalesPerson = async (req, res) => {
 
 const getAllReports = async (req, res) => {
     try {
-        const reports = [{name: 'Siddhant', distributer:'Rajiv',Product:'Product 1',date:'2024/07/23',noOfProduct:'09',region:'North',company:'XYZ Company'},
-        {name: 'Prince', distributer:'Rajiv',Product:'Product 2',date:'2024/07/23',noOfProduct:'09',region:'North',company:'XYZ Company'},
-        {name: 'Ankit', distributer:'Rajiv',Product:'Product 3',date:'2024/07/23',noOfProduct:'09',region:'North',company:'XYZ Company'},
-        {name: 'Deepanshu', distributer:'Rajiv',Product:'Product 4',date:'2024/07/23',noOfProduct:'09',region:'North',company:'XYZ Company'},
+        const reports = [{name: 'Siddhant', distributer:'Rajiv',Product:'Product 1',date:'2024/07/23',noOfProduct:'09',region:'North',company:'AAB Company'},
+        {name: 'Prince', distributer:'Rajiv',Product:'Product 2',date:'2024/07/23',noOfProduct:'09',region:'North',company:'BBa Company'},
+        {name: 'Ankit', distributer:'Rajiv',Product:'Product 3',date:'2024/07/23',noOfProduct:'09',region:'North',company:'CCC Company'},
+        {name: 'Deepanshu', distributer:'Rajiv',Product:'Product 4',date:'2024/07/23',noOfProduct:'09',region:'North',company:'DDD Company'},
         ] 
         return res.status(200).json({ success: true, reports });
     } catch (error) {
