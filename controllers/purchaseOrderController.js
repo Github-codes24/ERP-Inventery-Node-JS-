@@ -198,15 +198,6 @@ const createPurchaseOrder = async (req, res) => {
       purchaseOrder: savedPurchaseOrder,
     });
   } catch (error) {
-    // Handle validation error
-    if (error.code === 11000) {
-      // Duplicate key error (unique validation failure)
-      return res.status(400).json({
-        message: "Unique validation failed",
-        error: error.message,
-      });
-    }
-
     // General error handling
     console.error("Error creating purchase order:", error);
     return res.status(500).json({
