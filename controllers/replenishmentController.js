@@ -100,5 +100,47 @@ const getReplenishmentProductById = async (req, res) => {
   }
 };
 
+const AddNewReplenishment = async (req, res) => { 
+  try {
+    const { productId, product, quantity, amount } = req.body;
 
-module.exports = { getTopSellingProducts, getReplenishmentProductById };
+   
+    const error = {};
+    if (!productId) error.productId = "Product ID is required.";
+    if (!product) error.product = "Product name is required.";
+    if (!quantity) error.quantity = "Quantity is required.";
+    if (!amount) error.amount = "Amount is required.";
+
+    
+    if (Object.keys(error).length > 0) {
+      return res.status(400).json({
+        message: "The following fields are missing or invalid:",
+        error,
+      });
+    }
+
+    
+    const newProduct = new ReplenishmentProduct({
+      productName: product, 
+      code: productId,      
+      unitPrice: amount,   
+      inStock: quantity,    
+    });
+
+    // Save to the database
+    const savedProduct = await newProduct.save();
+
+    // Respond with the saved product
+    return res.status(201).json({
+      success: true,
+      message: 'New replenishment product added successfully',
+      product: savedProduct,
+    });
+  } catch (error) {
+    // Log and handle errors
+    console.error('Error adding new replenishment:', error);
+    return res.status(500).json({ message: 'Server error. Please try again later.' });
+  }
+};
+
+module.exports = { getTopSellingProducts, getReplenishmentProductById, AddNewReplenishment  };
