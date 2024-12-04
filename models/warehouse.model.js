@@ -20,10 +20,12 @@ const warehouseSchema = new mongoose.Schema({
     },
     contactNumber: {
         type: String,
+        unique: true,
         required: true
     },
     officialEmail: {
         type: String,
+        unique: true,
         required: true
     },
     alternateNumber: {

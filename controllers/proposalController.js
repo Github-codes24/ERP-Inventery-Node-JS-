@@ -125,6 +125,14 @@ const createProposal = async (req, res) => {
       missingFields,
     });
   }
+  const existingproposalID = await  Proposal.findOne({ proposalID });
+   
+  if (existingproposalID) {
+     return res.status(400).json({
+       success: false,
+       message: `proposal ID '${proposalID}' already exists.`,
+     });
+   }
 
   try {
     const newProposal = new Proposal({

@@ -123,14 +123,14 @@ const createQuotation = async (req, res) => {
 
     // Validate required fields
     const missingFields = [];
+
+    // Check if essential fields are missing
     if (!quotationNo) missingFields.push("quotationNo");
-
-    const existingQuotation = await Quotation.findOne({ quotationNo });
-    if (existingQuotation) {
-      return res.status(400).json({ message: 'Quotation with the same quotatoin no. already exists' });
-    };
-
+    if (!quotationName) missingFields.push("quotationName");
     if (!quotationDate) missingFields.push("quotationDate");
+    if (!validity) missingFields.push("validity");
+    
+    // Validate "from" field
     if (!from) {
       missingFields.push("from");
     } else {
@@ -143,6 +143,8 @@ const createQuotation = async (req, res) => {
       if (!from.companyEmail) missingFields.push("from.companyEmail");
       if (!from.companyMobile) missingFields.push("from.companyMobile");
     }
+
+    // Validate "to" field
     if (!to) {
       missingFields.push("to");
     } else {
@@ -152,36 +154,40 @@ const createQuotation = async (req, res) => {
       if (!to.customerState) missingFields.push("to.customerState");
       if (!to.customerCity) missingFields.push("to.customerCity");
       if (!to.customerZipcode) missingFields.push("to.customerZipcode");
+      if (!to.customerEmail) missingFields.push("to.customerEmail");
       if (!to.customerMobile) missingFields.push("to.customerMobile");
     }
+
+    // Validate "bankDetails" field
     if (!bankDetails) {
       missingFields.push("bankDetails");
     } else {
       if (!bankDetails.bankName) missingFields.push("bankDetails.bankName");
-      if (!bankDetails.accountNumber)
-        missingFields.push("bankDetails.accountNumber");
-      if (!bankDetails.accountType)
-        missingFields.push("bankDetails.accountType");
+      if (!bankDetails.accountNumber) missingFields.push("bankDetails.accountNumber");
+      if (!bankDetails.accountType) missingFields.push("bankDetails.accountType");
       if (!bankDetails.ifscCode) missingFields.push("bankDetails.ifscCode");
       if (!bankDetails.branchName) missingFields.push("bankDetails.branchName");
       if (!bankDetails.address) missingFields.push("bankDetails.address");
     }
-    if(!totalDiscountPercentage){
-      missingFields.push("totalDiscountPercentage");
-    }
-  
-    if(!taxes){
-      missingFields.push("taxes");
-    }
+
+    // Additional fields validation
     if (!subtotal) missingFields.push("subtotal");
+    if (!totalDiscountPercentage) missingFields.push("totalDiscountPercentage");
+    if (!taxes) missingFields.push("taxes");
     if (!netAmount) missingFields.push("netAmount");
 
-    // If any fields are missing, return a detailed error response
+    // Check for any missing fields
     if (missingFields.length > 0) {
       return res.status(400).json({
-        message: "The following fields are missing:",
+        message: "The following fields are required:",
         missingFields,
       });
+    }
+
+    // Check for duplicate quotation number
+    const existingQuotation = await Quotation.findOne({ quotationNo });
+    if (existingQuotation) {
+      return res.status(400).json({ message: "Quotation with the same quotation number already exists." });
     }
 
     // Create a new quotation
@@ -219,6 +225,7 @@ const createQuotation = async (req, res) => {
     });
   }
 };
+
 
 
 
