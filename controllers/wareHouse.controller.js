@@ -4,7 +4,7 @@ const Product =require('../models/productModel');
 
 const PurchaseOrder = require('../models/purchaseOrder');
 
-const createWarehouse = async (req, res) => {
+const createWarehouse = async (req, res) => { 
   try {
     // Extract warehouse data from request body
     const {
@@ -45,15 +45,15 @@ const createWarehouse = async (req, res) => {
       // Validate each material object in the storedMaterials array
       storedMaterials.forEach((material, index) => {
         if (!material.storedMaterialName) {
-          errors[`storedMaterials[${index}].storedMaterialName`] = `Stored material name is required at ${index} index.`;
+          errors[`storedMaterials[${index}].storedMaterialName`] = `Stored material name is required at index ${index}.`;
         }
         if (!material.quantity || typeof material.quantity !== "number") {
-          errors[`storedMaterials[${index}].quantity`] = `Quantity is required and must be a number at ${index} index.`;
+          errors[`storedMaterials[${index}].quantity`] = `Quantity is required and must be a number at index ${index}.`;
         }
       });
     }
 
-    // If any required fields are missing, return an error response
+    // If any validation errors exist, return an error response
     if (Object.keys(errors).length > 0) {
       return res.status(400).json({
         success: false,
@@ -62,17 +62,32 @@ const createWarehouse = async (req, res) => {
       });
     }
 
-    // Check if the warehouse ID already exists in the database
-    const existingWarehouse = await warehouseModel.findOne({ warehouseID });
-    if (existingWarehouse) {
+    // Check if `warehouseID` or `contactNumber` already exists in the database
+    const existingWarehouseID = await Warehouse.findOne({ warehouseID });
+    const existingContactNumber = await Warehouse.findOne({ contactNumber });
+    const existingofficialEmail =await await Warehouse.findOne({ officialEmail });
+    if (existingWarehouseID) {
       return res.status(400).json({
         success: false,
-        message: `Warehouse with ID ${warehouseID} already exists.`,
+        message: `Warehouse ID '${warehouseID}' already exists.`,
+      });
+    }
+
+    if (existingContactNumber) {
+      return res.status(400).json({
+        success: false,
+        message: `Contact number '${contactNumber}'  already exist.`,
+      });
+    }
+    if (existingofficialEmail) {
+      return res.status(400).json({
+        success: false,
+        message: `official Email '${officialEmail}'  already exist.`,
       });
     }
 
     // Create a new warehouse record
-    const newWarehouse = new warehouseModel({
+    const newWarehouse = new Warehouse({
       warehouseID,
       warehouseName,
       contactPerson1Name,
@@ -106,6 +121,7 @@ const createWarehouse = async (req, res) => {
     });
   }
 };
+
 
 const getAllWareHouses = async (req, res) => {
     try {

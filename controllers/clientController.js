@@ -54,7 +54,6 @@ const createClient = async (req, res) => {
     if (!mouValidity) error.mouValidity = "MOU Validity is required.";
     if (!technicalSpecification) error.technicalSpecification = "Technical Specification is required.";
     if (!date) error.date = "Date is required.";
-  
     if (!teritaryAuthFile) error.teritaryAuthFile = "Tertiary Authorization File is required.";
     if (!pptFile) error.pptFile = "PPT File is required.";
     if (!coverLetterFile) error.coverLetterFile = "Cover Letter File is required.";

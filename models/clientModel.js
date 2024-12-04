@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const clientSchema = new mongoose.Schema(
   {
-    srNo: { type: String, required: true },
+    srNo: { type: String,unique: true, required: true },
     dealerName: { type: String, required: true },
     manufacturerName: { type: String, required: true },
     productName: { type: String, required: true },
