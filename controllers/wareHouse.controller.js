@@ -87,7 +87,7 @@ const createWarehouse = async (req, res) => {
     }
 
     // Create a new warehouse record
-    const newWarehouse = new Warehouse({
+    const newWarehouse = new warehouseModel({
       warehouseID,
       warehouseName,
       contactPerson1Name,
