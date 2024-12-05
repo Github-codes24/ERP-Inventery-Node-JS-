@@ -245,7 +245,7 @@ const updateClient = async (req, res) => {
             return res.status(404).json({ message: "Client not found" });
         }
 
-        return res.status(200).json({ success: true, updatedClient });
+        return res.status(200).json({ success: true,message: 'Client Updated Successfully' ,updatedClient });
     } catch (error) {
         console.error("Error updating client:", error);
         return res
