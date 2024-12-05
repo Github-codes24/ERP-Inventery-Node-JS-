@@ -63,9 +63,9 @@ const createWarehouse = async (req, res) => {
     }
 
     // Check if `warehouseID` or `contactNumber` already exists in the database
-    const existingWarehouseID = await Warehouse.findOne({ warehouseID });
-    const existingContactNumber = await Warehouse.findOne({ contactNumber });
-    const existingofficialEmail =await await Warehouse.findOne({ officialEmail });
+    const existingWarehouseID = await warehouseModel.findOne({ warehouseID });
+    const existingContactNumber = await warehouseModel.findOne({ contactNumber });
+    const existingofficialEmail =await await warehouseModel.findOne({ officialEmail });
     if (existingWarehouseID) {
       return res.status(400).json({
         success: false,
@@ -87,7 +87,7 @@ const createWarehouse = async (req, res) => {
     }
 
     // Create a new warehouse record
-    const newWarehouse = new Warehouse({
+    const newWarehouse = new warehouseModel({
       warehouseID,
       warehouseName,
       contactPerson1Name,
