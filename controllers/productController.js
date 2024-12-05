@@ -248,6 +248,7 @@ const updateProduct = async (req, res) => {
       applicableTaxesAmount,
       date,
       subTotal,
+      warehouse,
       freight,
       taxes,
       netAmount,
