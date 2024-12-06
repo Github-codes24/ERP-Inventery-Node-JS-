@@ -65,7 +65,7 @@ const createTender = async (req, res) => {
       'tenderCopy', 'technicalDocuments', 'tenderFees', 'emdCopy',
       'boq', 'pricing', 'performanceGuarantee', 'mou', 'other'
     ];
-
+console.log(req.files);
     fileFields.forEach(field => {
       if (req.files && req.files[field]) {
         documents[field] = req.files[field][0].path;

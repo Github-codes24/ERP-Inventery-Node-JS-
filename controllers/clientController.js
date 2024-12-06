@@ -37,6 +37,7 @@ const createClient = async (req, res) => {
       isoCertificate,
       brochureFile,
     } = req.files || {};
+  console.log(req.files);
   
     // Validate each field separately
     const error = {}; 

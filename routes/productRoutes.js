@@ -2,13 +2,15 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const companyMiddleware = require("../middleware/companyMiddleware");
+const {uploadDocument,uploadImage, upload} = require("../middleware/upload");
+
 
 router.use(companyMiddleware);
 // Configure multer for file uploads
-const upload = multer({ 
-    dest: 'uploads/', 
-    limits: { fileSize: 10 * 1024 * 1024 } 
-});
+// const upload = multer({ 
+//     dest: 'uploads/', 
+//     limits: { fileSize: 10 * 1024 * 1024 } 
+// });
 
 const {
     getProducts,

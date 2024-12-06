@@ -3,8 +3,10 @@ const multer = require('multer');
 const { createTender,getAllTenders, getTenderById, getNewSrNumber, updateTender } = require('../controllers/tenderController'); 
 const router = express.Router();
 const companyMiddleware = require("../middleware/companyMiddleware");
+const {uploadDocument,uploadImage, upload} = require("../middleware/upload");
+
 router.use(companyMiddleware);
-const upload = multer({ dest: 'uploads/' }); 
+// const upload = multer({ dest: 'uploads/' }); 
 
 router.post('/createTender', upload.fields([
     { name: 'tenderCopy', maxCount: 1 },

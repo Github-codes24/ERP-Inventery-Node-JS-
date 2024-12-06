@@ -3,16 +3,18 @@ const multer = require("multer");
 const proposalController = require("../controllers/proposalController");
 const router = express.Router();
 const companyMiddleware = require("../middleware/companyMiddleware");
-router.use(companyMiddleware);
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
-const upload = multer({ storage: storage });
+const {uploadDocument,uploadImage, upload} = require("../middleware/upload");
+
+// router.use(companyMiddleware);
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   }
+// });
+// const upload = multer({ storage: storage });
 
 // Routes
 router.post('/createProposal', upload.fields([

@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const clientController = require("../controllers/clientController");
 const companyMiddleware = require("../middleware/companyMiddleware");
+const {uploadDocument,uploadImage, upload} = require("../middleware/upload");
 router.use(companyMiddleware);
 const multer = require("multer");
-const upload = multer({
-    dest: "uploads/",
-    limits: { fileSize: 10 * 1024 * 1024 },
-});
+// const upload = multer({
+//     dest: "uploads/",
+//     limits: { fileSize: 10 * 1024 * 1024 },
+// });
 
 // Route for client registration
 
