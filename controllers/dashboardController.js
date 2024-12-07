@@ -161,7 +161,7 @@ const getRecentOrders = async (req, res) => {
 //     return res.status(200).json({ totalPendingOrder });
 //   } catch (error) {
 //     console.error("Error in totalPendingOrder:", error);
-//     return res.status(500).json({ message: "Internal Server Error", error: error.message });
+//     return res.status(500).json({ message: "Internal server Error", error: error.message });
 //   }
 // };
 
@@ -368,41 +368,53 @@ const getLatestQuotation = async (req, res) => {
     const startDate = new Date();
     startDate.setDate(now.getDate() - 30);
 
+    // Fetch total count of quotations within the date range
     const totalCount = await Quotation.countDocuments({
       createdAt: { $gte: startDate, $lte: now },
     });
 
-    const data = await Quotation.find({
+    // Fetch quotations with pagination
+    const quotations = await Quotation.find({
       createdAt: { $gte: startDate, $lte: now },
     })
-      .select("quotationNo quotationDate quotationName items itemNo from.companyAddress")
+      .select("quotationNo quotationDate quotationName items from.companyAddress")
       .skip(skip)
       .limit(itemsPerPage)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
-    if (!data || data.length === 0) {
+    if (!quotations || quotations.length === 0) {
       return res.status(404).json({ message: "Quotations not found" });
     }
 
-    // Process data with asynchronous operations
-    const processedData = await Promise.all(
-      data.map(async (quotation) => {
-        // Get item numbers from quotation items
-        const itemNos = quotation.items.map((item) => item.itemNo);
+    // Collect all itemNos from all quotations
+    const allItemNos = quotations.reduce((acc, quotation) => {
+      const itemNos = quotation.items.map((item) => item.itemNo);
+      return acc.concat(itemNos);
+    }, []);
 
-        // Fetch products based on item numbers
-        const products = await Product.find({ srNo: { $in: itemNos } }).select("productName");
+    // Fetch all necessary products in a single query
+    const productsList = await Product.find({ srNo: { $in: allItemNos } })
+      .select("srNo productName")
+      .lean();
 
-        return {
-          products,
-          quotationNo: quotation.quotationNo,
-          quotationDate: quotation.quotationDate.toISOString().split('T')[0],
-          quotationName: quotation.quotationName,
-          firstQuantity: quotation.items?.[0]?.quantity || null,
-          companyAddress: quotation.from?.companyAddress || null,
-        };
-      })
-    );
+    // Create a map for quick lookup of product names by srNo
+    const productsMap = {};
+    productsList.forEach((product) => {
+      productsMap[product.srNo] = product.productName;
+    });
+
+    // Process data to include product names and quantities
+    const processedData = quotations.map((quotation) => ({
+      products: quotation.items.map((item) => ({
+        productName: productsMap[item.itemNo] || "Product Not Found",
+        quantity: item.quantity,
+      })),
+      quotationNo: quotation.quotationNo,
+      quotationDate: quotation.quotationDate.toISOString().split("T")[0],
+      quotationName: quotation.quotationName,
+      companyAddress: quotation.from?.companyAddress || null,
+    }));
 
     return res.status(200).json({
       success: true,
@@ -414,9 +426,8 @@ const getLatestQuotation = async (req, res) => {
       itemsPerPage,
       data: processedData,
     });
-
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching quotations:", error);
     return res.status(500).json({
       success: false,
       message: "Error fetching Quotations",
