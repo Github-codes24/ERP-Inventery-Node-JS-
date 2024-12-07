@@ -359,69 +359,68 @@ const getLatestTender = async (req, res) => {
   
 const getLatestQuotation = async (req, res) => {
   try {
-    // Extract query parameters for pagination
     const { page = 1, limit = 3 } = req.query;
-    
-    // Parse page and limit as integers
     const currentPage = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);
-
     const skip = (currentPage - 1) * itemsPerPage;
 
-    // Calculate the date range for the past 30 days
     const now = new Date();
     const startDate = new Date();
-    startDate.setDate(now.getDate() - 30); // Correctly subtract 30 days
+    startDate.setDate(now.getDate() - 30);
 
-    // Fetch the total count of documents in the date range
     const totalCount = await Quotation.countDocuments({
       createdAt: { $gte: startDate, $lte: now },
     });
 
-    // Fetch quotations with pagination and sort by creation date
     const data = await Quotation.find({
       createdAt: { $gte: startDate, $lte: now },
     })
-      .select(
-        "quotationNo quotationDate quotationName items.quantity from.companyAddress"
-      )
+      .select("quotationNo quotationDate quotationName items itemNo from.companyAddress")
       .skip(skip)
       .limit(itemsPerPage)
       .sort({ createdAt: -1 });
 
-    // Check if data exists
     if (!data || data.length === 0) {
       return res.status(404).json({ message: "Quotations not found" });
     }
 
-    // Extract the first quantity item manually
-    const processedData = data.map((quotation) => ({
-      quotationNo: quotation.quotationNo,
-      quotationDate: quotation.quotationDate,
-      quotationName: quotation.quotationName,
-      firstQuantity: quotation.items?.[0]?.quantity || null, // Safely access the first quantity
-      companyAddress: quotation.from?.companyAddress || null, // Safely access companyAddress
-    }));
+    // Process data with asynchronous operations
+    const processedData = await Promise.all(
+      data.map(async (quotation) => {
+        // Get item numbers from quotation items
+        const itemNos = quotation.items.map((item) => item.itemNo);
 
-    // Calculate total pages
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+        // Fetch products based on item numbers
+        const products = await Product.find({ srNo: { $in: itemNos } }).select("productName");
+
+        return {
+          products,
+          quotationNo: quotation.quotationNo,
+          quotationDate: quotation.quotationDate.toISOString().split('T')[0],
+          quotationName: quotation.quotationName,
+          firstQuantity: quotation.items?.[0]?.quantity || null,
+          companyAddress: quotation.from?.companyAddress || null,
+        };
+      })
+    );
 
     return res.status(200).json({
       success: true,
       currentPage,
-      totalPages,
+      totalPages: Math.ceil(totalCount / itemsPerPage),
       totalCount,
-      hasNextPage: currentPage < totalPages,
+      hasNextPage: currentPage < Math.ceil(totalCount / itemsPerPage),
       hasPrevPage: currentPage > 1,
       itemsPerPage,
       data: processedData,
     });
+
   } catch (error) {
-    console.log(error.message); // Log the error for debugging
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Error fetching Quotations",
-      error: error.message, // Include error details in the response
+      error: error.message,
     });
   }
 };
