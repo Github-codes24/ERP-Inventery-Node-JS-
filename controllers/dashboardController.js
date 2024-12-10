@@ -321,7 +321,7 @@ const getLatestTender = async (req, res) => {
     // Fetch all tenders for the past 30 days
     const tendersInRange = await Tender.find({
       createdAt: { $gte: startDate, $lte: now },
-    }).select("tenderID title issueDate authorizedPerson stockItems")
+    }).select("tenderID title issueDate authorizedPerson location stockItems")
     .skip(skip)
     .limit(itemsPerPage)
     .sort({ createdAt: -1 }); 
