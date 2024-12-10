@@ -314,7 +314,7 @@ const getLatestTender = async (req, res) => {
     startDate.setDate(now.getDate() - 30); // Correctly subtract 30 days
 
     // Fetch the total count of documents in the date range
-    const totalCount = await Quotation.countDocuments({
+    const totalCount = await Tender.countDocuments({
       createdAt: { $gte: startDate, $lte: now },
     });
 
@@ -326,8 +326,11 @@ const getLatestTender = async (req, res) => {
     .limit(itemsPerPage)
     .sort({ createdAt: -1 }); 
 
-    // Paginate the tenders for the current page
-    const tenders = tendersInRange.slice(skip, skip + itemsPerPage);
+    // Format the issueDate and paginate the tenders for the current page
+    const tenders = tendersInRange.map(tender => ({
+      ...tender._doc,
+      issueDate: tender.issueDate.toISOString().split("T")[0]
+    }));
 
     // Calculate total pages
     const totalPages = Math.ceil(totalCount / itemsPerPage);
