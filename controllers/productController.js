@@ -14,47 +14,52 @@ const getNewSrNumber = async (req,res) => {
 // Get products by name
 const getProducts = async (req, res) => {
   try {
-      const { productName, page = 1, limit = 10 } = req.query;
+    const { productName, page = 1, limit = 10 } = req.query;
 
-      // Parse page and limit as integers
-      const currentPage = parseInt(page);
-      const itemsPerPage = parseInt(limit);
-  
-      const skip = (currentPage - 1) * itemsPerPage;
+    // Parse page and limit as integers
+    const currentPage = parseInt(page);
+    const itemsPerPage = parseInt(limit);
 
-      // Build the filter object
-      const filter = {};
-      if (productName) {
-        filter.productName = productName;
-      }
- 
-      // Get total count of matching documents
-      const totalCount = await Product.countDocuments(filter);
+    const skip = (currentPage - 1) * itemsPerPage;
 
-      const products = await Product.find(filter).select("productName srNo productType date quantity companyPrice")
+    // Build the filter object
+    const filter = {};
+    if (productName) {
+      filter.productName = productName;
+    }
+
+    // Get total count of matching documents
+    const totalCount = await Product.countDocuments(filter);
+
+    const products = await Product.find(filter)
+      .select("productName srNo productType date quantity companyPrice")
       .skip(skip)
       .limit(itemsPerPage)
       .sort({ createdAt: -1 });
 
-      // Calculate total pages
-      const totalPages = Math.ceil(totalCount / itemsPerPage);
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-      // Modify the data to add `lastPurchase`
-      const modifiedData = products.map((product) => ({
-        ...product._doc, // Spread the original document
-        lastPurchase: "abcd", // Add the `lastPurchase` property
-      }));
-      return res.status(200).json({ success: true, products: modifiedData,
-        pagination: {
-          currentPage,
-          totalPages,
-          hasNextPage: currentPage < totalPages,
-          hasPrevPage: currentPage > 1,
-          totalCount,
-        },
-      }); 
+    // Modify the data to add `lastPurchase` and format `date`
+    const modifiedData = products.map((product) => ({
+      ...product._doc, // Spread the original document
+      date: product.date.toISOString().split("T")[0], // Format the date
+      lastPurchase: "abcd", // Add the `lastPurchase` property
+    }));
+
+    return res.status(200).json({
+      success: true,
+      products: modifiedData,
+      pagination: {
+        currentPage,
+        totalPages,
+        hasNextPage: currentPage < totalPages,
+        hasPrevPage: currentPage > 1,
+        totalCount,
+      },
+    });
   } catch (error) {
-     return  res.status(500).json({ message: 'Server Error', error: error.message });
+    return res.status(500).json({ message: 'Server Error', error: error.message });
   }
 }
 
