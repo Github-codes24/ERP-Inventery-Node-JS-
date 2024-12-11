@@ -233,6 +233,7 @@ const updateProduct = async (req, res) => {
     const {
       srNo,
       productName,
+      amount,
       model,
       productType,
       skuCode,
@@ -320,6 +321,7 @@ const updateProduct = async (req, res) => {
       warehouse, 
       productImage,
       productBrochure,
+      amount,
       pptAvailable,
       coveringLetter,
       isoCertificate,
