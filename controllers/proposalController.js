@@ -1,4 +1,5 @@
 const Proposal = require("../models/proposalModel");
+const Client = require("../models/clientModel");
  
 const getNewSrNumber = async (req,res) => {
   try {
@@ -417,13 +418,8 @@ const getProposalType = (req, res) => {
 };
 const getClientNames = async (req, res) => {
   // Define a list of 5 client names
-  const clientNames = [
-    "Sam",
-    "Vivky",
-    "John",
-    "Alex",
-    "Maria",
-  ];
+  const clientNames = await Client.find().select("dealerName");
+
 
   try {
     // Respond with the list of client names
