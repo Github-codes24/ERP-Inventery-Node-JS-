@@ -125,7 +125,7 @@ const createWarehouse = async (req, res) => {
 
 const getAllWareHouses = async (req, res) => {
     try {
-      const data = await warehouseModel.find();
+      const data = await warehouseModel.find().select(' warehouseName ');
         return res.status(200).json({
         success: true,
         "wareHouses": data
